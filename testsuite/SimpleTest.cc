@@ -8,6 +8,7 @@ class SimpleTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE( SimpleTest );
     CPPUNIT_TEST(test_trim);
+    CPPUNIT_TEST(test_toupperlower);
     CPPUNIT_TEST_SUITE_END();
 
 protected:
@@ -55,6 +56,20 @@ protected:
 	CPPUNIT_ASSERT( str2.trim_inplace() == "abc" );
 	CPPUNIT_ASSERT( str3.trim_inplace() == "abc" );
 	CPPUNIT_ASSERT( str4.trim_inplace() == "" );
+    }
+
+    void test_toupperlower()
+    {
+	// string-copy functions
+	CPPUNIT_ASSERT( stx::string(" aBc ").toupper() == " ABC " );
+	CPPUNIT_ASSERT( stx::string(" AbCdEfG ").tolower() == " abcdefg " );
+
+	// in-place functions
+	stx::string str1 = "  aBc  ";
+	stx::string str2 = "AbCdEfGh ";
+
+	CPPUNIT_ASSERT( str1.toupper_inplace() == "  ABC  " );
+	CPPUNIT_ASSERT( str2.tolower_inplace() == "abcdefgh " );
     }
 };
 

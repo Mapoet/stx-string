@@ -4,6 +4,7 @@
 #define _STX_STRING_H_
 
 #include <string>
+#include <cctype>
 
 namespace stx {
 
@@ -64,6 +65,10 @@ public:
 	: std::string(start, end)
     {
     }
+
+    /*
+     * --- Trim Functions ---
+     */
 
     /** Trims the contained string on the left and right. Removes all
      * characters in the given drop array, which defaults to " ". Returns a
@@ -149,6 +154,54 @@ public:
     string& trim_right_inplace(const string &drop = " ")
     {
 	erase(find_last_not_of(drop) + 1, npos);
+	return *this;
+    }
+
+    /*
+     * --- Upper and Lower Case Functions ---
+     */
+
+    /** toupper() functional for std::transform with correct signature. */
+    static char char_toupper_functional(char c)
+    {
+	return std::toupper(c);
+    }
+
+    /** tolower() functional for std::transform with correct signature. */
+    static char char_tolower_functional(char c)
+    {
+	return std::tolower(c);
+    }
+
+    /** Returns a copy of the enclosed string converted to uppercase. */
+    string toupper() const
+    {
+	string strcopy(size(), 0);
+	std::transform(begin(), end(), strcopy.begin(), char_toupper_functional);
+	return strcopy;
+    }
+
+    /** Returns a copy of the enclosed string converted to lowercase. */
+    string tolower() const
+    {
+	string strcopy(size(), 0);
+	std::transform(begin(), end(), strcopy.begin(), char_tolower_functional);
+	return strcopy;
+    }
+
+    /** Transforms the enclosed string to uppercase and returns a reference to
+     * this. */
+    string& toupper_inplace()
+    {
+	std::transform(begin(), end(), begin(), char_toupper_functional);
+	return *this;
+    }
+
+    /** Transforms the enclosed string to lowercase and returns a reference to
+     * this. */
+    string& tolower_inplace()
+    {
+	std::transform(begin(), end(), begin(), char_tolower_functional);
 	return *this;
     }
 };
