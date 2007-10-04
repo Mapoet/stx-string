@@ -1,6 +1,4 @@
-#                                               -*- Autoconf -*-
-# $Id$
-# Process this file with autoconf to produce a configure script.
+# $Id$ -*- Autoconf -*-
 
 AC_PREREQ(2.60)
 AC_INIT(stx-string, 0.6)
@@ -36,5 +34,6 @@ AM_CONDITIONAL(HAVE_CPPUNIT, test x$CPPUNIT_CONFIG != xno)
 
 # Checks for library functions.
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile
+		 testsuite/Makefile])
 AC_OUTPUT

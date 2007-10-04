@@ -1,9 +1,8 @@
 # $Id$
 
-SUBDIRS = .
+SUBDIRS = . testsuite
 
-include_HEADERS = \
-	include/stx-string.h
+include_HEADERS = include/stx-string.h
 
 noinst_PROGRAMS = test
 
