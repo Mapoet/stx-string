@@ -204,6 +204,86 @@ public:
 	std::transform(begin(), end(), begin(), char_tolower_functional);
 	return *this;
     }
+
+    /*
+     * --- Case-insensitive Comparision Functionals and Functions ---
+     */
+
+    /** Binary class functional which compares two characters
+     * case-insensitively. Returns true if they are equal. */
+    struct char_icase_equal : public std::binary_function<char, char, bool> 
+    {
+	bool operator() (const char& c1, const char& c2) const 
+	{ return std::tolower(c1) == std::tolower(c2); }
+    };
+
+    /** Binary class functional which compares two characters
+     * case-insensitively. Returns true if the first is less than the
+     * second. */
+    struct char_icase_less : public std::binary_function<char, char, bool> 
+    {
+	bool operator() (const char& c1, const char& c2) const 
+	{ return std::tolower(c1) < std::tolower(c2); }
+    };
+
+    /** Compare this string to the other case-insensitively. Return true if
+     * they are equal. */
+    bool equal_icase(const string& other) const
+    {
+	if (size() != other.size()) return false;
+
+	return std::equal( begin(), end(), other.begin(),
+			   char_icase_equal() );
+    }
+
+    /** Compare this string to the other case-insensitively. Return true if
+     * this one is less than the other. */
+    bool less_icase(const string& other) const
+    {
+	return std::lexicographical_compare( begin(), end(),
+					     other.begin(), other.end(),
+					     char_icase_less() );
+    }
+
+    /*
+     * --- Prefix and Suffix Functions ---
+     */
+
+    /** Checks if the given match string is located at the start of this
+     * string. */
+    bool is_prefix(const string& match) const
+    {
+	if (match.size() > size()) return false;
+	return std::equal( match.begin(), match.end(), begin() );
+    }
+
+    /** Checks if the given match string is located at the end of this
+     * string. */
+    bool is_suffix(const string& match) const
+    {
+	if (match.size() > size()) return false;
+	return std::equal( match.begin(), match.end(),
+			   end() - match.size() );
+    }
+
+    /** Checks if the given match string is located at the start of this
+     * string. Compares the characters case-insensitively. */
+    bool is_prefix_icase(const string& match) const
+    {
+	if (match.size() > size()) return false;
+	return std::equal( match.begin(), match.end(), begin(),
+			   char_icase_equal() );
+    }
+
+    /** Checks if the given match string is located at the end of this
+     * string. Compares the characters case-insensitively. */
+    bool is_suffix_icase(const string& match) const
+    {
+	if (match.size() > size()) return false;
+	return std::equal( match.begin(), match.end(),
+			   end() - match.size(),
+			   char_icase_equal() );
+    }
 };
 
 } // namespace stx

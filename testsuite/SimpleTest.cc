@@ -8,7 +8,9 @@ class SimpleTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE( SimpleTest );
     CPPUNIT_TEST(test_trim);
-    CPPUNIT_TEST(test_toupperlower);
+    CPPUNIT_TEST(test_toupper_tolower);
+    CPPUNIT_TEST(test_compare_icase);
+    CPPUNIT_TEST(test_prefix_suffix);
     CPPUNIT_TEST_SUITE_END();
 
 protected:
@@ -58,7 +60,7 @@ protected:
 	CPPUNIT_ASSERT( str4.trim_inplace() == "" );
     }
 
-    void test_toupperlower()
+    void test_toupper_tolower()
     {
 	// string-copy functions
 	CPPUNIT_ASSERT( stx::string(" aBc ").toupper() == " ABC " );
@@ -70,6 +72,44 @@ protected:
 
 	CPPUNIT_ASSERT( str1.toupper_inplace() == "  ABC  " );
 	CPPUNIT_ASSERT( str2.tolower_inplace() == "abcdefgh " );
+    }
+
+    void test_compare_icase()
+    {
+	CPPUNIT_ASSERT( stx::string("ABC") != stx::string("abc") );
+
+	CPPUNIT_ASSERT( stx::string("ABC").equal_icase("abc") );
+	CPPUNIT_ASSERT( !stx::string("ABC").equal_icase("abd") );
+	CPPUNIT_ASSERT( !stx::string("ABC").equal_icase("abcedf") );
+
+	CPPUNIT_ASSERT( stx::string("ABC") < stx::string("abc") );
+	CPPUNIT_ASSERT( !stx::string("ABC").less_icase("abc") );
+	CPPUNIT_ASSERT( stx::string("abc").less_icase("abcdef") );
+	CPPUNIT_ASSERT( !stx::string("abcdef").less_icase("abcd") );
+    }
+
+    void test_prefix_suffix()
+    {
+	CPPUNIT_ASSERT( stx::string("abcdef").is_prefix("abc") );
+	CPPUNIT_ASSERT( ! stx::string("abcdef").is_prefix("def") );
+	CPPUNIT_ASSERT( stx::string("abcdef").is_suffix("def") );
+	CPPUNIT_ASSERT( ! stx::string("abcdef").is_suffix("abc") );
+
+	CPPUNIT_ASSERT( ! stx::string("abcdef").is_prefix("ABC") );
+
+	CPPUNIT_ASSERT( stx::string("abcdef").is_prefix_icase("ABC") );
+	CPPUNIT_ASSERT( ! stx::string("abcdef").is_prefix_icase("DEF") );
+	CPPUNIT_ASSERT( stx::string("abcdef").is_suffix_icase("DEF") );
+	CPPUNIT_ASSERT( ! stx::string("abcdef").is_suffix_icase("ABC") );
+
+	CPPUNIT_ASSERT( stx::string("abcdef").is_prefix("") );
+	CPPUNIT_ASSERT( stx::string("abcdef").is_suffix("") );
+
+	CPPUNIT_ASSERT( ! stx::string("").is_prefix("abc") );
+	CPPUNIT_ASSERT( ! stx::string("").is_suffix("abc") );
+
+	CPPUNIT_ASSERT( stx::string("").is_prefix("") );
+	CPPUNIT_ASSERT( stx::string("").is_suffix("") );
     }
 };
 
