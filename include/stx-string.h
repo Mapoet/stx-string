@@ -12,6 +12,10 @@ class string : public std::string
 {
 public:
 
+    // ***                              ***
+    // *** Constructors for stx::string ***
+    // ***                              ***
+
     /** Default constructor. Creates an empty string. */
     string()
 	: std::string()
@@ -66,100 +70,188 @@ public:
     {
     }
 
-    /*
-     * --- Trim Functions ---
+    // ***                           ***
+    // *** Whitespace Trim Functions ***
+    // ***                           ***
+
+    // *** generic std::string versions ***
+
+    /** Trims the given string on the left and right. Removes all characters in
+     * the given drop array, which defaults to " ". Returns a copy of the
+     * string.
+     *
+     * @param str	string to process
+     * @param drop	remove these characters
+     * @return		new trimmed string
      */
+    static std::string trim(const std::string& str, const std::string& drop = " ")
+    {
+	std::string::size_type pos1 = str.find_first_not_of(drop);
+	if (pos1 == std::string::npos) return std::string();
+
+	std::string::size_type pos2 = str.find_last_not_of(drop);
+	if (pos2 == std::string::npos) return std::string();
+
+	return str.substr(pos1 == std::string::npos ? 0 : pos1,
+			  pos2 == std::string::npos ? (str.size() - 1) : (pos2 - pos1 + 1));
+    }
+
+    /** Trims the given string only on the left. Removes all characters in the
+     * given drop array, which defaults to " ". Returns a copy of the string.
+     *
+     * @param str	string to process
+     * @param drop	remove these characters
+     * @return		new trimmed string
+     */
+    static std::string trim_left(const std::string& str, const std::string& drop = " ")
+    {
+	std::string::size_type pos = str.find_first_not_of(drop);
+	if (pos == std::string::npos) return std::string();
+
+	return str.substr(pos, std::string::npos);
+    }
+
+    /** Trims the given string only on the right. Removes all characters in the
+     * given drop array, which defaults to " ". Returns a copy of the string.
+     *
+     * @param str	string to process
+     * @param drop	remove these characters
+     * @return	new trimmed string
+     */
+    static std::string trim_right(const std::string& str, const std::string& drop = " ")
+    {
+	std::string::size_type pos = str.find_last_not_of(drop);
+	if (pos == std::string::npos) return std::string();
+
+	return str.substr(0, pos + 1);
+    }
+
+    /** Trims the given string in-place on the left and right. Removes all
+     * characters in the given drop array, which defaults to " ".
+     *
+     * @param str	string to process
+     * @param drop	remove these characters
+     * @return	reference to the modified string
+     */
+    static std::string& trim_inplace(std::string& str, const std::string& drop = " ")
+    {
+	std::string::size_type pos = str.find_last_not_of(drop);
+	if (pos != std::string::npos) {
+	    str.erase(pos + 1);
+	    pos = str.find_first_not_of(drop);
+	    if (pos != std::string::npos) str.erase(0, pos);
+	}
+	else
+	    str.erase(str.begin(), str.end());
+
+	return str;
+    }
+
+    /** Trims the given string in-place only on the left. Removes all
+     * characters in the given drop array, which defaults to " ".
+     *
+     * @param str	string to process
+     * @param drop	remove these characters
+     * @return	reference to the modified string
+     */
+    static std::string& trim_left_inplace(std::string& str, const std::string &drop = " ")
+    {
+	str.erase(0, str.find_first_not_of(drop));
+	return str;
+    }
+
+    /** Trims the given string in-place only on the right. Removes all
+     * characters in the given drop array, which defaults to " ".
+     *
+     * @param str	string to process
+     * @param drop	remove these characters
+     * @return	reference to the modified string
+     */
+    static std::string& trim_right_inplace(std::string &str, const std::string &drop = " ")
+    {
+	str.erase(str.find_last_not_of(drop) + 1, std::string::npos);
+	return str;
+    }
+
+    // *** class stx::string methods versions ***
 
     /** Trims the contained string on the left and right. Removes all
      * characters in the given drop array, which defaults to " ". Returns a
      * copy of this string.
+     *
      * @param drop	remove these characters
      * @return		new trimmed string
      */
     string trim(const string& drop = " ") const
     {
-	size_type pos1 = find_first_not_of(drop);
-	if (pos1 == npos) return string();
-
-	size_type pos2 = find_last_not_of(drop);
-	if (pos2 == npos) return string();
-
-	return substr(pos1 == npos ? 0 : pos1,
-		      pos2 == npos ? (size() - 1) : (pos2 - pos1 + 1));
+	return trim(*this, drop);
     }
 
     /** Trims the contained string only on the left. Removes all characters in
      * the given drop array, which defaults to " ". Returns a copy of this
      * string.
+     *
      * @param drop	remove these characters
      * @return		new trimmed string
      */
     string trim_left(const string& drop = " ") const
     {
-	size_type pos = find_first_not_of(drop);
-	if (pos == npos) return string();
-
-	return substr(pos, npos);
+	return trim_left(*this, drop);
     }
 
     /** Trims the contained string only on the right. Removes all characters in
      * the given drop array, which defaults to " ". Returns a copy of this
      * string.
+     *
      * @param drop	remove these characters
      * @return		new trimmed string
      */
     string trim_right(const string& drop = " ") const
     {
-	size_type pos = find_last_not_of(drop);
-	if (pos == npos) return string();
-
-	return substr(0, pos + 1);
+	return trim_right(*this, drop);
     }
 
     /** Trims this string in-place on the left and right. Removes all
      * characters in the given drop array, which defaults to " ".
+     *
      * @param drop	remove these characters
      * @return		reference to this string
      */
     string& trim_inplace(const string& drop = " ")
     {
-	size_type pos = find_last_not_of(drop);
-	if (pos != npos) {
-	    erase(pos + 1);
-	    pos = find_first_not_of(drop);
-	    if (pos != npos) erase(0, pos);
-	}
-	else
-	    erase(begin(), end());
-
+	trim_inplace(*this, drop);
 	return *this;
     }
 
     /** Trims this string in-place only on the left. Removes all characters in
      * the given drop array, which defaults to " ".
+     *
      * @param drop	remove these characters
      * @return		reference to this string
      */
     string& trim_left_inplace(const string &drop = " ")
     {
-	erase(0, find_first_not_of(drop));
+	trim_left_inplace(*this, drop);
 	return *this;
     }
 
     /** Trims this string in-place only on the right. Removes all characters in
      * the given drop array, which defaults to " ".
+     *
      * @param drop	remove these characters
      * @return		reference to this string
      */
     string& trim_right_inplace(const string &drop = " ")
     {
-	erase(find_last_not_of(drop) + 1, npos);
+	trim_right_inplace(*this, drop);
 	return *this;
     }
 
-    /*
-     * --- Upper and Lower Case Functions ---
-     */
+    // ***                                 ***
+    // ***  Upper and Lower Case Functions ***
+    // ***                                 ***
+
+    // *** functionals ***
 
     /** toupper() functional for std::transform with correct signature. */
     static char char_toupper_functional(char c)
@@ -173,7 +265,51 @@ public:
 	return std::tolower(c);
     }
 
-    /** Returns a copy of the enclosed string converted to uppercase. */
+    // *** generic std::string versions ***
+
+    /** Returns a copy of the given string converted to uppercase.
+     * @param str	string to process
+     * @return		new string uppercased
+     */
+    static std::string toupper(const std::string& str)
+    {
+	std::string strcopy(str.size(), 0);
+	std::transform(str.begin(), str.end(), strcopy.begin(), char_toupper_functional);
+	return strcopy;
+    }
+
+    /** Returns a copy of the given string converted to lowercase.
+     * @param str	string to process
+     * @return		new string lowercased
+     */
+    static std::string tolower(const std::string& str)
+    {
+	std::string strcopy(str.size(), 0);
+	std::transform(str.begin(), str.end(), strcopy.begin(), char_tolower_functional);
+	return strcopy;
+    }
+
+    /** Transforms the enclosed string to uppercase and returns a reference to
+     * this. */
+    static std::string& toupper_inplace(std::string& str)
+    {
+	std::transform(str.begin(), str.end(), str.begin(), char_toupper_functional);
+	return str;
+    }
+
+    /** Transforms the enclosed string to lowercase and returns a reference to
+     * this. */
+    static std::string& tolower_inplace(std::string& str)
+    {
+	std::transform(str.begin(), str.end(), str.begin(), char_tolower_functional);
+	return str;
+    }
+
+    // *** class stx::string method versions ***
+
+    /** Returns a copy of the enclosed string converted to uppercase.
+     * @return		new string uppercased
+     */
     string toupper() const
     {
 	string strcopy(size(), 0);
@@ -181,7 +317,9 @@ public:
 	return strcopy;
     }
 
-    /** Returns a copy of the enclosed string converted to lowercase. */
+    /** Returns a copy of the enclosed string converted to lowercase.
+     * @return		new string lowercased
+     */
     string tolower() const
     {
 	string strcopy(size(), 0);
@@ -205,9 +343,11 @@ public:
 	return *this;
     }
 
-    /*
-     * --- Case-insensitive Comparision Functionals and Functions ---
-     */
+    // ***                              ***
+    // *** Case-insensitive Comparision ***
+    // ***                              ***
+
+    // *** functional classes ***
 
     /** Binary class functional which compares two characters
      * case-insensitively. Returns true if they are equal. */
@@ -226,65 +366,115 @@ public:
 	{ return std::tolower(c1) < std::tolower(c2); }
     };
 
+    // *** std::string comparison operators ***
+
+    /** Compare this string to the other case-insensitively. Return true if
+     * they are equal. */
+    static bool equal_icase(const std::string& a, const std::string& b)
+    {
+	if (a.size() != b.size()) return false;
+
+	return std::equal( a.begin(), a.end(), b.begin(),
+			   char_icase_equal() );
+    }
+
+    /** Compare this string to the other case-insensitively. Return true if
+     * this one is less than the other. */
+    static bool less_icase(const std::string& a, const std::string& b)
+    {
+	return std::lexicographical_compare( a.begin(), a.end(),
+					     b.begin(), b.end(),
+					     char_icase_less() );
+    }
+
+    // *** class stx::string method versions ***
+
     /** Compare this string to the other case-insensitively. Return true if
      * they are equal. */
     bool equal_icase(const string& other) const
     {
-	if (size() != other.size()) return false;
-
-	return std::equal( begin(), end(), other.begin(),
-			   char_icase_equal() );
+	return equal_icase(*this, other);
     }
 
     /** Compare this string to the other case-insensitively. Return true if
      * this one is less than the other. */
     bool less_icase(const string& other) const
     {
-	return std::lexicographical_compare( begin(), end(),
-					     other.begin(), other.end(),
-					     char_icase_less() );
+	return less_icase(*this, other);
     }
 
-    /*
-     * --- Prefix and Suffix Functions ---
-     */
+    // ***                             ***
+    // *** Prefix and Suffix Functions ***
+    // ***                             ***
+
+    // *** static std::string functions ***
+
+    /** Checks if the given match string is located at the start of this
+     * string. */
+    static bool is_prefix(const std::string& str, const std::string& match)
+    {
+	if (match.size() > str.size()) return false;
+	return std::equal( match.begin(), match.end(), str.begin() );
+    }
+
+    /** Checks if the given match string is located at the end of this
+     * string. */
+    static bool is_suffix(const std::string& str, const std::string& match)
+    {
+	if (match.size() > str.size()) return false;
+	return std::equal( match.begin(), match.end(),
+			   str.end() - match.size() );
+    }
+
+    /** Checks if the given match string is located at the start of this
+     * string. Compares the characters case-insensitively. */
+    static bool is_prefix_icase(const std::string& str, const std::string& match)
+    {
+	if (match.size() > str.size()) return false;
+	return std::equal( match.begin(), match.end(), str.begin(),
+			   char_icase_equal() );
+    }
+
+    /** Checks if the given match string is located at the end of this
+     * string. Compares the characters case-insensitively. */
+    static bool is_suffix_icase(const std::string& str, const std::string& match)
+    {
+	if (match.size() > str.size()) return false;
+	return std::equal( match.begin(), match.end(),
+			   str.end() - match.size(),
+			   char_icase_equal() );
+    }
+
+    // *** class stx::string method versions ***
 
     /** Checks if the given match string is located at the start of this
      * string. */
     bool is_prefix(const string& match) const
     {
-	if (match.size() > size()) return false;
-	return std::equal( match.begin(), match.end(), begin() );
+	return is_prefix(*this, match);
     }
 
     /** Checks if the given match string is located at the end of this
      * string. */
     bool is_suffix(const string& match) const
     {
-	if (match.size() > size()) return false;
-	return std::equal( match.begin(), match.end(),
-			   end() - match.size() );
+	return is_suffix(*this, match);
     }
 
     /** Checks if the given match string is located at the start of this
      * string. Compares the characters case-insensitively. */
     bool is_prefix_icase(const string& match) const
     {
-	if (match.size() > size()) return false;
-	return std::equal( match.begin(), match.end(), begin(),
-			   char_icase_equal() );
+	return is_prefix_icase(*this, match);
     }
 
     /** Checks if the given match string is located at the end of this
      * string. Compares the characters case-insensitively. */
     bool is_suffix_icase(const string& match) const
     {
-	if (match.size() > size()) return false;
-	return std::equal( match.begin(), match.end(),
-			   end() - match.size(),
-			   char_icase_equal() );
+	return is_suffix_icase(*this, match);
     }
-};
+}; // class string
 
 } // namespace stx
 

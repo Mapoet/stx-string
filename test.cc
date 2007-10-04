@@ -4,7 +4,7 @@
 
 int main()
 {
-    stx::string str;
+    class stx::string str;
 
     return 0;
 }
