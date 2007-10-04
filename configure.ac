@@ -27,6 +27,25 @@ AC_LANG([C++])
 
 # Checks for typedefs, structures, and compiler characteristics.
 
+# Check whether to enable gcov coverage flags and macros
+
+AC_ARG_ENABLE(gcov,
+    AS_HELP_STRING([--enable-gcov],
+                   [enable test coverage with gcov @<:@default=no@:>@]),
+	[case "${enableval}" in
+         yes) gcov=true ;;
+         no)  gcov=false ;;
+         *)   AC_MSG_ERROR([bad value ${enableval} for --enable-gcov]) ;;
+         esac],
+        [gcov=false])
+
+AM_CONDITIONAL(GCOV, test x"$gcov" = "xtrue")
+
+if test x"$gcov" = "xtrue"; then
+    CFLAGS="$CFLAGS -fprofile-arcs -ftest-coverage"
+    CXXFLAGS="$CXXFLAGS -fprofile-arcs -ftest-coverage"
+fi
+
 # check whether cppunit is available
 AM_PATH_CPPUNIT(1.10.0)
 
