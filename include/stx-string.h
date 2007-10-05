@@ -403,6 +403,15 @@ public:
 	return less_icase(*this, other);
     }
 
+    // *** case-insenstive less-relation functional class for std::map ***
+    
+    /** Case-insensitive less order relation functional class for std::map. */
+    struct order_less_icase {
+	inline bool operator()(const std::string &a, const std::string &b) const {
+	    return less_icase(a, b);
+	}
+    };
+
     // ***                             ***
     // *** Prefix and Suffix Functions ***
     // ***                             ***
@@ -474,6 +483,151 @@ public:
     {
 	return is_suffix_icase(*this, match);
     }
+
+    // ***                              ***
+    // *** Search and Replace Functions ***
+    // ***                              ***
+
+    // *** static std::string functions ***
+
+    /** Replace only the first occurrence of needle in str. The needle will be
+     * replaced with instead, if found. Returns a copy of the string with the
+     * possible replacement.
+     *
+     * @param str	the string to process
+     * @param needle	string to search for in str
+     * @param instead	replace needle with instead
+     * @return		copy of string possibly with replacement
+     */
+    static std::string replace_first(const std::string& str, const std::string& needle, const std::string& instead)
+    {
+	std::string newstr = str;
+	std::string::size_type firstpos = newstr.find(needle);
+
+	if ( firstpos != std::string::npos)
+	    newstr.replace(firstpos, needle.size(), instead);
+
+	return newstr;
+    }
+
+    /** Replace all occurrences of needle in str. Each needle will be replaced
+     * with instead, if found. Returns a copy of the string with possible
+     * replacements.
+     *
+     * @param str	the string to process
+     * @param needle	string to search for in str
+     * @param instead	replace needle with instead
+     * @return		copy of string possibly with replacements
+     */
+    static std::string replace_all(const std::string& str, const std::string& needle, const std::string& instead)
+    {
+	std::string newstr = str;
+	std::string::size_type lastpos = 0, thispos;
+
+	while ( (thispos = newstr.find(needle, lastpos)) != std::string::npos)
+	{
+	    newstr.replace(thispos, needle.size(), instead);
+	    lastpos = thispos + instead.size();
+	}
+	return newstr;
+    }
+
+    /** Replace only the first occurrence of needle in str. The needle will be
+     * replaced with instead, if found. The replacement is done in the given
+     * string and a reference to the same is returned.
+     *
+     * @param str	the string to process
+     * @param needle	string to search for in str
+     * @param instead	replace needle with instead
+     * @return		reference to str
+     */
+    static std::string& replace_first_inplace(std::string& str, const std::string& needle, const std::string& instead)
+    {
+	std::string::size_type firstpos = str.find(needle);
+
+	if ( firstpos != std::string::npos)
+	    str.replace(firstpos, needle.size(), instead);
+
+	return str;
+    }
+
+    /** Replace all occurrences of needle in str. Each needle will be replaced
+     * with instead, if found. The replacement is done in the given string and
+     * a reference to the same is returned.
+     *
+     * @param str	the string to process
+     * @param needle	string to search for in str
+     * @param instead	replace needle with instead
+     * @return		reference to str
+     */
+    static std::string& replace_all_inplace(std::string& str, const std::string& needle, const std::string& instead)
+    {
+	std::string::size_type lastpos = 0, thispos;
+
+	while ( (thispos = str.find(needle, lastpos)) != std::string::npos)
+	{
+	    str.replace(thispos, needle.size(), instead);
+	    lastpos = thispos + instead.size();
+	}
+	return str;
+    }
+
+    // *** class stx::string method versions ***
+
+    /** Replace only the first occurrence of needle in the enclosed string. The
+     * needle will be replaced with instead, if found. Returns a copy of this
+     * string with the possible replacement.
+     *
+     * @param needle	string to search for
+     * @param instead	replace needle with instead
+     * @return		copy of this string possibly with replacement
+     */
+    string replace_first(const string& needle, const string& instead) const
+    {
+	return replace_first(*this, needle, instead);
+    }
+    
+    /** Replace all occurrences of needle in the enclosed string. Each needle
+     * will be replaced with instead, if found. Returns a copy of the string
+     * with possible replacements.
+     *
+     * @param needle	string to search for
+     * @param instead	replace needle with instead
+     * @return		copy of this string possibly with replacements
+     */
+    string replace_all(const string& needle, const string& instead) const
+    {
+	return replace_all(*this, needle, instead);
+    }
+
+    /** Replace only the first occurrence of needle in the enclosed string. The
+     * needle will be replaced with instead, if found. The replacement is done
+     * in the enclosed string and a reference to this is returned.
+     *
+     * @param needle	string to search for in str
+     * @param instead	replace needle with instead
+     * @return		reference to this
+     */
+    string& replace_first_inplace(const string& needle, const string& instead)
+    {
+	replace_first_inplace(*this, needle, instead);
+	return *this;
+    }
+
+    /** Replace all occurrences of needle in the enclosed string. Each needle
+     * will be replaced with instead, if found. The replacement is done in the
+     * enclosed string and a reference to this is returned.
+     *
+     * @param needle	string to search for in str
+     * @param instead	replace needle with instead
+     * @return		reference to this
+     */
+    string& replace_all_inplace(const string& needle, const string& instead)
+    {
+	replace_all_inplace(*this, needle, instead);
+	return *this;
+    }
+
 }; // class string
 
 } // namespace stx

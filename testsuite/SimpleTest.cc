@@ -11,6 +11,7 @@ class SimpleTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(test_toupper_tolower);
     CPPUNIT_TEST(test_compare_icase);
     CPPUNIT_TEST(test_prefix_suffix);
+    CPPUNIT_TEST(test_replace);
     CPPUNIT_TEST_SUITE_END();
 
 protected:
@@ -110,6 +111,27 @@ protected:
 
 	CPPUNIT_ASSERT( stx::string("").is_prefix("") );
 	CPPUNIT_ASSERT( stx::string("").is_suffix("") );
+    }
+
+    void test_replace()
+    {
+	// copy variants
+	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_first("abc", "a") == "adef abcdef" );
+	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_first("cba", "a") == "abcdef abcdef" );
+	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_all("abc", "a") == "adef adef" );
+	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_all("cba", "a") == "abcdef abcdef" );
+
+	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_first("a", "aaa") == "aaabcdef abcdef" );
+	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_all("a", "aaa") == "aaabcdef aaabcdef" );
+
+	// in-place variants
+	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_first_inplace("abc", "a") == "adef abcdef" );
+	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_first_inplace("cba", "a") == "abcdef abcdef" );
+	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_all_inplace("abc", "a") == "adef adef" );
+	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_all_inplace("cba", "a") == "abcdef abcdef" );
+
+	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_first_inplace("a", "aaa") == "aaabcdef abcdef" );
+	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_all_inplace("a", "aaa") == "aaabcdef aaabcdef" );
     }
 };
 
