@@ -18,6 +18,7 @@ class SimpleTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(test_join);
     CPPUNIT_TEST(test_random);
     CPPUNIT_TEST(test_hexdump);
+    CPPUNIT_TEST(test_levenshtein);
     CPPUNIT_TEST_SUITE_END();
 
 protected:
@@ -314,6 +315,19 @@ protected:
 	// test parse_hexdump with illegal string
 	stx::string s1;
 	CPPUNIT_ASSERT_THROW( s1.parse_hexdump("illegal"), std::runtime_error);
+    }
+
+    void test_levenshtein()
+    {
+	CPPUNIT_ASSERT( stx::string::levenshtein("Demonstration", "Comparison") == 9 );
+	CPPUNIT_ASSERT( stx::string::levenshtein("Levenshtein", "Distance") == 10 );
+	CPPUNIT_ASSERT( stx::string::levenshtein("Distance", "Distance") == 0 );
+	CPPUNIT_ASSERT( stx::string("Distance").levenshtein("LVDistance") == 2 );
+
+	CPPUNIT_ASSERT( stx::string::levenshtein_icase("distance", "DISTANCE") == 0 );
+	CPPUNIT_ASSERT( stx::string::levenshtein_icase("Levenshtein", "Distance") == 10 );
+
+	CPPUNIT_ASSERT( stx::string("Test this distance").levenshtein_icase("to this one") == 9 );
     }
 };
 

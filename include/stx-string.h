@@ -1227,6 +1227,148 @@ public:
 	return *this;
     }
 
+    // ***                             ***
+    // *** Levenshtein String Distance ***
+    // ***                             ***
+
+    // *** Parameter Struct and Algorithm ***
+
+    /** Standard parameters to levenshtein distance function. Costs are all 1
+     * and characters are compared directly. */
+    struct LevenshteinStandard
+    {
+	static const unsigned int cost_insert_delete	= 1;
+	static const unsigned int cost_replace		= 1;
+
+	static bool char_equal(const char& a, const char& b)
+	{ return (a == b); }
+    };
+
+    /** Standard parameters to Levenshtein distance function. Costs are all 1
+     * and characters are compared case-insensitively. */
+    struct LevenshteinStandardICase
+    {
+	static const unsigned int cost_insert_delete	= 1;
+	static const unsigned int cost_replace		= 1;
+
+	static bool char_equal(const char& a, const char& b)
+	{ return std::tolower(a) == std::tolower(b); }
+    };
+
+    /** Computes the Levenshtein string distance between two strings. The
+     * distance is the minimum number of replacements/inserts/deletes needed to
+     * change one string into the other. Implemented with time complexity
+     * O(|n|+|m|) and memory complexity O(2*max(|n|,|m|))
+     *
+     * @param LevenshteinParam parameter object for the algorithm's cost variables
+     * @param a		first string
+     * @param b		second string
+     * @return		Levenshtein distance
+     */
+    template <typename levenshtein_param>
+    static unsigned int levenshtein_algorithm(const std::string& a, const std::string& b)
+    {
+	// if one of the strings is zero, then all characters of the other must
+	// be inserted.
+	if (a.empty()) return b.size();
+	if (b.empty()) return a.size();
+
+	// make "as" the longer string and "bs" the shorter.
+	const std::string &as = (a.size() > b.size()) ? a : b;
+	const std::string &bs = (a.size() > b.size()) ? b : a;
+
+	// only allocate two rows of the needed matrix.
+	unsigned int matrix[2][as.size() + 1];
+
+	// fill first row with ascending ordinals.
+	for(unsigned int i = 0; i < as.size() + 1; i++) {
+	    matrix[0][i] = i;
+	}
+
+	// compute distance
+	for(unsigned int j = 1; j < bs.size() + 1; j++)
+	{
+	    // switch rows each time
+	    unsigned int *lastrow = matrix[(j - 1) % 2];
+	    unsigned int *thisrow = matrix[j % 2];
+
+	    thisrow[0] = j;
+
+	    for(unsigned int i = 1; i < as.size() + 1; i++)
+	    {
+		// three-way mimimum of
+		thisrow[i] = std::min(
+		    std::min(
+			// left plus insert cost
+			thisrow[i-1] + levenshtein_param::cost_insert_delete,
+			// top plus delete cost
+			lastrow[i] + levenshtein_param::cost_insert_delete),
+		    // top left plus replacement cost
+		    lastrow[i-1] + (levenshtein_param::char_equal(as[i-1], bs[j-1]) ? 0 : levenshtein_param::cost_replace)
+		    );
+	    }
+	}
+
+	// result is in the last cell of the last computed row
+	return matrix[ bs.size() % 2 ][ as.size() ];
+    }
+
+    // *** static std::string functions ***
+
+    /** Computes the Levenshtein string distance between two strings. The
+     * distance is the minimum number of replacements/inserts/deletes needed to
+     * change one string into the other.
+     *
+     * @param a		first string
+     * @param b		second string
+     * @return		Levenshtein distance
+     */
+    static unsigned int levenshtein(const std::string& a, const std::string& b)
+    {
+	return levenshtein_algorithm<LevenshteinStandard>(a, b);
+    }
+
+    /** Computes the Levenshtein string distance between two strings. The
+     * distance is the minimum number of replacements/inserts/deletes needed to
+     * change one string into the other. Character comparison is done
+     * case-insensitively.
+     *
+     * @param a		first string
+     * @param b		second string
+     * @return		Levenshtein distance
+     */
+    static unsigned int levenshtein_icase(const std::string& a, const std::string& b)
+    {
+	return levenshtein_algorithm<LevenshteinStandardICase>(a, b);
+    }
+
+    // *** class stx::string method versions ***
+    
+    /** Computes the Levenshtein string distance between two strings. The
+     * distance is the number of replacements/inserts/deletes needed to change
+     * one string into the other.
+     *
+     * @param other	string to compare this one with
+     * @return		Levenshtein distance
+     */
+    unsigned int levenshtein(const std::string& other)
+    {
+	return levenshtein_algorithm<LevenshteinStandard>(*this, other);
+    }
+
+    /** Computes the Levenshtein string distance between two strings. The
+     * distance is the number of replacements/inserts/deletes needed to change
+     * one string into the other. Character comparison is done
+     * case-insensitively.
+     *
+     * @param other	string to compare this one with
+     * @return		Levenshtein distance
+     */
+    unsigned int levenshtein_icase(const std::string& other)
+    {
+	return levenshtein_algorithm<LevenshteinStandardICase>(*this, other);
+    }
+
 }; // class string
 
 } // namespace stx
