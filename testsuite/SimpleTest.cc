@@ -14,6 +14,7 @@ class SimpleTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(test_replace);
     CPPUNIT_TEST(test_split_ws);
     CPPUNIT_TEST(test_split);
+    CPPUNIT_TEST(test_join);
     CPPUNIT_TEST_SUITE_END();
 
 protected:
@@ -236,6 +237,22 @@ protected:
 
 	CPPUNIT_ASSERT( sv.size() == 4 );
 	CPPUNIT_ASSERT( sv[0] == "test" && sv[1] == "blah" && sv[2] == "" && sv[3] == "ab" );
+    }
+
+    void test_join()
+    {
+	// simple string split and join
+	std::vector<std::string> sv = stx::string("/usr/bin/test").split('/');
+	CPPUNIT_ASSERT( sv.size() == 4 );
+
+	CPPUNIT_ASSERT( stx::string::join("--", sv) == "--usr--bin--test" );
+	CPPUNIT_ASSERT( stx::string(";").join(sv) == ";usr;bin;test" );
+	
+	std::vector<stx::string> sv2;
+	for(unsigned int i = 0; i < 6; ++i)
+	    sv2.push_back("abc");
+
+	CPPUNIT_ASSERT( stx::string(".").join(sv2) == "abc.abc.abc.abc.abc.abc" );
     }
 };
 

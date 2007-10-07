@@ -750,6 +750,45 @@ public:
 	return out;
     }
 
+    /** Join a sequence of strings by some glue string between each pair from
+     * the sequence. The sequence in given as a range between two iterators.
+     *
+     * @param glue	string to glue
+     * @param first	the beginning iterator of the range to join
+     * @param last	the ending iterator of the range to join
+     * @return		string constructed from the range with the glue between two strings.
+     */
+    template <typename input_iterator>
+    static std::string join(const std::string& glue, input_iterator first, input_iterator last)
+    {
+	std::string out;
+	if (first == last) return out;
+
+	out.append(*first);
+	++first;
+
+	while( first != last )
+	{
+	    out.append(glue);
+	    out.append(*first);
+	    ++first;
+	}
+
+	return out;
+    }
+
+    /** Join a vector of strings by some glue string between each pair from
+     * the sequence.
+     *
+     * @param glue	string to glue
+     * @param parts	the vector of strings to join
+     * @return		string constructed from the vector with the glue between two strings.
+     */
+    static std::string join(const std::string& glue, const std::vector<std::string>& parts)
+    {
+	return join(glue, parts.begin(), parts.end());
+    }
+
     // *** class stx::string method versions ***
 
     /** Split the enclosed string by whitespaces into distinct words. Multiple
@@ -801,6 +840,42 @@ public:
     std::vector<std::string> split(const char* sepstr, size_type limit = npos) const
     {
 	return split(*this, std::string(sepstr), limit);
+    }
+
+    /** Join a sequence of strings by gluing each pair together with the
+     * enclosed glue string. The sequence in given as a range between two
+     * iterators.
+     *
+     * @param first	the beginning iterator of the range to join
+     * @param last	the ending iterator of the range to join
+     * @return		string constructed from the range with the glue between two strings.
+     */
+    template <typename input_iterator>
+    stx::string join(input_iterator first, input_iterator last) const
+    {
+	return join(*this, first, last);
+    }
+
+    /** Join a vector of strings by gluing each pair together with the enclosed
+     * glue string.
+     *
+     * @param parts	the vector of strings to join
+     * @return		string constructed from the vector with the glue between two strings.
+     */
+    stx::string join(const std::vector<std::string>& parts) const
+    {
+	return join(*this, parts.begin(), parts.end());
+    }
+
+    /** Join a vector of strings by gluing each pair together with the enclosed
+     * glue string.
+     *
+     * @param parts	the vector of strings to join
+     * @return		string constructed from the vector with the glue between two strings.
+     */
+    stx::string join(const std::vector<stx::string>& parts) const
+    {
+	return join(*this, parts.begin(), parts.end());
     }
 
 }; // class string
