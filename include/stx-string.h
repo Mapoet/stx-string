@@ -1147,7 +1147,6 @@ public:
      * defines an array of const char holding the data of the string.
      *
      * @param varname	name of the array variable in the outputted code snippet
-     * @param str	string to output as C source array
      * @result		string holding C source snippet
      */
     stx::string hexdump_sourcecode(const std::string& varname = "hexdump") const
@@ -1260,7 +1259,6 @@ public:
      * change one string into the other. Implemented with time complexity
      * O(|n|+|m|) and memory complexity O(2*max(|n|,|m|))
      *
-     * @param LevenshteinParam parameter object for the algorithm's cost variables
      * @param a		first string
      * @param b		second string
      * @return		Levenshtein distance
@@ -1351,7 +1349,7 @@ public:
      * @param other	string to compare this one with
      * @return		Levenshtein distance
      */
-    unsigned int levenshtein(const std::string& other)
+    unsigned int levenshtein(const std::string& other) const
     {
 	return levenshtein_algorithm<LevenshteinStandard>(*this, other);
     }
@@ -1364,7 +1362,7 @@ public:
      * @param other	string to compare this one with
      * @return		Levenshtein distance
      */
-    unsigned int levenshtein_icase(const std::string& other)
+    unsigned int levenshtein_icase(const std::string& other) const
     {
 	return levenshtein_algorithm<LevenshteinStandardICase>(*this, other);
     }
