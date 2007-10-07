@@ -6,6 +6,7 @@
 #include <string>
 #include <cctype>
 #include <stdexcept>
+#include <sstream>
 
 namespace stx {
 
@@ -1233,7 +1234,6 @@ public:
 #ifndef STX_STRING_NO_ZLIB
 
 #include <zlib.h>
-#include <sstream>
 
 inline std::string stx::string::compress(const std::string& str, int compressionlevel)
 {
