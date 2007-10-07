@@ -8,7 +8,7 @@ if HAVE_CPPUNIT
 
 testsuite_SOURCES = TestRunner.cc
 
-testsuite_SOURCES += SimpleTest.cc
+testsuite_SOURCES += SimpleTest.cc CompressTest.cc
 
 else
 

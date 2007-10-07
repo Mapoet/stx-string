@@ -21,11 +21,14 @@ AC_PROG_CC
 
 AC_LANG([C++])
 
-# Checks for libraries.
-
-# Checks for header files.
-
 # Checks for typedefs, structures, and compiler characteristics.
+AC_HEADER_STDBOOL
+AC_C_CONST
+AC_C_INLINE
+
+# Checks for library functions.
+AC_HEADER_STDC
+AC_CHECK_FUNCS([memset])
 
 # Check whether to enable gcov coverage flags and macros
 
@@ -46,7 +49,20 @@ if test x"$gcov" = "xtrue"; then
     CXXFLAGS="$CXXFLAGS -fprofile-arcs -ftest-coverage"
 fi
 
-# check whether cppunit is available
+# check if zlib is available
+
+AC_CHECK_LIB([z], [deflate],
+	     [],
+	     [AC_MSG_ERROR([*** zlib library not found!
+Install zlib development package using your distribution's package manager.])]
+            )
+
+AC_CHECK_HEADER([zlib.h],
+		[],
+		[AC_MSG_ERROR([*** zlib.h include file not found!
+Install zlib development package using your distribution's package manager.])])
+
+# check if cppunit is available
 AM_PATH_CPPUNIT(1.10.0)
 
 AM_CONDITIONAL(HAVE_CPPUNIT, test x$CPPUNIT_CONFIG != xno)

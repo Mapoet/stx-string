@@ -1154,8 +1154,168 @@ public:
 	return hexdump_sourcecode(*this, varname);
     }
 
+    // ***                                              ***
+    // *** Compress and Uncompress Functions using zlib ***
+    // ***                                              ***
+
+    // *** static std::string functions ***
+
+    /** Compress a string using zlib with given compression level and return
+     * the binary data.
+     * 
+     * @param str	(binary) string to compress
+     * @param compressionlevel	ranging 0-9
+     * @return		(binary) compressed image
+     */
+    static std::string compress(const std::string& str,
+				int compressionlevel = 9);
+
+    /** Decompress a string using zlib and return the original data. Throws
+     * std::runtime_error if an error occurred during decompression.
+     * 
+     * @param str	(binary) compressed image to decompress
+     * @return		uncompressed string
+     */
+    static std::string decompress(const std::string& str);
+
+    // *** class stx::string method versions ***
+
+    /** Compress the enclosed string using zlib with given compression level
+     * and return a copy of the binary compressed data.
+     * 
+     * @param compressionlevel	ranging 0-9
+     * @return		(binary) compressed image
+     */
+    stx::string compress(int compressionlevel = 9) const
+    {
+	return compress(*this, compressionlevel);
+    }
+
+    /** Decompress the enclosed string using zlib and return the original
+     * data. Throws std::runtime_error if an error occurred during
+     * decompression.
+     * 
+     * @return		uncompressed string
+     */
+    stx::string decompress() const
+    {
+	return decompress(*this);
+    }
+
+    /** Compress the enclosed string using zlib with given compression level
+     * and store the result in this string object, deleting the old data.
+     * 
+     * @param compressionlevel	ranging 0-9
+     * @return		reference to this, now (binary) compressed string
+     */
+    stx::string& compress_inplace(int compressionlevel = 9)
+    {
+	*this = compress(*this, compressionlevel);
+	return *this;
+    }
+
+    /** Decompress the enclosed string using zlib and store the result in this
+     * string object, deleting the old data. Throws std::runtime_error if an
+     * error occurred during decompression.
+     * 
+     * @return		reference to this, now uncompressed string
+     */
+    stx::string& decompress_inplace()
+    {
+	*this = decompress(*this);
+	return *this;
+    }
+
 }; // class string
 
 } // namespace stx
+
+#ifndef STX_STRING_NO_ZLIB
+
+#include <zlib.h>
+#include <sstream>
+
+inline std::string stx::string::compress(const std::string& str, int compressionlevel)
+{
+    z_stream zs;                        // z_stream is zlib's control structure
+    memset(&zs, 0, sizeof(zs));
+
+    if (deflateInit(&zs, compressionlevel) != Z_OK)
+	throw(std::runtime_error("deflateInit failed while compressing."));
+
+    zs.next_in = const_cast<Bytef*>(reinterpret_cast<const Bytef*>(str.data()));
+    zs.avail_in = str.size();           // set the z_stream's input
+
+    int ret;
+    char outbuffer[32768];
+    std::string outstring;
+
+    // retrieve the compressed bytes blockwise
+    do {
+	zs.next_out = reinterpret_cast<Bytef*>(outbuffer);
+	zs.avail_out = sizeof(outbuffer);
+
+	ret = deflate(&zs, Z_FINISH);
+
+	if (outstring.size() < zs.total_out) {
+	    // append the block to the output string
+	    outstring.append(outbuffer,
+			     zs.total_out - outstring.size());
+	}
+    } while (ret == Z_OK);
+
+    deflateEnd(&zs);
+
+    if (ret != Z_STREAM_END) {          // an error occurred that was not EOF
+	std::ostringstream oss;
+	oss << "Exception during zlib compression: (" << ret << ") " << zs.msg;
+	throw(std::runtime_error(oss.str()));
+    }
+
+    return outstring;
+}
+
+inline std::string stx::string::decompress(const std::string& str)
+{
+    z_stream zs;           	// z_stream is zlib's control structure
+    memset(&zs, 0, sizeof(zs));
+
+    if (inflateInit(&zs) != Z_OK)
+	throw(std::runtime_error("inflateInit failed while decompressing."));
+
+    zs.next_in = const_cast<Bytef*>(reinterpret_cast<const Bytef*>(str.data()));
+    zs.avail_in = str.size();
+
+    int ret;
+    char outbuffer[32768];
+    std::string outstring;
+
+    // get the uncompressed bytes blockwise using repeated calls to inflate
+    do {
+	zs.next_out = reinterpret_cast<Bytef*>(outbuffer);
+	zs.avail_out = sizeof(outbuffer);
+
+	ret = inflate(&zs, 0);
+
+	if (outstring.size() < zs.total_out) {
+	    outstring.append(outbuffer,
+			     zs.total_out - outstring.size());
+	}
+
+    } while (ret == Z_OK);
+
+    inflateEnd(&zs);
+
+    if (ret != Z_STREAM_END) {          // an error occurred that was not EOF
+	std::ostringstream oss;
+	oss << "Exception during zlib uncompression: (" << ret << ") "
+	    << zs.msg;
+	throw(std::runtime_error(oss.str()));
+    }
+
+    return outstring;
+}
+
+#endif
 
 #endif // _STX_STRING_H_

@@ -43,10 +43,11 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES =
 PROGRAMS = $(noinst_PROGRAMS)
-am__testsuite_SOURCES_DIST = TestTrue.cc TestRunner.cc SimpleTest.cc
+am__testsuite_SOURCES_DIST = TestTrue.cc TestRunner.cc SimpleTest.cc \
+	CompressTest.cc
 @HAVE_CPPUNIT_FALSE@am_testsuite_OBJECTS = TestTrue.$(OBJEXT)
 @HAVE_CPPUNIT_TRUE@am_testsuite_OBJECTS = TestRunner.$(OBJEXT) \
-@HAVE_CPPUNIT_TRUE@	SimpleTest.$(OBJEXT)
+@HAVE_CPPUNIT_TRUE@	SimpleTest.$(OBJEXT) CompressTest.$(OBJEXT)
 testsuite_OBJECTS = $(am_testsuite_OBJECTS)
 testsuite_LDADD = $(LDADD)
 testsuite_DEPENDENCIES =
@@ -77,6 +78,7 @@ CPPUNIT_CFLAGS = @CPPUNIT_CFLAGS@
 CPPUNIT_CONFIG = @CPPUNIT_CONFIG@
 CPPUNIT_LIBS = @CPPUNIT_LIBS@
 CXX = @CXX@
+CXXCPP = @CXXCPP@
 CXXDEPMODE = @CXXDEPMODE@
 CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
@@ -85,7 +87,9 @@ DEPDIR = @DEPDIR@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
+EGREP = @EGREP@
 EXEEXT = @EXEEXT@
+GREP = @GREP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -152,7 +156,8 @@ target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 @HAVE_CPPUNIT_FALSE@testsuite_SOURCES = TestTrue.cc
-@HAVE_CPPUNIT_TRUE@testsuite_SOURCES = TestRunner.cc SimpleTest.cc
+@HAVE_CPPUNIT_TRUE@testsuite_SOURCES = TestRunner.cc SimpleTest.cc \
+@HAVE_CPPUNIT_TRUE@	CompressTest.cc
 AM_CXXFLAGS = -W -Wall -Wold-style-cast -I$(top_srcdir)/include @CPPUNIT_CFLAGS@
 LDADD = @CPPUNIT_LIBS@
 all: all-am
@@ -201,6 +206,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CompressTest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/SimpleTest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TestRunner.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TestTrue.Po@am__quote@
