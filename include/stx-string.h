@@ -5,6 +5,7 @@
 
 #include <string>
 #include <cctype>
+#include <stdexcept>
 
 namespace stx {
 
@@ -987,6 +988,170 @@ public:
     {
 	*this = random_alphanumeric(size);
 	return *this;
+    }
+
+    // ***                           ***
+    // *** Hexadecimal Dump and Load ***
+    // ***                           ***
+
+    // *** static std::string functions ***
+
+    /** Dump a (binary) string as a sequence of hexadecimal pairs.
+     *
+     * @param str	string to output in hex
+     * @result		string of hexadecimal pairs
+     */
+    static std::string hexdump(const std::string& str)
+    {
+	std::string out;
+	out.resize( str.size() * 2 );
+
+	static const char xdigits[16] = {
+	    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+	};
+
+	std::string::iterator oi = out.begin();
+	for (std::string::const_iterator si = str.begin();
+	     si != str.end(); ++si)
+	{
+	    *oi++ = xdigits[ (*si & 0xF0) >> 4 ];
+	    *oi++ = xdigits[ (*si & 0x0F) ];
+	}
+
+	return out;
+    }
+
+    /** Read a string as a sequence of hexadecimal pairs. Converts each pair of
+     * hexadecimal digits into a byte of the output string. Throws
+     * std::runtime_error() if an unknown letter is encountered.
+     *
+     * @param str	string to parse as hex digits
+     * @result		string of read bytes
+     */
+    static std::string parse_hexdump(const std::string& str)
+    {
+	std::string out;
+	int n = 0;
+	unsigned char c = 0;
+
+	for (std::string::const_iterator si = str.begin();
+	     si != str.end(); ++si)
+	{
+	    switch(*si)
+	    {
+	    case '0': c |= 0; break;
+	    case '1': c |= 1; break;
+	    case '2': c |= 2; break;
+	    case '3': c |= 3; break;
+	    case '4': c |= 4; break;
+	    case '5': c |= 5; break;
+	    case '6': c |= 6; break;
+	    case '7': c |= 7; break;
+	    case '8': c |= 8; break;
+	    case '9': c |= 9; break;
+	    case 'A': case 'a': c |= 10; break;
+	    case 'B': case 'b': c |= 11; break;
+	    case 'C': case 'c': c |= 12; break;
+	    case 'D': case 'd': c |= 13; break;
+	    case 'E': case 'e': c |= 14; break;
+	    case 'F': case 'f': c |= 15; break;
+	    default:
+		throw(std::runtime_error("Invalid string for hex conversion"));
+	    }
+
+	    if (n == 0) {
+		c *= 0x10;
+	    }
+	    else if (n == 1) {
+		out.append(1, c);
+		c = 0;
+	    }
+	    n = (n+1) % 2;
+	}
+
+	if (n != 0) throw(std::runtime_error("Invalid string for hex conversion"));
+
+	return out;
+    }
+
+    /** Dump a (binary) string into a C source code snippet. The snippet
+     * defines an array of const char holding the data of the string. Cannot
+     * set a default argument for varname, because it leads to ambiguous calls
+     * with the object method below.
+     *
+     * @param str	string to output as C source array
+     * @param varname	name of the array variable in the outputted code snippet
+     * @result		string holding C source snippet
+     */
+    static std::string hexdump_sourcecode(const std::string& str, const std::string& varname)
+    {
+	std::ostringstream header;
+	header << "const char " << varname << "[" << str.size() << "] = {\n";
+
+	static const int perline = 16;
+
+	std::string out = header.str();
+	out.reserve( out.size() + (str.size() * 5) - 1 + (str.size() / 16) + 4 );
+
+	static const char xdigits[16] = {
+	    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+	};
+
+	size_type ci = 0;
+
+	for (std::string::const_iterator si = str.begin();
+	     si != str.end(); ++si, ++ci)
+	{
+	    out.append("0x");
+	    out.append(1, xdigits[ (*si & 0xF0) >> 4 ]);
+	    out.append(1, xdigits[ (*si & 0x0F) ]);
+
+	    if (ci+1 < str.size()) {
+		out.append(1, ',');
+
+		if (ci % perline == perline-1) {
+		    out.append(1, '\n');
+		}
+	    }
+	}
+
+	out.append("\n};\n");
+
+	return out;
+    }
+
+    // *** class stx::string method versions ***
+
+    /** Dump the (binary) enclosed string as a sequence of hexadecimal pairs.
+     *
+     * @result		string of hexadecimal pairs
+     */
+    stx::string hexdump() const
+    {
+	return hexdump(*this);
+    }
+
+    /** Reads this string as a sequence of hexadecimal pairs. Converts each
+     * pair of hexadecimal digits into a byte of the output string. Throws
+     * std::runtime_error() if an unknown letter is encountered.
+     *
+     * @result		string of parsed bytes
+     */
+    stx::string parse_hexdump() const
+    {
+	return parse_hexdump(*this);
+    }
+
+    /** Dump a (binary) string into a C source code snippet. The snippet
+     * defines an array of const char holding the data of the string.
+     *
+     * @param varname	name of the array variable in the outputted code snippet
+     * @param str	string to output as C source array
+     * @result		string holding C source snippet
+     */
+    stx::string hexdump_sourcecode(const std::string& varname = "hexdump") const
+    {
+	return hexdump_sourcecode(*this, varname);
     }
 
 }; // class string
