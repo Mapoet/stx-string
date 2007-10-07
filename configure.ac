@@ -2,7 +2,7 @@
 
 AC_PREREQ(2.60)
 AC_INIT(stx-string, 0.6)
-AC_CONFIG_SRCDIR(test.cc)
+AC_CONFIG_SRCDIR(include/stx-string.h)
 AC_CONFIG_AUX_DIR(acscripts)
 
 AM_INIT_AUTOMAKE(foreign)

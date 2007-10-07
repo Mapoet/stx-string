@@ -576,7 +576,7 @@ PACKAGE_VERSION='0.6'
 PACKAGE_STRING='stx-string 0.6'
 PACKAGE_BUGREPORT=''
 
-ac_unique_file="test.cc"
+ac_unique_file="include/stx-string.h"
 ac_subst_vars='SHELL
 PATH_SEPARATOR
 PACKAGE_NAME

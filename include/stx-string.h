@@ -878,6 +878,117 @@ public:
 	return join(*this, parts.begin(), parts.end());
     }
 
+    // ***                         ***
+    // *** Random String Functions ***
+    // ***                         ***
+
+    // *** static std::string functions ***
+
+    /** Generate a random binary string of given length. Any byte from 0-256 is
+     * equally probably. Uses the pseudo-random number generator from stdlib;
+     * take care to seed it using srand() before calling this function.
+     *
+     * @param size	length of result
+     * @result		random binary string of given length
+     */
+    static std::string random_binary(size_type size)
+    {
+	std::string out;
+	out.resize(size);
+	
+	for (unsigned int i = 0; i < size; ++i)
+	    out[i] = static_cast<unsigned char>(rand() % 256);
+
+	return out;
+    }
+
+    /** Generate a random string of given length. Any letter A-Z and a-z is
+     * equally probably to occur. Uses the pseudo-random number generator from
+     * stdlib; take care to seed it using srand() before calling this function.
+     *
+     * @param size	length of result
+     * @result		random string of given length
+     */
+    static std::string random_alpha(size_type size)
+    {
+	std::string out;
+	out.resize(size);
+
+	static const char letters[53] =
+	    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+	for (unsigned int i = 0; i < size; ++i)
+	    out[i] = letters[ rand() % 52 ];
+
+	return out;
+    }
+
+    /** Generate a random string of given length. Any letter A-Z and a-z or
+     * digit 0-9 is equally probably to occur. Uses the pseudo-random number
+     * generator from stdlib; take care to seed it using srand() before calling
+     * this function.
+     *
+     * @param size	length of result
+     * @result		random string of given length
+     */
+    static std::string random_alphanumeric(size_type size)
+    {
+	std::string out;
+	out.resize(size);
+
+	static const char letters[63] =
+	    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+	for (unsigned int i = 0; i < size; ++i)
+	    out[i] = letters[ rand() % 62 ];
+
+	return out;
+    }
+
+    // *** class stx::string method versions ***
+
+    /** Generate a random binary string of given length and replace the current
+     * object with it. Any byte from 0-256 is equally probably. Uses the
+     * pseudo-random number generator from stdlib; take care to seed it using
+     * srand() before calling this function.
+     *
+     * @param size	length of result
+     * @result		reference to this, now a random binary string of given length
+     */
+    stx::string& random_binary_inplace(size_type size)
+    {
+	*this = random_binary(size);
+	return *this;
+    }
+
+    /** Generate a random string of given length and replace the current object
+     * with it. Any letter A-Z and a-z is equally probably to occur. Uses the
+     * pseudo-random number generator from stdlib; take care to seed it using
+     * srand() before calling this function.
+     *
+     * @param size	length of result
+     * @result		reference to this, now a random string of given length
+     */
+    stx::string& random_alpha_inplace(size_type size)
+    {
+	*this = random_alpha(size);
+	return *this;
+    }
+
+    /** Generate a random string of given length and replace the current object
+     * with it. Any letter A-Z and a-z or digit 0-9 is equally probably to
+     * occur. Uses the pseudo-random number generator from stdlib; take care to
+     * seed it using srand() before calling this function.
+     *
+     * @param size	length of result
+     * @result		reference to this, now a random string of given length
+     */
+    stx::string& random_alphanumeric_inplace(size_type size)
+    {
+	*this = random_alphanumeric(size);
+	return *this;
+    }
+
 }; // class string
 
 } // namespace stx

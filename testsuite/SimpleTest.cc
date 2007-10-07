@@ -3,6 +3,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include <stx-string.h>
+#include <stdlib.h>
 
 class SimpleTest : public CPPUNIT_NS::TestFixture
 {
@@ -15,6 +16,7 @@ class SimpleTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(test_split_ws);
     CPPUNIT_TEST(test_split);
     CPPUNIT_TEST(test_join);
+    CPPUNIT_TEST(test_random);
     CPPUNIT_TEST_SUITE_END();
 
 protected:
@@ -253,6 +255,27 @@ protected:
 	    sv2.push_back("abc");
 
 	CPPUNIT_ASSERT( stx::string(".").join(sv2) == "abc.abc.abc.abc.abc.abc" );
+    }
+
+    void test_random()
+    {
+	srand( time(NULL) );
+
+	stx::string rand1 = stx::string::random_binary(42);
+	stx::string rand2 = stx::string::random_alpha(42);
+	stx::string rand3 = stx::string::random_alphanumeric(42);
+
+	CPPUNIT_ASSERT( rand1.size() == 42 );
+
+	CPPUNIT_ASSERT( rand2.size() == 42 );
+	for(unsigned int i = 0; i < rand2.size(); ++i) {
+	    CPPUNIT_ASSERT( isalpha(rand2[i]) );
+	}
+
+	CPPUNIT_ASSERT( rand3.size() == 42 );
+	for(unsigned int i = 0; i < rand3.size(); ++i) {
+	    CPPUNIT_ASSERT( isalnum(rand3[i]) );
+	}
     }
 };
 
