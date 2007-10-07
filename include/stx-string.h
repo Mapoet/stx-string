@@ -628,6 +628,181 @@ public:
 	return *this;
     }
 
+    // ***                          ***
+    // *** Split and Join Functions ***
+    // ***                          ***
+
+    // *** static std::string functions ***
+
+    /** Split the given string by whitespaces into distinct words. Multiple
+     * consecutive whitespaces are considered as one split point. Whitespaces
+     * are space, tab, newline and carriage-return.
+     *
+     * @param str	string to split
+     * @param limit	maximum number of parts returned
+     * @return		vector containing each split substring
+     */
+    static std::vector<std::string> split_ws(const std::string& str, std::string::size_type limit = std::string::npos)
+    {
+	std::vector<std::string> out;
+	if (limit == 0) return out;
+
+	std::string::const_iterator it = str.begin(), last = it;
+
+	for (; it != str.end(); ++it)
+	{
+	    if (*it == ' ' || *it == '\n' || *it == '\t' || *it == '\r')
+	    {
+		if (it == last) { // skip over empty split substrings
+		    last = it+1;
+		    continue;
+		}
+
+		if (out.size() + 1 >= limit)
+		{
+		    out.push_back(std::string(last, str.end()));
+		    return out;
+		}
+
+		out.push_back(std::string(last, it));
+		last = it + 1;
+	    }
+	}
+
+	if (last != it)
+	    out.push_back(std::string(last, it));
+
+	return out;
+    }
+
+    /** Split the given string at each separator character into distinct
+     * substrings. Multiple consecutive separators are considered individually
+     * and will result in empty split substrings.
+     *
+     * @param str	string to split
+     * @param sep	separator character
+     * @param limit	maximum number of parts returned
+     * @return		vector containing each split substring
+     */
+    static std::vector<std::string> split(const std::string& str, char sep, std::string::size_type limit = std::string::npos)
+    {
+	std::vector<std::string> out;
+	if (limit == 0) return out;
+
+	std::string::const_iterator it = str.begin(), last = it;
+
+	for (; it != str.end(); ++it)
+	{
+	    if (*it == sep)
+	    {
+		if (out.size() + 1 >= limit)
+		{
+		    out.push_back(std::string(last, str.end()));
+		    return out;
+		}
+
+		out.push_back(std::string(last, it));
+		last = it + 1;
+	    }
+	}
+
+	if (last != it)
+	    out.push_back(std::string(last, it));
+
+	return out;
+    }
+
+    /** Split the given string at each separator string into distinct
+     * substrings. Multiple consecutive separators are considered individually
+     * and will result in empty split substrings.
+     *
+     * @param str	string to split
+     * @param sepstr	separator string
+     * @param limit	maximum number of parts returned
+     * @return		vector containing each split substring
+     */
+    static std::vector<std::string> split(const std::string& str, const std::string& sepstr, std::string::size_type limit = std::string::npos)
+    {
+	std::vector<std::string> out;
+	if (limit == 0) return out;
+	if (sepstr.empty()) return out;
+
+	std::string::const_iterator it = str.begin(), last = it;
+
+	for (; it + sepstr.size() <= str.end(); ++it)
+	{
+	    if (std::equal(sepstr.begin(), sepstr.end(), it))
+	    {
+		if (out.size() + 1 >= limit)
+		{
+		    out.push_back(std::string(last, str.end()));
+		    return out;
+		}
+
+		out.push_back(std::string(last, it));
+		last = it + sepstr.size();
+	    }
+	}
+
+	if (last != str.end())
+	    out.push_back(std::string(last, str.end()));
+
+	return out;
+    }
+
+    // *** class stx::string method versions ***
+
+    /** Split the enclosed string by whitespaces into distinct words. Multiple
+     * consecutive whitespaces are considered as one split point.
+     *
+     * @param limit	maximum number of parts returned
+     * @return		vector containing each split substring
+     */
+    std::vector<std::string> split_ws(size_type limit = npos) const
+    {
+	return split_ws(*this, limit);
+    }
+
+    /** Split the enclosed string at each separator character into distinct
+     * substrings. Multiple consecutive separators are considered individually
+     * and will result in empty split substrings.
+     *
+     * @param sep	separator character
+     * @param limit	maximum number of parts returned
+     * @return		vector containing each split substring
+     */
+    std::vector<std::string> split(char sep, size_type limit = npos) const
+    {
+	return split(*this, sep, limit);
+    }
+
+    /** Split the enclosed string at each separator string into distinct
+     * substrings. Multiple consecutive separators are considered individually
+     * and will result in empty split substrings.
+     *
+     * @param sepstr	separator string
+     * @param limit	maximum number of parts returned
+     * @return		vector containing each split substring
+     */
+    std::vector<std::string> split(const std::string& sepstr, size_type limit = npos) const
+    {
+	return split(*this, sepstr, limit);
+    }
+
+    /** Split the enclosed string at each separator string into distinct
+     * substrings. Multiple consecutive separators are considered individually
+     * and will result in empty split substrings. This function fixes ambiguous
+     * calls with C-style strings.
+     *
+     * @param sepstr	separator C-style string
+     * @param limit	maximum number of parts returned
+     * @return		vector containing each split substring
+     */
+    std::vector<std::string> split(const char* sepstr, size_type limit = npos) const
+    {
+	return split(*this, std::string(sepstr), limit);
+    }
+
 }; // class string
 
 } // namespace stx

@@ -12,6 +12,8 @@ class SimpleTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(test_compare_icase);
     CPPUNIT_TEST(test_prefix_suffix);
     CPPUNIT_TEST(test_replace);
+    CPPUNIT_TEST(test_split_ws);
+    CPPUNIT_TEST(test_split);
     CPPUNIT_TEST_SUITE_END();
 
 protected:
@@ -132,6 +134,108 @@ protected:
 
 	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_first_inplace("a", "aaa") == "aaabcdef abcdef" );
 	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_all_inplace("a", "aaa") == "aaabcdef aaabcdef" );
+    }
+
+    void test_split_ws()
+    {
+	// simple whitespace split
+	std::vector<std::string> sv = stx::string("  ab c df  fdlk f  ").split_ws();
+
+	CPPUNIT_ASSERT( sv.size() == 5 );
+	CPPUNIT_ASSERT( sv[0] == "ab" && sv[1] == "c" && sv[2] == "df" && sv[3] == "fdlk" && sv[4] == "f" );
+
+	sv = stx::string("ab c df  fdlk f  ").split_ws();
+
+	CPPUNIT_ASSERT( sv.size() == 5 );
+	CPPUNIT_ASSERT( sv[0] == "ab" && sv[1] == "c" && sv[2] == "df" && sv[3] == "fdlk" && sv[4] == "f" );
+
+	sv = stx::string("ab c df  fdlk f").split_ws();
+
+	CPPUNIT_ASSERT( sv.size() == 5 );
+	CPPUNIT_ASSERT( sv[0] == "ab" && sv[1] == "c" && sv[2] == "df" && sv[3] == "fdlk" && sv[4] == "f" );
+
+	sv = stx::string("").split_ws();
+	CPPUNIT_ASSERT( sv.size() == 0 );
+
+	sv = stx::string("    ").split_ws();
+	CPPUNIT_ASSERT( sv.size() == 0 );
+
+	// whitespace split with limit
+	sv = stx::string("  ab c   df  fdlk f  ").split_ws(3);
+
+	CPPUNIT_ASSERT( sv.size() == 3 );
+	CPPUNIT_ASSERT( sv[0] == "ab" && sv[1] == "c" && sv[2] == "df  fdlk f  " );
+
+	// whitespace split with some strange limits
+	sv = stx::string("  ab c df  fdlk f  ").split_ws(0);
+	CPPUNIT_ASSERT( sv.size() == 0 );
+
+	sv = stx::string("  ab c df  fdlk f  ").split_ws(1);
+
+	CPPUNIT_ASSERT( sv.size() == 1 );
+	CPPUNIT_ASSERT( sv[0] == "ab c df  fdlk f  " );
+
+	// whitespace split with large limit
+	sv = stx::string("  ab  c  df  fdlk f  ").split_ws(10);
+
+	CPPUNIT_ASSERT( sv.size() == 5 );
+	CPPUNIT_ASSERT( sv[0] == "ab" && sv[1] == "c" && sv[2] == "df" && sv[3] == "fdlk" && sv[4] == "f" );
+
+	// whitespace split with limit at exactly the end
+	sv = stx::string("  ab  c  df  fdlk f  ").split_ws(5);
+
+	CPPUNIT_ASSERT( sv.size() == 5 );
+	CPPUNIT_ASSERT( sv[0] == "ab" && sv[1] == "c" && sv[2] == "df" && sv[3] == "fdlk" && sv[4] == "f  " );
+    }
+
+    void test_split()
+    {
+	// simple char split
+	std::vector<std::string> sv = stx::string("/usr/bin/test").split('/');
+
+	CPPUNIT_ASSERT( sv.size() == 4 );
+	CPPUNIT_ASSERT( sv[0] == "" && sv[1] == "usr" && sv[2] == "bin" && sv[3] == "test" );
+
+	sv = stx::string("/usr/bin/test").split('/', 3);
+
+	CPPUNIT_ASSERT( sv.size() == 3 );
+	CPPUNIT_ASSERT( sv[0] == "" && sv[1] == "usr" && sv[2] == "bin/test" );
+
+	// char split with some strange limits
+	sv = stx::string("/usr//bin/test").split('/', 0);
+	CPPUNIT_ASSERT( sv.size() == 0 );
+
+	sv = stx::string("/usr//bin/test").split('/', 1);
+	CPPUNIT_ASSERT( sv.size() == 1 );
+	CPPUNIT_ASSERT( sv[0] == "/usr//bin/test" );
+
+	// simple str split
+	sv = stx::string("/usr/bin/test").split("/");
+
+	CPPUNIT_ASSERT( sv.size() == 4 );
+	CPPUNIT_ASSERT( sv[0] == "" && sv[1] == "usr" && sv[2] == "bin" && sv[3] == "test" );
+
+	sv = stx::string("/usr/bin/test").split("/", 3);
+
+	CPPUNIT_ASSERT( sv.size() == 3 );
+	CPPUNIT_ASSERT( sv[0] == "" && sv[1] == "usr" && sv[2] == "bin/test" );
+
+	// str split with some strange limits
+	sv = stx::string("/usr//bin/test").split("/", 0);
+	CPPUNIT_ASSERT( sv.size() == 0 );
+
+	sv = stx::string("/usr//bin/test").split("/", 1);
+	CPPUNIT_ASSERT( sv.size() == 1 );
+	CPPUNIT_ASSERT( sv[0] == "/usr//bin/test" );
+
+	sv = stx::string("/usr/bin/test").split("");
+	CPPUNIT_ASSERT( sv.size() == 0 );
+
+	// str split with parital needle at end
+	sv = stx::string("testabcblahabcabcab").split("abc");
+
+	CPPUNIT_ASSERT( sv.size() == 4 );
+	CPPUNIT_ASSERT( sv[0] == "test" && sv[1] == "blah" && sv[2] == "" && sv[3] == "ab" );
     }
 };
 
