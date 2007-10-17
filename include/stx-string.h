@@ -887,7 +887,7 @@ public:
     // *** static std::string functions ***
 
     /** Generate a random binary string of given length. Any byte from 0-256 is
-     * equally probably. Uses the pseudo-random number generator from stdlib;
+     * equally probable. Uses the pseudo-random number generator from stdlib;
      * take care to seed it using srand() before calling this function.
      *
      * @param size	length of result
@@ -904,8 +904,28 @@ public:
 	return out;
     }
 
+    /** Generate a random string of given length. The set of available
+     * bytes/characters is given as the second argument. Each byte is equally
+     * probable. Uses the pseudo-random number generator from stdlib; take care
+     * to seed it using srand() before calling this function.
+     *
+     * @param size	length of result
+     * @param cset	character set to choose from
+     * @result		random string of given length
+     */
+    static std::string random(size_type size, const std::string& cset)
+    {
+	std::string out;
+	out.resize(size);
+
+	for (unsigned int i = 0; i < size; ++i)
+	    out[i] = cset[ rand() % cset.size() ];
+
+	return out;
+    }
+
     /** Generate a random string of given length. Any letter A-Z and a-z is
-     * equally probably to occur. Uses the pseudo-random number generator from
+     * equally probable to occur. Uses the pseudo-random number generator from
      * stdlib; take care to seed it using srand() before calling this function.
      *
      * @param size	length of result
@@ -913,20 +933,14 @@ public:
      */
     static std::string random_alpha(size_type size)
     {
-	std::string out;
-	out.resize(size);
-
-	static const char letters[53] =
+	static const std::string letters =
 	    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-	for (unsigned int i = 0; i < size; ++i)
-	    out[i] = letters[ rand() % 52 ];
-
-	return out;
+	return random(size, letters);
     }
 
     /** Generate a random string of given length. Any letter A-Z and a-z or
-     * digit 0-9 is equally probably to occur. Uses the pseudo-random number
+     * digit 0-9 is equally probable to occur. Uses the pseudo-random number
      * generator from stdlib; take care to seed it using srand() before calling
      * this function.
      *
@@ -935,22 +949,16 @@ public:
      */
     static std::string random_alphanumeric(size_type size)
     {
-	std::string out;
-	out.resize(size);
-
-	static const char letters[63] =
+	static const std::string letters =
 	    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-	for (unsigned int i = 0; i < size; ++i)
-	    out[i] = letters[ rand() % 62 ];
-
-	return out;
+	return random(size, letters);
     }
 
     // *** class stx::string method versions ***
 
     /** Generate a random binary string of given length and replace the current
-     * object with it. Any byte from 0-256 is equally probably. Uses the
+     * object with it. Any byte from 0-256 is equally probable. Uses the
      * pseudo-random number generator from stdlib; take care to seed it using
      * srand() before calling this function.
      *
@@ -964,7 +972,23 @@ public:
     }
 
     /** Generate a random string of given length and replace the current object
-     * with it. Any letter A-Z and a-z is equally probably to occur. Uses the
+     * with it. The set of available bytes/characters is given as the second
+     * argument. Each byte is equally probable. Uses the pseudo-random number
+     * generator from stdlib; take care to seed it using srand() before calling
+     * this function.
+     *
+     * @param size	length of result
+     * @param cset	character set to choose from
+     * @result		reference to this, now a random string of given length
+     */
+    stx::string& random_inplace(size_type size, const std::string& cset)
+    {
+	*this = random(size, cset);
+	return *this;
+    }
+
+    /** Generate a random string of given length and replace the current object
+     * with it. Any letter A-Z and a-z is equally probable to occur. Uses the
      * pseudo-random number generator from stdlib; take care to seed it using
      * srand() before calling this function.
      *
@@ -978,7 +1002,7 @@ public:
     }
 
     /** Generate a random string of given length and replace the current object
-     * with it. Any letter A-Z and a-z or digit 0-9 is equally probably to
+     * with it. Any letter A-Z and a-z or digit 0-9 is equally probable to
      * occur. Uses the pseudo-random number generator from stdlib; take care to
      * seed it using srand() before calling this function.
      *
