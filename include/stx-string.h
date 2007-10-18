@@ -30,7 +30,7 @@ public:
     {
     }
 
-    /** Automatic Type-cast Constructor. Duplicates the given STL string. */
+    /** Automatic type-cast Constructor. Duplicates the given STL string. */
     string(const std::string &s)
 	: std::string(s)
     {
@@ -406,11 +406,34 @@ public:
     }
 
     // *** case-insenstive less-relation functional class for std::map ***
+
+    /** Case-sensitive less order relation functional class for std::map. */
+    struct order_less {
+	inline bool operator()(const std::string &a, const std::string &b) const {
+	    return (a < b);
+	}
+    };
     
     /** Case-insensitive less order relation functional class for std::map. */
     struct order_less_icase {
 	inline bool operator()(const std::string &a, const std::string &b) const {
 	    return less_icase(a, b);
+	}
+    };
+
+    /** Descending case-sensitive less order relation functional class for
+     * std::map. */
+    struct order_less_desc {
+	inline bool operator()(const std::string &a, const std::string &b) const {
+	    return !(a < b);
+	}
+    };
+    
+    /** Descending case-insensitive less order relation functional class for
+     * std::map. */
+    struct order_less_icase_desc {
+	inline bool operator()(const std::string &a, const std::string &b) const {
+	    return !less_icase(a, b);
 	}
     };
 
