@@ -10,6 +10,8 @@ testsuite_SOURCES = TestRunner.cc
 
 testsuite_SOURCES += SimpleTest.cc CompressTest.cc
 
+testsuite_SOURCES += NatcmpTest.cc strnatcmp.h strnatcmp.c
+
 else
 
 testsuite_SOURCES = TestTrue.cc

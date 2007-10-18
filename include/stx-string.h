@@ -370,8 +370,8 @@ public:
 
     // *** std::string comparison operators ***
 
-    /** Compare this string to the other case-insensitively. Return true if
-     * they are equal. */
+    /** Compare two strings case-insensitively. Return true if they are
+     * equal. */
     static bool equal_icase(const std::string& a, const std::string& b)
     {
 	if (a.size() != b.size()) return false;
@@ -380,8 +380,8 @@ public:
 			   char_icase_equal() );
     }
 
-    /** Compare this string to the other case-insensitively. Return true if
-     * this one is less than the other. */
+    /** Compare two string case-insensitively. Return true if this one is less
+     * than the other. */
     static bool less_icase(const std::string& a, const std::string& b)
     {
 	return std::lexicographical_compare( a.begin(), a.end(),
@@ -1390,6 +1390,317 @@ public:
     {
 	return levenshtein_algorithm<LevenshteinStandardICase>(*this, other);
     }
+
+    // ***                            ***
+    // *** 'Natural Order' Comparison ***
+    // ***                            ***
+
+    // *** Algorithm and Helper Functions ***
+
+    /** Function to compare two STL (binary) strings using the 'natural order'
+     * comparison algorithm written by Martin Pool. I converted the C code
+     * using C-style strings to STL-style string processing. The equivalence to
+     * the original algorithm is verified in the test suite.
+     *
+     * Based on:
+     *
+     * strnatcmp.c -- Perform 'natural order' comparisons of strings in C.
+     * Copyright (C) 2000, 2004 by Martin Pool &lt;mbp sourcefrog net&gt;
+     *
+     * This software is provided 'as-is', without any express or implied
+     * warranty.  In no event will the authors be held liable for any damages
+     * arising from the use of this software.
+     *
+     * Permission is granted to anyone to use this software for any purpose,
+     * including commercial applications, and to alter it and redistribute it
+     * freely, subject to the following restrictions:
+     *
+     * 1. The origin of this software must not be misrepresented; you must not
+     *    claim that you wrote the original software. If you use this software
+     *    in a product, an acknowledgment in the product documentation would be
+     *    appreciated but is not required.
+     * 2. Altered source versions must be plainly marked as such, and must not be
+     *    misrepresented as being the original software.
+     * 3. This notice may not be removed or altered from any source distribution.
+     * 
+     * @param a		first string to compare
+     * @param b		second string to compare
+     * @param fold_case	ignore alphabetic case in comparison
+     * @return		0 if (a == b), -1 if (a < b) and +1 if (a > b).
+     */
+    static int natcmp_algorithm(const std::string& a, const std::string& b, bool fold_case)
+    {
+	std::string::const_iterator ai = a.begin();
+	std::string::const_iterator bi = b.begin();
+
+	while (ai != a.end() || bi != b.end())
+	{
+	    // skip over leading spaces or zeros
+	    while (ai != a.end() && std::isspace(*ai))
+		++ai;
+
+	    while (bi != b.end() && std::isspace(*bi))
+		++bi;
+
+	    if (ai == a.end() || bi == b.end())
+		break;
+
+	    // process run of digits
+	    if (std::isdigit(*ai) && std::isdigit(*bi))
+	    {
+		if (*ai == '0' || *bi == '0') // fractional
+		{
+		    // Compare two left-aligned numbers: the first to have a
+		    // different value wins.
+
+		    while (ai != a.end() && bi != b.end())
+		    {
+			if (!std::isdigit(*ai) && !std::isdigit(*bi))
+			    break;
+			else if (!std::isdigit(*ai))
+			    return -1;
+			else if (!std::isdigit(*bi))
+			    return +1;
+			else if (*ai < *bi)
+			    return -1;
+			else if (*ai > *bi)
+			    return +1;
+
+			++ai; ++bi;
+		    }
+
+		    continue;
+		}
+		else
+		{
+		    // The longest run of digits wins.  That aside, the
+		    // greatest value wins, but we can't know that it will
+		    // until we've scanned both numbers to know that they have
+		    // the same magnitude, so we remember it in BIAS.
+
+		    int bias = 0;
+
+		    while(ai != a.end() && bi != b.end())
+		    {
+			if (!std::isdigit(*ai) && !std::isdigit(*bi)) {
+			    if (bias) return bias;
+			    else break;
+			}
+			else if (!std::isdigit(*ai))
+			    return -1;
+			else if (!std::isdigit(*bi))
+			    return +1;
+			else if (*ai < *bi) {
+			    if (!bias) bias = -1;
+			}
+			else if (*ai > *bi) {
+			    if (!bias) bias = +1;
+			}
+
+			++ai; ++bi;
+		    }
+
+		    // check for the longer sequence of digits
+		    if (ai == a.end() && bi != b.end() && std::isdigit(*bi)) return -1;
+		    if (bi == b.end() && ai != a.end() && std::isdigit(*ai)) return +1;
+
+		    if (bias) return bias;
+
+		    continue;
+		}
+	    }
+
+	    if (ai == a.end() || bi == b.end())
+		break;
+
+	    char ca = fold_case ? std::toupper(*ai) : *ai;
+	    char cb = fold_case ? std::toupper(*bi) : *bi;
+
+	    if (ca < cb)
+		return -1;
+	    else if (ca > cb)
+		return +1;
+
+	    ++ai; ++bi;
+	}
+
+	if (ai == a.end() && bi == b.end()) {
+	    // The strings compare the same.  Perhaps the caller will want to
+	    // call strcmp to break the tie.
+	    return 0;
+	}
+	else if (ai == a.end() && bi != b.end())
+	    return -1;
+	else if (ai != a.end() && bi == b.end())
+	    return +1;
+
+	return 0; // never reached
+    }
+
+    // *** static std::string functions ***
+
+    /** Function to compare two STL (binary) strings using the 'natural order'
+     * comparison algorithm. It orders strings so that "rfc1.txt" <
+     * "rfc822.txt" < "rfc2086.txt". The comparison is done case-sensitive.
+     *
+     * @param a		first string to compare
+     * @param b		second string to compare
+     * @return		0 if (a == b), -1 if (a < b) and +1 if (a > b).
+     */
+    static int natcmp(const std::string& a, const std::string& b)
+    {
+	return natcmp_algorithm(a, b, false);
+    }
+
+    /** Function to compare two STL (binary) strings using the 'natural order'
+     * comparison algorithm. It orders strings so that "rfc1.txt" <
+     * "rfc822.txt" < "rfc2086.txt". The comparison is done case-insensitive.
+     *
+     * @param a		first string to compare
+     * @param b		second string to compare
+     * @return		0 if (a == b), -1 if (a < b) and +1 if (a > b).
+     */
+    static int natcmp_icase(const std::string& a, const std::string& b)
+    {
+	return natcmp_algorithm(a, b, true);
+    }
+
+    // *** class stx::string method versions ***
+
+    /** Function to compare two (binary) strings using the 'natural order'
+     * comparison algorithm. It orders strings so that "rfc1.txt" <
+     * "rfc822.txt" < "rfc2086.txt". The comparison is done case-sensitive.
+     *
+     * @param b		string to compare with
+     * @return		0 if (this == b), -1 if (this < b) and +1 if (this > b).
+     */
+    int natcmp(const stx::string& b) const
+    {
+	return natcmp_algorithm(*this, b, false);
+    }
+
+    /** Function to compare two STL (binary) strings using the 'natural order'
+     * comparison algorithm. It orders strings so that "rfc1.txt" <
+     * "rfc822.txt" < "rfc2086.txt". The comparison is done case-insensitive.
+     *
+     * @param b		string to compare with
+     * @return		0 if (this == b), -1 if (this < b) and +1 if (this > b).
+     */
+    int natcmp_icase(const stx::string& b) const
+    {
+	return natcmp_algorithm(*this, b, true);
+    }
+
+    // *** std::string natural order comparison operators ***
+
+    /** Compare two strings case-sensitively using the 'natural order'
+     * algorithm. Return true if they are equal. */
+    static bool natequal(const std::string& a, const std::string& b)
+    {
+	return (natcmp(a, b) == 0);
+    }
+
+    /** Compare two strings case-insensitively using the 'natural order'
+     * algorithm. Return true if they are equal. */
+    static bool natequal_icase(const std::string& a, const std::string& b)
+    {
+	return (natcmp_icase(a, b) == 0);
+    }
+
+    /** Compare two string case-sensitively using the 'natural order'
+     * algorithm. Strings that are equal in the 'natural order' are compared
+     * using the binary less operator to break ties. Return true if this one is
+     * less than the other. */
+    static bool natless(const std::string& a, const std::string& b)
+    {
+	int r = natcmp(a, b);
+	if (r != 0) return (r < 0);
+	return (a < b);
+    }
+
+    /** Compare two string case-insensitively using the 'natural order'
+     * algorithm. Strings that are equal in the 'natural order' are compared
+     * using the binary less operator to break ties. Return true if this one is
+     * less than the other. */
+    static bool natless_icase(const std::string& a, const std::string& b)
+    {
+	int r = natcmp_icase(a, b);
+	if (r != 0) return (r < 0);
+	return less_icase(a, b);
+    }
+
+    // *** class stx::string method versions ***
+
+    /** Compare this string to the other case-sensitively using the 'natural
+     * order' algorithm. Return true if they are equal. */
+    bool natequal(const string& b) const
+    {
+	return natequal(*this, b);
+    }
+
+    /** Compare this string to the other case-insensitively using the 'natural
+     * order' algorithm. Return true if they are equal. */
+    bool natequal_icase(const string& b) const
+    {
+	return natequal_icase(*this, b);
+    }
+
+    /** Compare this string to the other case-sensitively using the 'natural
+     * order' algorithm. Strings that are equal in the 'natural order' are
+     * compared using the binary less operator to break ties. Return true if
+     * this one is less than the other. */
+    bool natless(const std::string& b) const
+    {
+	int r = natcmp(*this, b);
+	if (r != 0) return (r < 0);
+	return (*this < b);
+    }
+
+    /** Compare this string to the other case-insensitively using the 'natural
+     * order' algorithm. Strings that are equal in the 'natural order' are
+     * compared using the binary less operator to break ties. Return true if
+     * this one is less than the other. */
+    bool natless_icase(const std::string& b) const
+    {
+	int r = natcmp_icase(*this, b);
+	if (r != 0) return (r < 0);
+	return less_icase(*this, b);
+    }
+
+    // *** 'natural order' less-relation functional class for std::map and
+    // *** others ***
+    
+    /** 'Natural order' case-sensitive less order relation functional class for
+     * std::map and others. */
+    struct order_natless {
+	inline bool operator()(const std::string &a, const std::string &b) const {
+	    return natless(a, b);
+	}
+    };
+
+    /** 'Natural order' case-insensitive less order relation functional class
+     * for std::map and others. */
+    struct order_natless_icase {
+	inline bool operator()(const std::string &a, const std::string &b) const {
+	    return natless_icase(a, b);
+	}
+    };
+
+    /** Descending 'natural order' case-sensitive less order relation
+     * functional class for std::map and others. */
+    struct order_natless_desc {
+	inline bool operator()(const std::string &a, const std::string &b) const {
+	    return !natless(a, b);
+	}
+    };
+
+    /** Descending 'natural order' case-insensitive less order relation
+     * functional class for std::map and others. */
+    struct order_natless_icase_desc {
+	inline bool operator()(const std::string &a, const std::string &b) const {
+	    return !natless_icase(a, b);
+	}
+    };
 
 }; // class string
 
