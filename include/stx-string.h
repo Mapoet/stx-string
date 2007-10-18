@@ -1533,9 +1533,6 @@ public:
 		}
 	    }
 
-	    if (ai == a.end() || bi == b.end())
-		break;
-
 	    char ca = fold_case ? std::toupper(*ai) : *ai;
 	    char cb = fold_case ? std::toupper(*bi) : *bi;
 
