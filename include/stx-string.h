@@ -914,7 +914,7 @@ public:
      * take care to seed it using srand() before calling this function.
      *
      * @param size	length of result
-     * @result		random binary string of given length
+     * @return		random binary string of given length
      */
     static std::string random_binary(size_type size)
     {
@@ -934,7 +934,7 @@ public:
      *
      * @param size	length of result
      * @param cset	character set to choose from
-     * @result		random string of given length
+     * @return		random string of given length
      */
     static std::string random(size_type size, const std::string& cset)
     {
@@ -952,7 +952,7 @@ public:
      * stdlib; take care to seed it using srand() before calling this function.
      *
      * @param size	length of result
-     * @result		random string of given length
+     * @return		random string of given length
      */
     static std::string random_alpha(size_type size)
     {
@@ -968,7 +968,7 @@ public:
      * this function.
      *
      * @param size	length of result
-     * @result		random string of given length
+     * @return		random string of given length
      */
     static std::string random_alphanumeric(size_type size)
     {
@@ -986,7 +986,7 @@ public:
      * srand() before calling this function.
      *
      * @param size	length of result
-     * @result		reference to this, now a random binary string of given length
+     * @return		reference to this, now a random binary string of given length
      */
     stx::string& random_binary_inplace(size_type size)
     {
@@ -1002,7 +1002,7 @@ public:
      *
      * @param size	length of result
      * @param cset	character set to choose from
-     * @result		reference to this, now a random string of given length
+     * @return		reference to this, now a random string of given length
      */
     stx::string& random_inplace(size_type size, const std::string& cset)
     {
@@ -1016,7 +1016,7 @@ public:
      * srand() before calling this function.
      *
      * @param size	length of result
-     * @result		reference to this, now a random string of given length
+     * @return		reference to this, now a random string of given length
      */
     stx::string& random_alpha_inplace(size_type size)
     {
@@ -1030,7 +1030,7 @@ public:
      * seed it using srand() before calling this function.
      *
      * @param size	length of result
-     * @result		reference to this, now a random string of given length
+     * @return		reference to this, now a random string of given length
      */
     stx::string& random_alphanumeric_inplace(size_type size)
     {
@@ -1047,7 +1047,7 @@ public:
     /** Dump a (binary) string as a sequence of hexadecimal pairs.
      *
      * @param str	string to output in hex
-     * @result		string of hexadecimal pairs
+     * @return		string of hexadecimal pairs
      */
     static std::string hexdump(const std::string& str)
     {
@@ -1074,7 +1074,7 @@ public:
      * std::runtime_error() if an unknown letter is encountered.
      *
      * @param str	string to parse as hex digits
-     * @result		string of read bytes
+     * @return		string of read bytes
      */
     static std::string parse_hexdump(const std::string& str)
     {
@@ -1129,7 +1129,7 @@ public:
      *
      * @param str	string to output as C source array
      * @param varname	name of the array variable in the outputted code snippet
-     * @result		string holding C source snippet
+     * @return		string holding C source snippet
      */
     static std::string hexdump_sourcecode(const std::string& str, const std::string& varname)
     {
@@ -1172,7 +1172,7 @@ public:
 
     /** Dump the (binary) enclosed string as a sequence of hexadecimal pairs.
      *
-     * @result		string of hexadecimal pairs
+     * @return		string of hexadecimal pairs
      */
     stx::string hexdump() const
     {
@@ -1183,7 +1183,7 @@ public:
      * pair of hexadecimal digits into a byte of the output string. Throws
      * std::runtime_error() if an unknown letter is encountered.
      *
-     * @result		string of parsed bytes
+     * @return		string of parsed bytes
      */
     stx::string parse_hexdump() const
     {
@@ -1194,7 +1194,7 @@ public:
      * defines an array of const char holding the data of the string.
      *
      * @param varname	name of the array variable in the outputted code snippet
-     * @result		string holding C source snippet
+     * @return		string holding C source snippet
      */
     stx::string hexdump_sourcecode(const std::string& varname = "hexdump") const
     {
