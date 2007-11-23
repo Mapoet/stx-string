@@ -1,6 +1,6 @@
 // $Id$
 
-#ifndef _STX_STRING_H_ 
+#ifndef _STX_STRING_H_
 #define _STX_STRING_H_
 
 #include <string>
@@ -63,7 +63,7 @@ public:
 	: std::string(str, index, length)
     {
     }
-    
+
     /** Template-Iterator range constructor. Fills the new string with the
      * character in the start-end range. */
     template <typename input_iterator>
@@ -353,18 +353,18 @@ public:
 
     /** Binary class functional which compares two characters
      * case-insensitively. Returns true if they are equal. */
-    struct char_icase_equal : public std::binary_function<char, char, bool> 
+    struct char_icase_equal : public std::binary_function<char, char, bool>
     {
-	bool operator() (const char& c1, const char& c2) const 
+	bool operator() (const char& c1, const char& c2) const
 	{ return std::tolower(c1) == std::tolower(c2); }
     };
 
     /** Binary class functional which compares two characters
      * case-insensitively. Returns true if the first is less than the
      * second. */
-    struct char_icase_less : public std::binary_function<char, char, bool> 
+    struct char_icase_less : public std::binary_function<char, char, bool>
     {
-	bool operator() (const char& c1, const char& c2) const 
+	bool operator() (const char& c1, const char& c2) const
 	{ return std::tolower(c1) < std::tolower(c2); }
     };
 
@@ -413,7 +413,7 @@ public:
 	    return (a < b);
 	}
     };
-    
+
     /** Case-insensitive less order relation functional class for std::map. */
     struct order_less_icase {
 	inline bool operator()(const std::string &a, const std::string &b) const {
@@ -428,7 +428,7 @@ public:
 	    return !(a < b);
 	}
     };
-    
+
     /** Descending case-insensitive less order relation functional class for
      * std::map. */
     struct order_less_icase_desc {
@@ -611,7 +611,7 @@ public:
     {
 	return replace_first(*this, needle, instead);
     }
-    
+
     /** Replace all occurrences of needle in the enclosed string. Each needle
      * will be replaced with instead, if found. Returns a copy of the string
      * with possible replacements.
@@ -920,7 +920,7 @@ public:
     {
 	std::string out;
 	out.resize(size);
-	
+
 	for (unsigned int i = 0; i < size; ++i)
 	    out[i] = static_cast<unsigned char>(rand() % 256);
 
@@ -1216,7 +1216,7 @@ public:
      *
      * @param instr	input string to encode
      * @param linebreak	break the output string every n characters
-     * @return		base64 encoded string	
+     * @return		base64 encoded string
      */
     static std::string base64_encode(const std::string& instr, unsigned int linebreak = 0)
     {
@@ -1436,7 +1436,7 @@ public:
 
     /** Compress a string using zlib with given compression level and return
      * the binary data.
-     * 
+     *
      * @param str	(binary) string to compress
      * @param compressionlevel	ranging 0-9
      * @return		(binary) compressed image
@@ -1446,7 +1446,7 @@ public:
 
     /** Decompress a string using zlib and return the original data. Throws
      * std::runtime_error if an error occurred during decompression.
-     * 
+     *
      * @param str	(binary) compressed image to decompress
      * @return		uncompressed string
      */
@@ -1456,7 +1456,7 @@ public:
 
     /** Compress the enclosed string using zlib with given compression level
      * and return a copy of the binary compressed data.
-     * 
+     *
      * @param compressionlevel	ranging 0-9
      * @return		(binary) compressed image
      */
@@ -1468,7 +1468,7 @@ public:
     /** Decompress the enclosed string using zlib and return the original
      * data. Throws std::runtime_error if an error occurred during
      * decompression.
-     * 
+     *
      * @return		uncompressed string
      */
     stx::string decompress() const
@@ -1478,7 +1478,7 @@ public:
 
     /** Compress the enclosed string using zlib with given compression level
      * and store the result in this string object, deleting the old data.
-     * 
+     *
      * @param compressionlevel	ranging 0-9
      * @return		reference to this, now (binary) compressed string
      */
@@ -1491,7 +1491,7 @@ public:
     /** Decompress the enclosed string using zlib and store the result in this
      * string object, deleting the old data. Throws std::runtime_error if an
      * error occurred during decompression.
-     * 
+     *
      * @return		reference to this, now uncompressed string
      */
     stx::string& decompress_inplace()
@@ -1615,7 +1615,7 @@ public:
     }
 
     // *** class stx::string method versions ***
-    
+
     /** Computes the Levenshtein string distance between two strings. The
      * distance is the number of replacements/inserts/deletes needed to change
      * one string into the other.
@@ -1672,7 +1672,7 @@ public:
      * 2. Altered source versions must be plainly marked as such, and must not be
      *    misrepresented as being the original software.
      * 3. This notice may not be removed or altered from any source distribution.
-     * 
+     *
      * @param a		first string to compare
      * @param b		second string to compare
      * @param fold_case	ignore alphabetic case in comparison
@@ -1916,7 +1916,7 @@ public:
 
     // *** 'natural order' less-relation functional class for std::map and
     // *** others ***
-    
+
     /** 'Natural order' case-sensitive less order relation functional class for
      * std::map and others. */
     struct order_natless {
@@ -1959,7 +1959,7 @@ public:
 
 inline std::string stx::string::compress(const std::string& str, int compressionlevel)
 {
-    z_stream zs;                        // z_stream is zlib's control structure
+    z_stream zs;         // z_stream is zlib's control structure
     memset(&zs, 0, sizeof(zs));
 
     if (deflateInit(&zs, compressionlevel) != Z_OK)
@@ -1999,7 +1999,7 @@ inline std::string stx::string::compress(const std::string& str, int compression
 
 inline std::string stx::string::decompress(const std::string& str)
 {
-    z_stream zs;           	// z_stream is zlib's control structure
+    z_stream zs;	// z_stream is zlib's control structure
     memset(&zs, 0, sizeof(zs));
 
     if (inflateInit(&zs) != Z_OK)

@@ -252,7 +252,7 @@ protected:
 
 	CPPUNIT_ASSERT( stx::string::join("--", sv) == "--usr--bin--test" );
 	CPPUNIT_ASSERT( stx::string(";").join(sv) == ";usr;bin;test" );
-	
+
 	std::vector<stx::string> sv2;
 	for(unsigned int i = 0; i < 6; ++i)
 	    sv2.push_back("abc");
@@ -290,7 +290,7 @@ protected:
 	stx::string hexstring = hexdata.hexdump();
 
 	CPPUNIT_ASSERT( hexstring == "8DE285D4BF98E603" );
-	
+
 	stx::string hexparsed = hexstring.parse_hexdump();
 	CPPUNIT_ASSERT( hexparsed == hexdata );
 
@@ -326,7 +326,7 @@ protected:
 	    0x0C,0x57,0x3E,0x35,0xE7,0xA6,0xB2,0x37,0xEC,0x6D,0xF6,0x68,0xF6,0x0E,0x74,0x0C,
 	    0x44,0x3F,0x0F,0xD4,0xAA,0x56,0xE5,0x2F,0x58,0xCC
 	};
-	
+
 	stx::string rand1(rand1data, sizeof(rand1data));
 
 	stx::string rand1base64 = rand1.base64_encode();

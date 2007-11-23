@@ -61,7 +61,7 @@ static int
 compare_right(nat_char const *a, nat_char const *b)
 {
      int bias = 0;
-     
+
      /* The longest run of digits wins.  That aside, the greatest
 	value wins, but we can't know that it will until we've scanned
 	both numbers to know that they have the same magnitude, so we
@@ -90,7 +90,7 @@ static int
 compare_left(nat_char const *a, nat_char const *b)
 {
      /* Compare two left-aligned numbers: the first to have a
-        different value wins. */
+	different value wins. */
      for (;; a++, b++) {
 	  if (!nat_isdigit(*a)  &&  !nat_isdigit(*b))
 	       return 0;
@@ -103,7 +103,7 @@ compare_left(nat_char const *a, nat_char const *b)
 	  else if (*a > *b)
 	       return +1;
      }
-	  
+
      return 0;
 }
 
@@ -112,7 +112,7 @@ static int strnatcmp0(nat_char const *a, nat_char const *b, int fold_case)
      int ai, bi;
      nat_char ca, cb;
      int fractional, result;
-     
+
      assert(a && b);
      ai = bi = 0;
      while (1) {
@@ -140,7 +140,7 @@ static int strnatcmp0(nat_char const *a, nat_char const *b, int fold_case)
 
 	  if (!ca && !cb) {
 	       /* The strings compare the same.  Perhaps the caller
-                  will want to call strcmp to break the tie. */
+		  will want to call strcmp to break the tie. */
 	       return 0;
 	  }
 
@@ -148,7 +148,7 @@ static int strnatcmp0(nat_char const *a, nat_char const *b, int fold_case)
 	       ca = nat_toupper(ca);
 	       cb = nat_toupper(cb);
 	  }
-	  
+
 	  if (ca < cb)
 	       return -1;
 	  else if (ca > cb)

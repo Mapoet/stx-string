@@ -61,7 +61,7 @@ protected:
 	};
 
 	stx::string input(input_, sizeof(input_));
-	
+
 	stx::string compresstest = input.compress();
 
 	const char compressed_[513] = {
@@ -99,7 +99,7 @@ protected:
 	    0x83,0xCD,0x1C,0x41,0x9A,0x69,0x80,0xE6,0x6D,0xA2,0x34,0xF9,0x3F,0xB7,0x6F,0xDB,
 	    0xF8
 	};
-	
+
 	stx::string compressed(compressed_, sizeof(compressed_));
 
 	CPPUNIT_ASSERT( compresstest == compressed );
