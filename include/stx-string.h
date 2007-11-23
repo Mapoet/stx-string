@@ -1201,6 +1201,233 @@ public:
 	return hexdump_sourcecode(*this, varname);
     }
 
+    // ***                              ***
+    // *** Base64 Encoding and Decoding ***
+    // ***                              ***
+
+    // *** static std::string functions ***
+
+    /** Encode the given binary string into Base64 representation as described
+     * in RFC 2045 or RFC 3548. The output string contains only characters
+     * [A-Za-z0-9+/] and is roughly 33% longer than the input. The output
+     * string can be broken into lines after n characters, where n must be a
+     * multiple of 4. The function's code is based on code from the libb64
+     * project (see http://sourceforge.net/projects/libb64).
+     *
+     * @param instr	input string to encode
+     * @param linebreak	break the output string every n characters
+     * @return		base64 encoded string	
+     */
+    static std::string base64_encode(const std::string& instr, unsigned int linebreak = 0)
+    {
+	std::string::const_iterator inchar = instr.begin();
+	std::string outstr;
+
+	if (instr.size() == 0) return outstr;
+
+	// calculate output string's size in advance
+	unsigned int outsize = (((instr.size() - 1) / 3) + 1) * 4;
+	if (linebreak > 0) outsize += outsize / linebreak;
+	outstr.reserve( outsize );
+
+	static const char encoding64[65]
+	    = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+	char result = 0;
+	unsigned int linebegin = 0;
+
+	while (1)
+	{
+	    // step 0: if the string is finished here, no padding is needed
+	    if (inchar == instr.end()) {
+		return outstr;
+	    }
+
+	    // step 0: process first byte, write first letter
+	    char fragment = *inchar++;
+	    result = (fragment & 0xFC) >> 2;
+	    outstr += encoding64[static_cast<int>(result)];
+	    result = (fragment & 0x03) << 4;
+
+	    // step 1: if string finished here, add two padding '='s
+	    if (inchar == instr.end()) {
+		outstr += encoding64[static_cast<int>(result)];
+		outstr += '=';
+		outstr += '=';
+		return outstr;
+	    }
+
+	    // step 1: process second byte together with first, write second
+	    // letter
+	    fragment = *inchar++;
+	    result |= (fragment & 0xF0) >> 4;
+	    outstr += encoding64[static_cast<int>(result)];
+	    result = (fragment & 0x0F) << 2;
+
+	    // step 2: if string finished here, add one padding '='
+	    if (inchar == instr.end()) {
+		outstr += encoding64[static_cast<int>(result)];
+		outstr += '=';
+		return outstr;
+	    }
+
+	    // step 2: process third byte and write third and fourth letters.
+	    fragment = *inchar++;
+
+	    result |= (fragment & 0xC0) >> 6;
+	    outstr += encoding64[static_cast<int>(result)];
+
+	    result  = (fragment & 0x3F) >> 0;
+	    outstr += encoding64[static_cast<int>(result)];
+
+	    // wrap base64 encoding into lines if desired, but only after whole
+	    // blocks of 4 letters.
+	    if (linebreak > 0 && outstr.size() - linebegin >= linebreak)
+	    {
+		outstr += '\n';
+		linebegin = outstr.size();
+	    }
+	}
+    }
+
+    /** Decode a stringin Base64 representation as described in RFC 2045 or RFC
+     * 3548 and return the original data. If a non-whitespace invalid Base64
+     * character is encountered _and_ the parameter "strict" is true, then this
+     * function will throw a std::runtime_error. If "strict" is false, the
+     * character is silently ignored. The function's code is based on code from
+     * the libb64 project (see http://sourceforge.net/projects/libb64).
+     *
+     * @param instr	input string to encode
+     * @param strict	throw exception on invalid character
+     * @return		decoded binary data
+     */
+    static std::string base64_decode(const std::string& instr, bool strict = false)
+    {
+	std::string::const_iterator inchar = instr.begin();
+	std::string outstr;
+
+	// estimate the output size, assume that the whole input string is
+	// base64 encoded.
+	outstr.reserve( instr.size() * 3 / 4 );
+
+	// value lookup table: -1 -> exception, -2 -> skip whitespace
+	const char decoding64[256] = {
+	    -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -2, -1, -1, -2, -1, -1,
+	    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	    -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63,
+	    52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -2, -1, -1,
+	    -1,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14,
+	    15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1,
+	    -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+	    41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1,
+	    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
+	};
+
+	char outchar;
+	char fragment;
+
+	while (1)
+	{
+	    // step 0: save first valid letter. do not output a byte, yet.
+	    do {
+		if (inchar == instr.end()) return outstr;
+
+		fragment = decoding64[ static_cast<int>(*inchar++) ];
+
+		if (fragment == -1 && strict)
+		    throw(std::runtime_error("Invalid character encountered during Base64 decoding."));
+
+	    } while (fragment < 0);
+
+	    outchar = (fragment & 0x3F) << 2;
+
+	    // step 1: get second valid letter. output the first byte.
+	    do {
+		if (inchar == instr.end()) return outstr;
+
+		fragment = decoding64[ static_cast<int>(*inchar++) ];
+
+		if (fragment == -1 && strict)
+		    throw(std::runtime_error("Invalid character encountered during Base64 decoding."));
+
+	    } while (fragment < 0);
+
+	    outchar |= (fragment & 0x30) >> 4;
+	    outstr += outchar;
+
+	    outchar = (fragment & 0x0F) << 4;
+
+	    // step 2: get third valid letter. output the second byte.
+	    do {
+		if (inchar == instr.end())  return outstr;
+
+		fragment = decoding64[ static_cast<int>(*inchar++) ];
+
+		if (fragment == -1 && strict)
+		    throw(std::runtime_error("Invalid character encountered during Base64 decoding."));
+
+	    } while (fragment < 0);
+
+	    outchar |= (fragment & 0x3C) >> 2;
+	    outstr += outchar;
+
+	    outchar = (fragment & 0x03) << 6;
+
+	    // step 3: get fourth valid letter. output the third byte.
+	    do {
+		if (inchar == instr.end()) return outstr;
+
+		fragment = decoding64[ static_cast<int>(*inchar++) ];
+
+		if (fragment == -1 && strict)
+		    throw(std::runtime_error("Invalid character encountered during Base64 decoding."));
+
+	    } while (fragment < 0);
+
+	    outchar |= (fragment & 0x3F);
+	    outstr += outchar;
+	}
+    }
+
+    // *** class stx::string method versions ***
+
+    /** Encode the enclosed binary string into Base64 representation as
+     * described in RFC 2045 or RFC 3548. The output string contains only
+     * characters [A-Za-z0-9+/] and is roughly 33% longer than the input. The
+     * output string can be broken into lines after n characters, where n must
+     * be a multiple of 4. The function's code is based on code from the libb64
+     * project (see http://sourceforge.net/projects/libb64).
+     *
+     * @param linebreak	break the output string every n characters
+     * @return		base64 encoded string
+     */
+    stx::string base64_encode(unsigned int linebreak = 0) const
+    {
+	return base64_encode(*this, linebreak);
+    }
+
+    /** Decode the enclosed string in Base64 representation as described in RFC
+     * 2045 or RFC 3548 and return the original data. If a non-whitespace
+     * invalid Base64 character is encountered _and_ the parameter "strict" is
+     * true, then this function will throw a std::runtime_error. If "strict" is
+     * false, the character is silently ignored. The function's code is based
+     * on code from the libb64 project (see
+     * http://sourceforge.net/projects/libb64).
+     *
+     * @param strict	throw exception on invalid character
+     * @return		decoded binary data
+     */
+    stx::string base64_decode(bool strict = false) const
+    {
+	return base64_decode(*this, strict);
+    }
+
     // ***                                              ***
     // *** Compress and Uncompress Functions using zlib ***
     // ***                                              ***

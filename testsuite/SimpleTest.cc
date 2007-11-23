@@ -18,6 +18,7 @@ class SimpleTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(test_join);
     CPPUNIT_TEST(test_random);
     CPPUNIT_TEST(test_hexdump);
+    CPPUNIT_TEST(test_base64);
     CPPUNIT_TEST(test_levenshtein);
     CPPUNIT_TEST_SUITE_END();
 
@@ -315,6 +316,52 @@ protected:
 	// test parse_hexdump with illegal string
 	stx::string s1;
 	CPPUNIT_ASSERT_THROW( s1.parse_hexdump("illegal"), std::runtime_error);
+    }
+
+    void test_base64()
+    {
+	// take some static hex data and dump it using base64 encoding, then decode it again.
+	const char rand1data[42] = {
+	    0x16,0x35,0xCA,0x03,0x90,0x6B,0x47,0x11,0x85,0x02,0xE7,0x40,0x9E,0x3A,0xCE,0x43,
+	    0x0C,0x57,0x3E,0x35,0xE7,0xA6,0xB2,0x37,0xEC,0x6D,0xF6,0x68,0xF6,0x0E,0x74,0x0C,
+	    0x44,0x3F,0x0F,0xD4,0xAA,0x56,0xE5,0x2F,0x58,0xCC
+	};
+	
+	stx::string rand1(rand1data, sizeof(rand1data));
+
+	stx::string rand1base64 = rand1.base64_encode();
+
+	CPPUNIT_ASSERT( rand1base64 == "FjXKA5BrRxGFAudAnjrOQwxXPjXnprI37G32aPYOdAxEPw/UqlblL1jM" );
+
+	CPPUNIT_ASSERT( rand1base64.base64_decode(1) == rand1 );
+
+	// check line-splitting
+	stx::string rand1base64lines = rand1.base64_encode(16);
+
+	CPPUNIT_ASSERT( rand1base64lines == "FjXKA5BrRxGFAudA\n" "njrOQwxXPjXnprI3\n" "7G32aPYOdAxEPw/U\n" "qlblL1jM" );
+
+	// take three random binary data string with different sizes and run
+	// the base64 encoding->decoding->checking drill.
+
+	stx::string rand12 = stx::string::random_binary(12);
+	CPPUNIT_ASSERT( rand12.base64_encode().base64_decode(1) == rand12 );
+
+	stx::string rand13 = stx::string::random_binary(13);
+	CPPUNIT_ASSERT( rand13.base64_encode().base64_decode(1) == rand13 );
+
+	stx::string rand14 = stx::string::random_binary(14);
+	CPPUNIT_ASSERT( rand14.base64_encode().base64_decode(1) == rand14 );
+
+	// run a larger set of random tests
+	for (unsigned int ti = 0; ti < 1000; ++ti)
+	{
+	    unsigned int randlen = ti; // rand() % 1000;
+	    stx::string randstr = stx::string::random_binary(randlen);
+
+	    CPPUNIT_ASSERT( randstr.base64_encode().base64_decode(1) == randstr );
+	}
+
+	CPPUNIT_ASSERT_THROW( stx::string("FjXKA5!!RxGFAudA").base64_decode(1), std::runtime_error );
     }
 
     void test_levenshtein()
