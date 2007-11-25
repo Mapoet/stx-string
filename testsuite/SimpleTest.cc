@@ -1,9 +1,9 @@
 // $Id$
 
-#include <cppunit/extensions/HelperMacros.h>
-
 #include <stx-string.h>
 #include <stdlib.h>
+
+#include <cppunit/extensions/HelperMacros.h>
 
 class SimpleTest : public CPPUNIT_NS::TestFixture
 {

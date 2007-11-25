@@ -7,6 +7,7 @@
 #include <cctype>
 #include <stdexcept>
 #include <sstream>
+#include <vector>
 
 namespace stx {
 
@@ -1444,6 +1445,17 @@ public:
     static std::string compress(const std::string& str,
 				int compressionlevel = 9);
 
+    /** Compress a string using zlib in gzip mode with given compression level
+     * and return the binary data. The function adds simple gzip header and
+     * footer structures so that gzip will accept the file.
+     *
+     * @param str	(binary) string to compress
+     * @param compressionlevel	ranging 0-9
+     * @return		(binary) compressed gzip image
+     */
+    static std::string gzcompress(const std::string& str,
+				  int compressionlevel = 9);
+
     /** Decompress a string using zlib and return the original data. Throws
      * std::runtime_error if an error occurred during decompression.
      *
@@ -1463,6 +1475,18 @@ public:
     stx::string compress(int compressionlevel = 9) const
     {
 	return compress(*this, compressionlevel);
+    }
+
+    /** Compress the enclosed string using zlib in gzip mode with given
+     * compression level and return the binary data. The function adds simple
+     * gzip header and footer structures so that gzip will accept the file.
+     *
+     * @param compressionlevel	ranging 0-9
+     * @return		(binary) compressed gzip image
+     */
+    stx::string gzcompress(int compressionlevel = 9) const
+    {
+	return gzcompress(*this, compressionlevel);
     }
 
     /** Decompress the enclosed string using zlib and return the original
@@ -1485,6 +1509,20 @@ public:
     stx::string& compress_inplace(int compressionlevel = 9)
     {
 	*this = compress(*this, compressionlevel);
+	return *this;
+    }
+
+    /** Compress the enclosed string using zlib in gzip mode with given
+     * compression level and store the result in this string object. The
+     * function adds simple gzip header and footer structures so that gzip will
+     * accept the file.
+     *
+     * @param compressionlevel	ranging 0-9
+     * @return		reference to this, now (binary) compressed gzip image
+     */
+    stx::string& gzcompress_inplace(int compressionlevel = 9)
+    {
+	*this = gzcompress(*this, compressionlevel);
 	return *this;
     }
 
@@ -1993,6 +2031,76 @@ inline std::string stx::string::compress(const std::string& str, int compression
 	oss << "Exception during zlib compression: (" << ret << ") " << zs.msg;
 	throw(std::runtime_error(oss.str()));
     }
+
+    return outstring;
+}
+
+inline std::string stx::string::gzcompress(const std::string& str, int compressionlevel)
+{
+    std::string outstring;
+
+    // add simple gzip header of 10 bytes length
+    static const unsigned int header_size = 10;
+    outstring += '\x1F';	// ID1 (IDentification 1)
+    outstring += '\x8B';	// ID2 (IDentification 2)
+    outstring += '\x08';	// CM (Compression Method). 8 = deflate.
+    outstring += '\x00';	// FLG (FLaGs). None set.
+    outstring.append(4, '\0');	// MTIME (Modification TIME). Zeroed.
+    outstring += '\x02';	// XFL (eXtra FLags). Set maximum compression.
+    outstring += '\x03';	// OS (Operating System). 3 = Unix.
+
+    // perform deflation
+    z_stream zs;         // z_stream is zlib's control structure
+    memset(&zs, 0, sizeof(zs));
+
+    // use advance initialization routine with windowBits < 0 to suppress zlib
+    // deflate header and footer.
+    if (deflateInit2(&zs, compressionlevel, Z_DEFLATED, -MAX_WBITS, MAX_MEM_LEVEL, Z_DEFAULT_STRATEGY) != Z_OK)
+	throw(std::runtime_error("deflateInit failed while compressing."));
+
+    zs.next_in = const_cast<Bytef*>(reinterpret_cast<const Bytef*>(str.data()));
+    zs.avail_in = str.size();           // set the z_stream's input
+
+    int ret;
+    char outbuffer[32768];
+
+    // retrieve the compressed bytes blockwise
+    do {
+	zs.next_out = reinterpret_cast<Bytef*>(outbuffer);
+	zs.avail_out = sizeof(outbuffer);
+
+	ret = deflate(&zs, Z_FINISH);
+
+	if (outstring.size() < header_size + zs.total_out) {
+	    // append the block to the output string
+	    outstring.append(outbuffer,
+			     zs.total_out - outstring.size() + header_size);
+	}
+    } while (ret == Z_OK);
+
+    deflateEnd(&zs);
+
+    if (ret != Z_STREAM_END) {          // an error occurred that was not EOF
+	std::ostringstream oss;
+	oss << "Exception during zlib compression: (" << ret << ") " << zs.msg;
+	throw(std::runtime_error(oss.str()));
+    }
+
+    // add gzip footer: calculate crc32 of original data
+
+    uLong crc = crc32(0L, Z_NULL, 0);
+    crc = crc32(crc, reinterpret_cast<const Bytef*>(str.data()), str.size());
+    uLong datasize = str.size();
+
+    // output crc and total uncompressed data size
+    outstring.append(1, (crc >> 0)  & 0xFF);
+    outstring.append(1, (crc >> 8)  & 0xFF);
+    outstring.append(1, (crc >> 16) & 0xFF);
+    outstring.append(1, (crc >> 24) & 0xFF);
+    outstring.append(1, (datasize >> 0)  & 0xFF);
+    outstring.append(1, (datasize >> 8)  & 0xFF);
+    outstring.append(1, (datasize >> 16) & 0xFF);
+    outstring.append(1, (datasize >> 24) & 0xFF);
 
     return outstring;
 }
