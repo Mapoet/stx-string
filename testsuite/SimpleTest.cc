@@ -1,9 +1,9 @@
 // $Id$
 
+#include <cppunit/extensions/HelperMacros.h>
+
 #include <stx-string.h>
 #include <stdlib.h>
-
-#include <cppunit/extensions/HelperMacros.h>
 
 class SimpleTest : public CPPUNIT_NS::TestFixture
 {
@@ -16,6 +16,7 @@ class SimpleTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(test_split_ws);
     CPPUNIT_TEST(test_split);
     CPPUNIT_TEST(test_join);
+    CPPUNIT_TEST(test_contains);
     CPPUNIT_TEST(test_random);
     CPPUNIT_TEST(test_hexdump);
     CPPUNIT_TEST(test_base64);
@@ -258,6 +259,19 @@ protected:
 	    sv2.push_back("abc");
 
 	CPPUNIT_ASSERT( stx::string(".").join(sv2) == "abc.abc.abc.abc.abc.abc" );
+    }
+
+    void test_contains()
+    {
+	stx::string data = "test admin write readall read do";
+	
+	CPPUNIT_ASSERT( data.contains_word("test") );
+	CPPUNIT_ASSERT( !data.contains_word("testit") );
+
+	CPPUNIT_ASSERT( data.contains_word("read") );
+	CPPUNIT_ASSERT( data.contains_word("readall") );
+
+	CPPUNIT_ASSERT( !data.contains_word("doit") );
     }
 
     void test_random()

@@ -654,9 +654,9 @@ public:
 	return *this;
     }
 
-    // ***                          ***
-    // *** Split and Join Functions ***
-    // ***                          ***
+    // ***                                    ***
+    // *** Split, Join and Contains Functions ***
+    // ***                                    ***
 
     // *** static std::string functions ***
 
@@ -774,6 +774,60 @@ public:
 	    out.push_back(std::string(last, str.end()));
 
 	return out;
+    }
+
+    /** Search the given string for a whitespace-delimited word. It works as if
+     * the str was split_ws() and the resulting vector checked for a given
+     * word. However this function does not create a vector, it scans the
+     * string directly. Whitespace is space, tab, newline or carriage-return.
+     *
+     * @param str	whitespace-delimited string to check
+     * @param word	word to find
+     * @return		true if the word was found
+     */
+    static bool contains_word(const std::string& str, const std::string& word)
+    {
+	std::string::const_iterator it = str.begin(), last = it;
+
+	while (it != str.end())
+	{
+	    // skip over whitespace
+	    while (*it == ' ' || *it == '\n' || *it == '\t' || *it == '\r') {
+		if (++it == str.end()) return false;
+	    }
+
+	    // check if this non-whitespace matches the string
+	    std::string::const_iterator wi = word.begin();
+	    while (*it == *wi) {
+		++it; ++wi;
+		if (wi == word.end()) {
+		    if (it == str.end() || *it == ' ' || *it == '\n' || *it == '\t' || *it == '\r')
+			return true;
+		    else break;
+		}
+		if (it == str.end()) return false;
+	    }
+
+	    // skip over not matching whitespace
+	    while (*it != ' ' && *it != '\n' && *it != '\t' && *it != '\r') {
+		if (++it == str.end()) return false;
+	    }
+	}
+
+	return false;
+    }
+
+    /** Search the contained string for a whitespace-delimited word. It works
+     * as if the string was split_ws() and the resulting vector checked for a
+     * given word. However this function does not create a vector, it scans the
+     * string directly. Whitespace is space, tab, newline or carriage-return.
+     *
+     * @param word	word to find
+     * @return		true if the word was found
+     */
+    bool contains_word(const string& word) const	
+    {
+	return contains_word(*this, word);
     }
 
     /** Join a sequence of strings by some glue string between each pair from
