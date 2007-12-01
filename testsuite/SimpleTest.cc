@@ -96,6 +96,10 @@ protected:
 	CPPUNIT_ASSERT( !stx::string("ABC").less_icase("abc") );
 	CPPUNIT_ASSERT( stx::string("abc").less_icase("abcdef") );
 	CPPUNIT_ASSERT( !stx::string("abcdef").less_icase("abcd") );
+
+	CPPUNIT_ASSERT( stx::string("ABC").compare_icase("abc") == 0 );
+	CPPUNIT_ASSERT( stx::string("ABC").compare_icase("abd") < 0  );
+	CPPUNIT_ASSERT( stx::string("ABC").compare_icase("abb") > 0  );
     }
 
     void test_prefix_suffix()

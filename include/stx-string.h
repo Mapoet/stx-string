@@ -390,6 +390,28 @@ public:
 					     char_icase_less() );
     }
 
+    /** Compare two string case-insensitively. Returns 0 if they are equal, -1
+     * if a is lexicographical before b, +1 if a is after b. */
+    static int compare_icase(const std::string& a, const std::string& b)
+    {
+	std::string::const_iterator ai = a.begin();
+	std::string::const_iterator bi = b.begin();
+
+	while( ai != a.end() && bi != b.end() )
+	{
+	    char ca = std::tolower(*ai++);
+	    char cb = std::tolower(*bi++);
+
+	    if (ca == cb) continue;
+	    if (ca < cb) return -1;
+	    else return +1;
+	}
+
+	if (ai == a.end() && bi != b.end()) return +1;
+	else if (ai != a.end() && bi == b.end()) return -1;
+	else return 0;
+    }
+
     // *** class stx::string method versions ***
 
     /** Compare this string to the other case-insensitively. Return true if
@@ -404,6 +426,13 @@ public:
     bool less_icase(const string& other) const
     {
 	return less_icase(*this, other);
+    }
+
+    /** Compare this string to the other case-insensitively. Returns 0 if they
+     * are equal, -1 if a is lexicographical before b, +1 if a is after b. */
+    int compare_icase(const string& other) const
+    {
+	return compare_icase(*this, other);
     }
 
     // *** case-insenstive less-relation functional class for std::map ***
