@@ -28,172 +28,178 @@ protected:
     void test_trim()
     {
 	// string-copy functions
-	CPPUNIT_ASSERT( stx::string("  abc  ").trim_left() == "abc  " );
-	CPPUNIT_ASSERT( stx::string("abc  ").trim_left() == "abc  " );
-	CPPUNIT_ASSERT( stx::string("  ").trim_left() == "" );
+	CPPUNIT_ASSERT( stx::string::trim_left("  abc  ") == "abc  " );
+	CPPUNIT_ASSERT( stx::string::trim_left("abc  ") == "abc  " );
+	CPPUNIT_ASSERT( stx::string::trim_left("  ") == "" );
 
-	CPPUNIT_ASSERT( stx::string("  abc  ").trim_right() == "  abc" );
-	CPPUNIT_ASSERT( stx::string("  abc").trim_right() == "  abc" );
-	CPPUNIT_ASSERT( stx::string("  ").trim_right() == "" );
+	CPPUNIT_ASSERT( stx::string::trim_right("  abc  ") == "  abc" );
+	CPPUNIT_ASSERT( stx::string::trim_right("  abc") == "  abc" );
+	CPPUNIT_ASSERT( stx::string::trim_right("  ") == "" );
 
-	CPPUNIT_ASSERT( stx::string("  abc  ").trim() == "abc" );
-	CPPUNIT_ASSERT( stx::string("abc  ").trim() == "abc" );
-	CPPUNIT_ASSERT( stx::string("  abc").trim() == "abc" );
-	CPPUNIT_ASSERT( stx::string("  ").trim() == "" );
+	CPPUNIT_ASSERT( stx::string::trim("  abc  ") == "abc" );
+	CPPUNIT_ASSERT( stx::string::trim("abc  ") == "abc" );
+	CPPUNIT_ASSERT( stx::string::trim("  abc") == "abc" );
+	CPPUNIT_ASSERT( stx::string::trim("  ") == "" );
 
 	// in-place functions
-	stx::string str1 = "  abc  ";
-	stx::string str2 = "abc  ";
-	stx::string str3 = "  ";
+	std::string str1 = "  abc  ";
+	std::string str2 = "abc  ";
+	std::string str3 = "  ";
 
-	CPPUNIT_ASSERT( str1.trim_left_inplace() == "abc  " );
-	CPPUNIT_ASSERT( str2.trim_left_inplace() == "abc  " );
-	CPPUNIT_ASSERT( str3.trim_left_inplace() == "" );
+	CPPUNIT_ASSERT( stx::string::trim_left_inplace(str1) == "abc  " );
+	CPPUNIT_ASSERT( stx::string::trim_left_inplace(str2) == "abc  " );
+	CPPUNIT_ASSERT( stx::string::trim_left_inplace(str3) == "" );
 
 	str1 = "  abc  ";
 	str2 = "  abc";
 	str3 = "  ";
 
-
-	CPPUNIT_ASSERT( str1.trim_right_inplace() == "  abc" );
-	CPPUNIT_ASSERT( str2.trim_right_inplace() == "  abc" );
-	CPPUNIT_ASSERT( str3.trim_right_inplace() == "" );
+	CPPUNIT_ASSERT( stx::string::trim_right_inplace(str1) == "  abc" );
+	CPPUNIT_ASSERT( stx::string::trim_right_inplace(str2) == "  abc" );
+	CPPUNIT_ASSERT( stx::string::trim_right_inplace(str3) == "" );
 
 	str1 = "  abc  ";
 	str2 = "  abc";
 	str3 = "abc  ";
-	stx::string str4 = "  ";
+	std::string str4 = "  ";
 
-	CPPUNIT_ASSERT( str1.trim_inplace() == "abc" );
-	CPPUNIT_ASSERT( str2.trim_inplace() == "abc" );
-	CPPUNIT_ASSERT( str3.trim_inplace() == "abc" );
-	CPPUNIT_ASSERT( str4.trim_inplace() == "" );
+	CPPUNIT_ASSERT( stx::string::trim_inplace(str1) == "abc" );
+	CPPUNIT_ASSERT( stx::string::trim_inplace(str2) == "abc" );
+	CPPUNIT_ASSERT( stx::string::trim_inplace(str3) == "abc" );
+	CPPUNIT_ASSERT( stx::string::trim_inplace(str4) == "" );
     }
 
     void test_toupper_tolower()
     {
 	// string-copy functions
-	CPPUNIT_ASSERT( stx::string(" aBc ").toupper() == " ABC " );
-	CPPUNIT_ASSERT( stx::string(" AbCdEfG ").tolower() == " abcdefg " );
+	CPPUNIT_ASSERT( stx::string::toupper(" aBc ") == " ABC " );
+	CPPUNIT_ASSERT( stx::string::tolower(" AbCdEfG ") == " abcdefg " );
 
 	// in-place functions
-	stx::string str1 = "  aBc  ";
-	stx::string str2 = "AbCdEfGh ";
+	std::string str1 = "  aBc  ";
+	std::string str2 = "AbCdEfGh ";
 
-	CPPUNIT_ASSERT( str1.toupper_inplace() == "  ABC  " );
-	CPPUNIT_ASSERT( str2.tolower_inplace() == "abcdefgh " );
+	CPPUNIT_ASSERT( stx::string::toupper_inplace(str1) == "  ABC  " );
+	CPPUNIT_ASSERT( stx::string::tolower_inplace(str2) == "abcdefgh " );
     }
 
     void test_compare_icase()
     {
-	CPPUNIT_ASSERT( stx::string("ABC") != stx::string("abc") );
+	CPPUNIT_ASSERT( std::string("ABC") != std::string("abc") );
 
-	CPPUNIT_ASSERT( stx::string("ABC").equal_icase("abc") );
-	CPPUNIT_ASSERT( !stx::string("ABC").equal_icase("abd") );
-	CPPUNIT_ASSERT( !stx::string("ABC").equal_icase("abcedf") );
+	CPPUNIT_ASSERT( stx::string::equal_icase("ABC", "abc") );
+	CPPUNIT_ASSERT( !stx::string::equal_icase("ABC", "abd") );
+	CPPUNIT_ASSERT( !stx::string::equal_icase("ABC", "abcedf") );
 
-	CPPUNIT_ASSERT( stx::string("ABC") < stx::string("abc") );
-	CPPUNIT_ASSERT( !stx::string("ABC").less_icase("abc") );
-	CPPUNIT_ASSERT( stx::string("abc").less_icase("abcdef") );
-	CPPUNIT_ASSERT( !stx::string("abcdef").less_icase("abcd") );
+	CPPUNIT_ASSERT( std::string("ABC") < std::string("abc") );
+	CPPUNIT_ASSERT( !stx::string::less_icase("ABC", "abc") );
+	CPPUNIT_ASSERT( stx::string::less_icase("abc", "abcdef") );
+	CPPUNIT_ASSERT( !stx::string::less_icase("abcdef", "abcd") );
 
-	CPPUNIT_ASSERT( stx::string("ABC").compare_icase("abc") == 0 );
-	CPPUNIT_ASSERT( stx::string("ABC").compare_icase("abd") < 0  );
-	CPPUNIT_ASSERT( stx::string("ABC").compare_icase("abb") > 0  );
+	CPPUNIT_ASSERT( stx::string::compare_icase("ABC", "abc") == 0 );
+	CPPUNIT_ASSERT( stx::string::compare_icase("ABC", "abd") < 0  );
+	CPPUNIT_ASSERT( stx::string::compare_icase("ABC", "abb") > 0  );
     }
 
     void test_prefix_suffix()
     {
-	CPPUNIT_ASSERT( stx::string("abcdef").is_prefix("abc") );
-	CPPUNIT_ASSERT( ! stx::string("abcdef").is_prefix("def") );
-	CPPUNIT_ASSERT( stx::string("abcdef").is_suffix("def") );
-	CPPUNIT_ASSERT( ! stx::string("abcdef").is_suffix("abc") );
+	CPPUNIT_ASSERT( stx::string::is_prefix("abcdef", "abc") );
+	CPPUNIT_ASSERT( ! stx::string::is_prefix("abcdef", "def") );
+	CPPUNIT_ASSERT( stx::string::is_suffix("abcdef", "def") );
+	CPPUNIT_ASSERT( ! stx::string::is_suffix("abcdef", "abc") );
 
-	CPPUNIT_ASSERT( ! stx::string("abcdef").is_prefix("ABC") );
+	CPPUNIT_ASSERT( ! stx::string::is_prefix("abcdef", "ABC") );
 
-	CPPUNIT_ASSERT( stx::string("abcdef").is_prefix_icase("ABC") );
-	CPPUNIT_ASSERT( ! stx::string("abcdef").is_prefix_icase("DEF") );
-	CPPUNIT_ASSERT( stx::string("abcdef").is_suffix_icase("DEF") );
-	CPPUNIT_ASSERT( ! stx::string("abcdef").is_suffix_icase("ABC") );
+	CPPUNIT_ASSERT( stx::string::is_prefix_icase("abcdef", "ABC") );
+	CPPUNIT_ASSERT( ! stx::string::is_prefix_icase("abcdef", "DEF") );
+	CPPUNIT_ASSERT( stx::string::is_suffix_icase("abcdef", "DEF") );
+	CPPUNIT_ASSERT( ! stx::string::is_suffix_icase("abcdef", "ABC") );
 
-	CPPUNIT_ASSERT( stx::string("abcdef").is_prefix("") );
-	CPPUNIT_ASSERT( stx::string("abcdef").is_suffix("") );
+	CPPUNIT_ASSERT( stx::string::is_prefix("abcdef", "") );
+	CPPUNIT_ASSERT( stx::string::is_suffix("abcdef", "") );
 
-	CPPUNIT_ASSERT( ! stx::string("").is_prefix("abc") );
-	CPPUNIT_ASSERT( ! stx::string("").is_suffix("abc") );
+	CPPUNIT_ASSERT( ! stx::string::is_prefix("", "abc") );
+	CPPUNIT_ASSERT( ! stx::string::is_suffix("", "abc") );
 
-	CPPUNIT_ASSERT( stx::string("").is_prefix("") );
-	CPPUNIT_ASSERT( stx::string("").is_suffix("") );
+	CPPUNIT_ASSERT( stx::string::is_prefix("", "") );
+	CPPUNIT_ASSERT( stx::string::is_suffix("", "") );
     }
 
     void test_replace()
     {
 	// copy variants
-	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_first("abc", "a") == "adef abcdef" );
-	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_first("cba", "a") == "abcdef abcdef" );
-	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_all("abc", "a") == "adef adef" );
-	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_all("cba", "a") == "abcdef abcdef" );
+	CPPUNIT_ASSERT( stx::string::replace_first("abcdef abcdef", "abc", "a") == "adef abcdef" );
+	CPPUNIT_ASSERT( stx::string::replace_first("abcdef abcdef", "cba", "a") == "abcdef abcdef" );
+	CPPUNIT_ASSERT( stx::string::replace_all("abcdef abcdef", "abc", "a") == "adef adef" );
+	CPPUNIT_ASSERT( stx::string::replace_all("abcdef abcdef", "cba", "a") == "abcdef abcdef" );
 
-	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_first("a", "aaa") == "aaabcdef abcdef" );
-	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_all("a", "aaa") == "aaabcdef aaabcdef" );
+	CPPUNIT_ASSERT( stx::string::replace_first("abcdef abcdef", "a", "aaa") == "aaabcdef abcdef" );
+	CPPUNIT_ASSERT( stx::string::replace_all("abcdef abcdef", "a", "aaa") == "aaabcdef aaabcdef" );
 
 	// in-place variants
-	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_first_inplace("abc", "a") == "adef abcdef" );
-	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_first_inplace("cba", "a") == "abcdef abcdef" );
-	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_all_inplace("abc", "a") == "adef adef" );
-	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_all_inplace("cba", "a") == "abcdef abcdef" );
+	std::string str1 = "abcdef abcdef";
+	std::string str2 = "abcdef abcdef";
+	CPPUNIT_ASSERT( stx::string::replace_first_inplace(str1, "abc", "a") == "adef abcdef" );
+	CPPUNIT_ASSERT( stx::string::replace_first_inplace(str2, "cba", "a") == "abcdef abcdef" );
 
-	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_first_inplace("a", "aaa") == "aaabcdef abcdef" );
-	CPPUNIT_ASSERT( stx::string("abcdef abcdef").replace_all_inplace("a", "aaa") == "aaabcdef aaabcdef" );
+	str1 = "abcdef abcdef";
+	str2 = "abcdef abcdef";
+	CPPUNIT_ASSERT( stx::string::replace_all_inplace(str1, "abc", "a") == "adef adef" );
+	CPPUNIT_ASSERT( stx::string::replace_all_inplace(str2, "cba", "a") == "abcdef abcdef" );
+
+	str1 = "abcdef abcdef";
+	str2 = "abcdef abcdef";
+	CPPUNIT_ASSERT( stx::string::replace_first_inplace(str1, "a", "aaa") == "aaabcdef abcdef" );
+	CPPUNIT_ASSERT( stx::string::replace_all_inplace(str2, "a", "aaa") == "aaabcdef aaabcdef" );
     }
 
     void test_split_ws()
     {
 	// simple whitespace split
-	std::vector<std::string> sv = stx::string("  ab c df  fdlk f  ").split_ws();
+	std::vector<std::string> sv = stx::string::split_ws("  ab c df  fdlk f  ");
 
 	CPPUNIT_ASSERT( sv.size() == 5 );
 	CPPUNIT_ASSERT( sv[0] == "ab" && sv[1] == "c" && sv[2] == "df" && sv[3] == "fdlk" && sv[4] == "f" );
 
-	sv = stx::string("ab c df  fdlk f  ").split_ws();
+	sv = stx::string::split_ws("ab c df  fdlk f  ");
 
 	CPPUNIT_ASSERT( sv.size() == 5 );
 	CPPUNIT_ASSERT( sv[0] == "ab" && sv[1] == "c" && sv[2] == "df" && sv[3] == "fdlk" && sv[4] == "f" );
 
-	sv = stx::string("ab c df  fdlk f").split_ws();
+	sv = stx::string::split_ws("ab c df  fdlk f");
 
 	CPPUNIT_ASSERT( sv.size() == 5 );
 	CPPUNIT_ASSERT( sv[0] == "ab" && sv[1] == "c" && sv[2] == "df" && sv[3] == "fdlk" && sv[4] == "f" );
 
-	sv = stx::string("").split_ws();
+	sv = stx::string::split_ws("");
 	CPPUNIT_ASSERT( sv.size() == 0 );
 
-	sv = stx::string("    ").split_ws();
+	sv = stx::string::split_ws("    ");
 	CPPUNIT_ASSERT( sv.size() == 0 );
 
 	// whitespace split with limit
-	sv = stx::string("  ab c   df  fdlk f  ").split_ws(3);
+	sv = stx::string::split_ws("  ab c   df  fdlk f  ", 3);
 
 	CPPUNIT_ASSERT( sv.size() == 3 );
 	CPPUNIT_ASSERT( sv[0] == "ab" && sv[1] == "c" && sv[2] == "df  fdlk f  " );
 
 	// whitespace split with some strange limits
-	sv = stx::string("  ab c df  fdlk f  ").split_ws(0);
+	sv = stx::string::split_ws("  ab c df  fdlk f  ", 0);
 	CPPUNIT_ASSERT( sv.size() == 0 );
 
-	sv = stx::string("  ab c df  fdlk f  ").split_ws(1);
+	sv = stx::string::split_ws("  ab c df  fdlk f  ", 1);
 
 	CPPUNIT_ASSERT( sv.size() == 1 );
 	CPPUNIT_ASSERT( sv[0] == "ab c df  fdlk f  " );
 
 	// whitespace split with large limit
-	sv = stx::string("  ab  c  df  fdlk f  ").split_ws(10);
+	sv = stx::string::split_ws("  ab  c  df  fdlk f  ", 10);
 
 	CPPUNIT_ASSERT( sv.size() == 5 );
 	CPPUNIT_ASSERT( sv[0] == "ab" && sv[1] == "c" && sv[2] == "df" && sv[3] == "fdlk" && sv[4] == "f" );
 
 	// whitespace split with limit at exactly the end
-	sv = stx::string("  ab  c  df  fdlk f  ").split_ws(5);
+	sv = stx::string::split_ws("  ab  c  df  fdlk f  ", 5);
 
 	CPPUNIT_ASSERT( sv.size() == 5 );
 	CPPUNIT_ASSERT( sv[0] == "ab" && sv[1] == "c" && sv[2] == "df" && sv[3] == "fdlk" && sv[4] == "f  " );
@@ -202,48 +208,48 @@ protected:
     void test_split()
     {
 	// simple char split
-	std::vector<std::string> sv = stx::string("/usr/bin/test").split('/');
+	std::vector<std::string> sv = stx::string::split("/usr/bin/test", '/');
 
 	CPPUNIT_ASSERT( sv.size() == 4 );
 	CPPUNIT_ASSERT( sv[0] == "" && sv[1] == "usr" && sv[2] == "bin" && sv[3] == "test" );
 
-	sv = stx::string("/usr/bin/test").split('/', 3);
+	sv = stx::string::split("/usr/bin/test", '/', 3);
 
 	CPPUNIT_ASSERT( sv.size() == 3 );
 	CPPUNIT_ASSERT( sv[0] == "" && sv[1] == "usr" && sv[2] == "bin/test" );
 
 	// char split with some strange limits
-	sv = stx::string("/usr//bin/test").split('/', 0);
+	sv = stx::string::split("/usr//bin/test", '/', 0);
 	CPPUNIT_ASSERT( sv.size() == 0 );
 
-	sv = stx::string("/usr//bin/test").split('/', 1);
+	sv = stx::string::split("/usr//bin/test", '/', 1);
 	CPPUNIT_ASSERT( sv.size() == 1 );
 	CPPUNIT_ASSERT( sv[0] == "/usr//bin/test" );
 
 	// simple str split
-	sv = stx::string("/usr/bin/test").split("/");
+	sv = stx::string::split("/usr/bin/test", "/");
 
 	CPPUNIT_ASSERT( sv.size() == 4 );
 	CPPUNIT_ASSERT( sv[0] == "" && sv[1] == "usr" && sv[2] == "bin" && sv[3] == "test" );
 
-	sv = stx::string("/usr/bin/test").split("/", 3);
+	sv = stx::string::split("/usr/bin/test", "/", 3);
 
 	CPPUNIT_ASSERT( sv.size() == 3 );
 	CPPUNIT_ASSERT( sv[0] == "" && sv[1] == "usr" && sv[2] == "bin/test" );
 
 	// str split with some strange limits
-	sv = stx::string("/usr//bin/test").split("/", 0);
+	sv = stx::string::split("/usr//bin/test", "/", 0);
 	CPPUNIT_ASSERT( sv.size() == 0 );
 
-	sv = stx::string("/usr//bin/test").split("/", 1);
+	sv = stx::string::split("/usr//bin/test", "/", 1);
 	CPPUNIT_ASSERT( sv.size() == 1 );
 	CPPUNIT_ASSERT( sv[0] == "/usr//bin/test" );
 
-	sv = stx::string("/usr/bin/test").split("");
+	sv = stx::string::split("/usr/bin/test", "");
 	CPPUNIT_ASSERT( sv.size() == 0 );
 
 	// str split with parital needle at end
-	sv = stx::string("testabcblahabcabcab").split("abc");
+	sv = stx::string::split("testabcblahabcabcab", "abc");
 
 	CPPUNIT_ASSERT( sv.size() == 4 );
 	CPPUNIT_ASSERT( sv[0] == "test" && sv[1] == "blah" && sv[2] == "" && sv[3] == "ab" );
@@ -252,39 +258,39 @@ protected:
     void test_join()
     {
 	// simple string split and join
-	std::vector<std::string> sv = stx::string("/usr/bin/test").split('/');
+	std::vector<std::string> sv = stx::string::split("/usr/bin/test", '/');
 	CPPUNIT_ASSERT( sv.size() == 4 );
 
 	CPPUNIT_ASSERT( stx::string::join("--", sv) == "--usr--bin--test" );
-	CPPUNIT_ASSERT( stx::string(";").join(sv) == ";usr;bin;test" );
+	CPPUNIT_ASSERT( stx::string::join(";", sv) == ";usr;bin;test" );
 
-	std::vector<stx::string> sv2;
+	std::vector<std::string> sv2;
 	for(unsigned int i = 0; i < 6; ++i)
 	    sv2.push_back("abc");
 
-	CPPUNIT_ASSERT( stx::string(".").join(sv2) == "abc.abc.abc.abc.abc.abc" );
+	CPPUNIT_ASSERT( stx::string::join(".", sv2) == "abc.abc.abc.abc.abc.abc" );
     }
 
     void test_contains()
     {
-	stx::string data = "test admin write readall read do";
+	std::string data = "test admin write readall read do";
 	
-	CPPUNIT_ASSERT( data.contains_word("test") );
-	CPPUNIT_ASSERT( !data.contains_word("testit") );
+	CPPUNIT_ASSERT( stx::string::contains_word(data, "test") );
+	CPPUNIT_ASSERT( !stx::string::contains_word(data, "testit") );
 
-	CPPUNIT_ASSERT( data.contains_word("read") );
-	CPPUNIT_ASSERT( data.contains_word("readall") );
+	CPPUNIT_ASSERT( stx::string::contains_word(data, "read") );
+	CPPUNIT_ASSERT( stx::string::contains_word(data, "readall") );
 
-	CPPUNIT_ASSERT( !data.contains_word("doit") );
+	CPPUNIT_ASSERT( !stx::string::contains_word(data, "doit") );
     }
 
     void test_random()
     {
 	srand( time(NULL) );
 
-	stx::string rand1 = stx::string::random_binary(42);
-	stx::string rand2 = stx::string::random_alpha(42);
-	stx::string rand3 = stx::string::random_alphanumeric(42);
+	std::string rand1 = stx::string::random_binary(42);
+	std::string rand2 = stx::string::random_alpha(42);
+	std::string rand3 = stx::string::random_alphanumeric(42);
 
 	CPPUNIT_ASSERT( rand1.size() == 42 );
 
@@ -304,22 +310,22 @@ protected:
 	// take hex data and dump it into a string, then parse back into array
 	const char hexdump[8] = { 0x8D,0xE2,0x85,0xD4,0xBF,0x98,0xE6,0x03 };
 
-	stx::string hexdata(hexdump, 8);
-	stx::string hexstring = hexdata.hexdump();
+	std::string hexdata(hexdump, 8);
+	std::string hexstring = stx::string::hexdump(hexdata);
 
 	CPPUNIT_ASSERT( hexstring == "8DE285D4BF98E603" );
 
-	stx::string hexparsed = hexstring.parse_hexdump();
+	std::string hexparsed = stx::string::parse_hexdump(hexstring);
 	CPPUNIT_ASSERT( hexparsed == hexdata );
 
 	// dump random binary string into hex and parse it back
-	stx::string rand1 = stx::string::random_binary(42);
-	CPPUNIT_ASSERT( rand1.hexdump().parse_hexdump() == rand1 );
+	std::string rand1 = stx::string::random_binary(42);
+	CPPUNIT_ASSERT( stx::string::parse_hexdump( stx::string::hexdump(rand1) ) == rand1 );
 
 	// take the first hex list and dump it into source code format, then
 	// compare it with correct data (which was also dumped with
 	// hexdump_sourcecode())
-	stx::string hexsource = hexdata.hexdump_sourcecode("abc");
+	std::string hexsource = stx::string::hexdump_sourcecode(hexdata, "abc");
 
 	const char hexsourcecmp[65] = {
 	    0x63,0x6F,0x6E,0x73,0x74,0x20,0x63,0x68,0x61,0x72,0x20,0x61,0x62,0x63,0x5B,0x38,
@@ -332,8 +338,7 @@ protected:
 	CPPUNIT_ASSERT( hexsource == std::string(hexsourcecmp, sizeof(hexsourcecmp)) );
 
 	// test parse_hexdump with illegal string
-	stx::string s1;
-	CPPUNIT_ASSERT_THROW( s1.parse_hexdump("illegal"), std::runtime_error);
+	CPPUNIT_ASSERT_THROW( stx::string::parse_hexdump("illegal"), std::runtime_error);
     }
 
     void test_base64()
@@ -345,41 +350,41 @@ protected:
 	    0x44,0x3F,0x0F,0xD4,0xAA,0x56,0xE5,0x2F,0x58,0xCC
 	};
 
-	stx::string rand1(rand1data, sizeof(rand1data));
+	std::string rand1(rand1data, sizeof(rand1data));
 
-	stx::string rand1base64 = rand1.base64_encode();
+	std::string rand1base64 = stx::string::base64_encode(rand1);
 
 	CPPUNIT_ASSERT( rand1base64 == "FjXKA5BrRxGFAudAnjrOQwxXPjXnprI37G32aPYOdAxEPw/UqlblL1jM" );
 
-	CPPUNIT_ASSERT( rand1base64.base64_decode(1) == rand1 );
+	CPPUNIT_ASSERT( stx::string::base64_decode(rand1base64, 1) == rand1 );
 
 	// check line-splitting
-	stx::string rand1base64lines = rand1.base64_encode(16);
+	std::string rand1base64lines = stx::string::base64_encode(rand1, 16);
 
 	CPPUNIT_ASSERT( rand1base64lines == "FjXKA5BrRxGFAudA\n" "njrOQwxXPjXnprI3\n" "7G32aPYOdAxEPw/U\n" "qlblL1jM" );
 
 	// take three random binary data string with different sizes and run
 	// the base64 encoding->decoding->checking drill.
 
-	stx::string rand12 = stx::string::random_binary(12);
-	CPPUNIT_ASSERT( rand12.base64_encode().base64_decode(1) == rand12 );
+	std::string rand12 = stx::string::random_binary(12);
+	CPPUNIT_ASSERT( stx::string::base64_decode( stx::string::base64_encode(rand12) , 1) == rand12 );
 
-	stx::string rand13 = stx::string::random_binary(13);
-	CPPUNIT_ASSERT( rand13.base64_encode().base64_decode(1) == rand13 );
+	std::string rand13 = stx::string::random_binary(13);
+	CPPUNIT_ASSERT( stx::string::base64_decode( stx::string::base64_encode(rand13) , 1) == rand13 );
 
-	stx::string rand14 = stx::string::random_binary(14);
-	CPPUNIT_ASSERT( rand14.base64_encode().base64_decode(1) == rand14 );
+	std::string rand14 = stx::string::random_binary(14);
+	CPPUNIT_ASSERT( stx::string::base64_decode( stx::string::base64_encode(rand14) , 1) == rand14 );
 
 	// run a larger set of random tests
 	for (unsigned int ti = 0; ti < 1000; ++ti)
 	{
 	    unsigned int randlen = ti; // rand() % 1000;
-	    stx::string randstr = stx::string::random_binary(randlen);
+	    std::string randstr = stx::string::random_binary(randlen);
 
-	    CPPUNIT_ASSERT( randstr.base64_encode().base64_decode(1) == randstr );
+	    CPPUNIT_ASSERT( stx::string::base64_decode( stx::string::base64_encode(randstr) , 1) == randstr );
 	}
 
-	CPPUNIT_ASSERT_THROW( stx::string("FjXKA5!!RxGFAudA").base64_decode(1), std::runtime_error );
+	CPPUNIT_ASSERT_THROW( stx::string::base64_decode("FjXKA5!!RxGFAudA", 1), std::runtime_error );
     }
 
     void test_levenshtein()
@@ -387,12 +392,12 @@ protected:
 	CPPUNIT_ASSERT( stx::string::levenshtein("Demonstration", "Comparison") == 9 );
 	CPPUNIT_ASSERT( stx::string::levenshtein("Levenshtein", "Distance") == 10 );
 	CPPUNIT_ASSERT( stx::string::levenshtein("Distance", "Distance") == 0 );
-	CPPUNIT_ASSERT( stx::string("Distance").levenshtein("LVDistance") == 2 );
+	CPPUNIT_ASSERT( stx::string::levenshtein("Distance", "LVDistance") == 2 );
 
 	CPPUNIT_ASSERT( stx::string::levenshtein_icase("distance", "DISTANCE") == 0 );
 	CPPUNIT_ASSERT( stx::string::levenshtein_icase("Levenshtein", "Distance") == 10 );
 
-	CPPUNIT_ASSERT( stx::string("Test this distance").levenshtein_icase("to this one") == 9 );
+	CPPUNIT_ASSERT( stx::string::levenshtein_icase("Test this distance", "to this one") == 9 );
     }
 };
 

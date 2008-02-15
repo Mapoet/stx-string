@@ -60,9 +60,9 @@ protected:
 	    0x62,0x57
 	};
 
-	stx::string input(input_, sizeof(input_));
+	std::string input(input_, sizeof(input_));
 
-	stx::string compresstest = input.compress();
+	std::string compresstest = stx::string::compress(input);
 
 	const char compressed_[513] = {
 	    0x78,0xDA,0x0D,0xD1,0x59,0xA2,0x6B,0x30,0x00,0x00,0xD0,0x2D,0xD1,0x50,0x7C,0xD6,
@@ -100,20 +100,20 @@ protected:
 	    0xF8
 	};
 
-	stx::string compressed(compressed_, sizeof(compressed_));
+	std::string compressed(compressed_, sizeof(compressed_));
 
 	CPPUNIT_ASSERT( compresstest == compressed );
     }
 
     void test_compress_random()
     {
-	stx::string rand1 = stx::string::random_binary(1023);
-	stx::string rand2 = stx::string::random_alpha(1023);
-	stx::string rand3 = stx::string::random_alphanumeric(1023);
+	std::string rand1 = stx::string::random_binary(1023);
+	std::string rand2 = stx::string::random_alpha(1023);
+	std::string rand3 = stx::string::random_alphanumeric(1023);
 
-	CPPUNIT_ASSERT( rand1.compress().decompress() == rand1 );
-	CPPUNIT_ASSERT( rand2.compress().decompress() == rand2 );
-	CPPUNIT_ASSERT( rand3.compress().decompress() == rand3 );
+	CPPUNIT_ASSERT( stx::string::decompress( stx::string::compress(rand1) ) == rand1 );
+	CPPUNIT_ASSERT( stx::string::decompress( stx::string::compress(rand2) ) == rand2 );
+	CPPUNIT_ASSERT( stx::string::decompress( stx::string::compress(rand3) ) == rand3 );
     }
 };
 
