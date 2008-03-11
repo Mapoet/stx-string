@@ -44,10 +44,12 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES =
 PROGRAMS = $(noinst_PROGRAMS)
 am__testsuite_SOURCES_DIST = TestTrue.cc TestRunner.cc SimpleTest.cc \
-	CompressTest.cc NatcmpTest.cc strnatcmp.h strnatcmp.c
+	CompressTest.cc Bz2CompressTest.cc NatcmpTest.cc strnatcmp.h \
+	strnatcmp.c
 @HAVE_CPPUNIT_FALSE@am_testsuite_OBJECTS = TestTrue.$(OBJEXT)
 @HAVE_CPPUNIT_TRUE@am_testsuite_OBJECTS = TestRunner.$(OBJEXT) \
 @HAVE_CPPUNIT_TRUE@	SimpleTest.$(OBJEXT) CompressTest.$(OBJEXT) \
+@HAVE_CPPUNIT_TRUE@	Bz2CompressTest.$(OBJEXT) \
 @HAVE_CPPUNIT_TRUE@	NatcmpTest.$(OBJEXT) strnatcmp.$(OBJEXT)
 testsuite_OBJECTS = $(am_testsuite_OBJECTS)
 testsuite_LDADD = $(LDADD)
@@ -162,8 +164,8 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 @HAVE_CPPUNIT_FALSE@testsuite_SOURCES = TestTrue.cc
 @HAVE_CPPUNIT_TRUE@testsuite_SOURCES = TestRunner.cc SimpleTest.cc \
-@HAVE_CPPUNIT_TRUE@	CompressTest.cc NatcmpTest.cc strnatcmp.h \
-@HAVE_CPPUNIT_TRUE@	strnatcmp.c
+@HAVE_CPPUNIT_TRUE@	CompressTest.cc Bz2CompressTest.cc \
+@HAVE_CPPUNIT_TRUE@	NatcmpTest.cc strnatcmp.h strnatcmp.c
 AM_CXXFLAGS = -W -Wall -Wold-style-cast -I$(top_srcdir)/include @CPPUNIT_CFLAGS@
 LDADD = @CPPUNIT_LIBS@
 all: all-am
@@ -212,6 +214,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Bz2CompressTest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CompressTest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NatcmpTest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/SimpleTest.Po@am__quote@

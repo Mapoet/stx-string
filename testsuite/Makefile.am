@@ -8,7 +8,7 @@ if HAVE_CPPUNIT
 
 testsuite_SOURCES = TestRunner.cc
 
-testsuite_SOURCES += SimpleTest.cc CompressTest.cc
+testsuite_SOURCES += SimpleTest.cc CompressTest.cc Bz2CompressTest.cc
 
 testsuite_SOURCES += NatcmpTest.cc strnatcmp.h strnatcmp.c
 

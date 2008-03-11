@@ -1040,42 +1040,6 @@ static inline std::string base64_decode(const std::string& instr, bool strict = 
     }
 }
 
-// ***                                              ***
-// *** Compress and Uncompress Functions using zlib ***
-// ***                                              ***
-
-/**
- * Compress a string using zlib with given compression level and return the
- * binary data.
- *
- * @param str		(binary) string to compress
- * @param compressionlevel	ranging 0-9
- * @return		(binary) compressed image
- */
-static inline std::string compress(const std::string& str,
-				   int compressionlevel = 9);
-
-/**
- * Compress a string using zlib in gzip mode with given compression level and
- * return the binary data. The function adds simple gzip header and footer
- * structures so that gzip will accept the file.
- *
- * @param str		(binary) string to compress
- * @param compressionlevel	ranging 0-9
- * @return		(binary) compressed gzip image
- */
-static inline std::string gzcompress(const std::string& str,
-				     int compressionlevel = 9);
-
-/**
- * Decompress a string using zlib and return the original data. Throws
- * std::runtime_error if an error occurred during decompression.
- *
- * @param str	(binary) compressed image to decompress
- * @return	uncompressed string
- */
-static inline std::string decompress(const std::string& str);
-
 // ***                             ***
 // *** Levenshtein String Distance ***
 // ***                             ***
@@ -1465,13 +1429,25 @@ struct order_natless_icase_desc {
 
 #ifndef STX_STRING_NO_ZLIB
 
+// ***                                              ***
+// *** Compress and Uncompress Functions using zlib ***
+// ***                                              ***
+
 #include <zlib.h>
 
 namespace stx {
 
 namespace string {
 
-inline std::string compress(const std::string& str, int compressionlevel)
+/**
+ * Compress a string using zlib with given compression level and return the
+ * binary data.
+ *
+ * @param str          (binary) string to compress
+ * @param compressionlevel     ranging 0-9
+ * @return             (binary) compressed image
+ */
+static inline std::string compress(const std::string& str, int compressionlevel = 9)
 {
     z_stream zs;         // z_stream is zlib's control structure
     memset(&zs, 0, sizeof(zs));
@@ -1511,7 +1487,16 @@ inline std::string compress(const std::string& str, int compressionlevel)
     return outstring;
 }
 
-inline std::string gzcompress(const std::string& str, int compressionlevel)
+/**
+ * Compress a string using zlib in gzip mode with given compression level and
+ * return the binary data. The function adds simple gzip header and footer
+ * structures so that gzip will accept the file.
+ *
+ * @param str          (binary) string to compress
+ * @param compressionlevel     ranging 0-9
+ * @return             (binary) compressed gzip image
+ */
+static inline std::string gzcompress(const std::string& str, int compressionlevel = 9)
 {
     std::string outstring;
 
@@ -1581,7 +1566,14 @@ inline std::string gzcompress(const std::string& str, int compressionlevel)
     return outstring;
 }
 
-inline std::string decompress(const std::string& str)
+/**
+ * Decompress a string using zlib and return the original data. Throws
+ * std::runtime_error if an error occurred during decompression.
+ *
+ * @param str  (binary) compressed image to decompress
+ * @return     uncompressed string
+ */
+static inline std::string decompress(const std::string& str)
 {
     z_stream zs;	// z_stream is zlib's control structure
     memset(&zs, 0, sizeof(zs));
@@ -1626,6 +1618,139 @@ inline std::string decompress(const std::string& str)
 
 } // namespace stx
 
-#endif
+#endif // STX_STRING_NO_ZLIB
+
+#ifndef STX_STRING_NO_BZ2LIB
+
+// ***                                               ***
+// *** Compress and Uncompress Functions using bzip2 ***
+// ***                                               ***
+
+#include <bzlib.h>
+
+namespace stx {
+
+namespace string {
+
+/**
+ * Compress a string using bzip2 with given settings and return the binary
+ * data.
+ *
+ * @param str          (binary) string to compress
+ *
+ * @param blockSize100k Parameter blockSize100k specifies the block size to be
+ * used for compression. It should be a value between 1 and 9 inclusive, and
+ * the actual block size used is 100000 x this figure. 9 gives the best
+ * compression but takes most memory.
+
+ * @param workFactor Parameter workFactor controls how the compression phase
+ * behaves when presented with worst case, highly repetitive, input data. If
+ * compression runs into difficulties caused by repetitive data, the library
+ * switches from the standard sorting algorithm to a fallback algorithm. The
+ * fallback is slower than the standard algorithm by perhaps a factor of three,
+ * but always behaves reasonably, no matter how bad the input. Lower values of
+ * workFactor reduce the amount of effort the standard algorithm will expend
+ * before resorting to the fallback. You should set this parameter carefully;
+ * too low, and many inputs will be handled by the fallback algorithm and so
+ * compress rather slowly, too high, and your average-to-worst case compression
+ * times can become very large. The default value of 30 gives reasonable
+ * behaviour over a wide range of circumstances. Allowable values range from 0
+ * to 250 inclusive. 0 is a special case, equivalent to using the default value
+ * of 30.
+ *
+ * @return             (binary) compressed image
+ */
+static inline std::string bz2compress(const std::string& str, int blockSize100k = 9, int workFactor = 30)
+{
+    bz_stream bz;         // bz_stream is bzip2's control structure
+    memset(&bz, 0, sizeof(bz));
+
+    if (BZ2_bzCompressInit(&bz, blockSize100k, 0, workFactor) != BZ_OK)
+	throw(std::runtime_error("BZ2_bzCompressInit failed while initializing compression."));
+
+    bz.next_in = const_cast<char*>(str.data());
+    bz.avail_in = str.size();	// set the bz_stream's input
+
+    int ret;
+    char outbuffer[32768];
+    std::string outstring;
+
+    // retrieve the compressed bytes blockwise
+    do {
+	bz.next_out = outbuffer;
+	bz.avail_out = sizeof(outbuffer);
+
+	ret = BZ2_bzCompress(&bz, BZ_FINISH);
+
+	if (outstring.size() < bz.total_out_lo32) {
+	    // append the block to the output string
+	    outstring.append(outbuffer,
+			     bz.total_out_lo32 - outstring.size());
+	}
+    } while (ret == BZ_OK);
+
+    BZ2_bzCompressEnd(&bz);
+
+    if (ret != BZ_STREAM_END) {          // an error occurred that was not EOF
+	std::ostringstream oss;
+	oss << "Exception during bzip2 compression: (" << ret << ")";
+	throw(std::runtime_error(oss.str()));
+    }
+
+    return outstring;
+}
+
+/**
+ * Decompress a string using bzip2 and return the original data. Throws
+ * std::runtime_error if an error occurred during decompression.
+ *
+ * @param str  (binary) compressed image to decompress
+ * @return     uncompressed string
+ */
+static inline std::string bz2decompress(const std::string& str)
+{
+    bz_stream bz;	// bz_stream is bzip2's control structure
+    memset(&bz, 0, sizeof(bz));
+
+    if (BZ2_bzDecompressInit(&bz, 0, 0) != BZ_OK)
+	throw(std::runtime_error("BZ2_bzDecompressInit failed while initializing decompression."));
+
+    bz.next_in = const_cast<char*>(str.data());
+    bz.avail_in = str.size();
+
+    int ret;
+    char outbuffer[32768];
+    std::string outstring;
+
+    // get the uncompressed bytes blockwise
+    do {
+	bz.next_out = outbuffer;
+	bz.avail_out = sizeof(outbuffer);
+
+	ret = BZ2_bzDecompress(&bz);
+
+	if (outstring.size() < bz.total_out_lo32) {
+	    outstring.append(outbuffer,
+			     bz.total_out_lo32 - outstring.size());
+	}
+
+    } while (ret == BZ_OK);
+
+    BZ2_bzDecompressEnd(&bz);
+
+    if (ret != BZ_STREAM_END) {          // an error occurred that was not EOF
+	std::ostringstream oss;
+	oss << "Exception during bzip2 uncompression: (" << ret << ")";
+	throw(std::runtime_error(oss.str()));
+    }
+
+    return outstring;
+}
+
+} // namespace string
+
+} // namespace stx
+
+#endif // STX_STRING_NO_BZ2LIB
 
 #endif // _STX_STRING_H_

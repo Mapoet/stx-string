@@ -62,6 +62,19 @@ AC_CHECK_HEADER([zlib.h],
 		[AC_MSG_ERROR([*** zlib.h include file not found!
 Install zlib development package using your distribution's package manager.])])
 
+# check if bzip2 is available
+
+AC_CHECK_LIB([bz2], [BZ2_bzCompressInit],
+	     [],
+	     [AC_MSG_ERROR([*** bzip2 library not found!
+Install bzip2 development package using your distribution's package manager.])]
+            )
+
+AC_CHECK_HEADER([bzlib.h],
+		[],
+		[AC_MSG_ERROR([*** bzlib.h include file not found!
+Install bzip2 development package using your distribution's package manager.])])
+
 # check if cppunit is available
 AM_PATH_CPPUNIT(1.10.0)
 
