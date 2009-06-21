@@ -17,6 +17,7 @@ class SimpleTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(test_split);
     CPPUNIT_TEST(test_join);
     CPPUNIT_TEST(test_contains);
+    CPPUNIT_TEST(test_extract_between);
     CPPUNIT_TEST(test_random);
     CPPUNIT_TEST(test_hexdump);
     CPPUNIT_TEST(test_base64);
@@ -282,6 +283,18 @@ protected:
 	CPPUNIT_ASSERT( stx::string::contains_word(data, "readall") );
 
 	CPPUNIT_ASSERT( !stx::string::contains_word(data, "doit") );
+    }
+
+    void test_extract_between()
+    {
+        std::string data = "Content-Disposition: form-data; name='testfile'; filename='test.html'";
+
+	CPPUNIT_ASSERT( stx::string::extract_between(data, "name='", "'") == "testfile" );
+	CPPUNIT_ASSERT( stx::string::extract_between(data, "filename='", "'") == "test.html" );
+	CPPUNIT_ASSERT( stx::string::extract_between(data, "other='", "'") == "" );
+
+	CPPUNIT_ASSERT( stx::string::extract_between(data, "Name='", "'") == "" );
+	CPPUNIT_ASSERT( stx::string::extract_between_icase(data, "Name='", "'") == "testfile" );
     }
 
     void test_random()

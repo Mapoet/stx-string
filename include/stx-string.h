@@ -8,6 +8,8 @@
 #include <stdexcept>
 #include <sstream>
 #include <vector>
+#include <algorithm>
+#include <string.h>
 
 namespace stx {
 
@@ -432,9 +434,146 @@ static inline std::string& replace_all_inplace(std::string& str, const std::stri
     return str;
 }
 
-// ***                                    ***
-// *** Split, Join and Contains Functions ***
-// ***                                    ***
+// ***                                ***
+// *** Extract and Contains Functions ***
+// ***                                ***
+
+/**
+ * Search for a substring like find() but case-insensitively.
+ *
+ * @param haystack      string to search in
+ * @param pos           position to start search
+ * @param needle        string to search for
+ * @param needlelen     length of search string
+ */
+static inline std::string::size_type find_icase(const std::string& haystack, const char* needle, std::string::size_type pos, std::string::size_type needlelen)
+{
+    if (needlelen == 0)
+	return (pos <= haystack.size()) ? pos : std::string::npos;
+
+    for (; pos <= haystack.size() - needlelen; ++pos)
+    {
+        if (std::equal( needle, needle + needlelen, haystack.data() + pos, 
+                        char_icase_equal() ))
+        {
+            return pos;
+        }
+    }
+    return std::string::npos;
+}
+
+/**
+ * Search for a substring like find() but case-insensitively.
+ *
+ * @param haystack      string to search in
+ * @param pos           position to start search
+ * @param needle        string to search for
+ */
+static inline std::string::size_type find_icase(const std::string& haystack, const std::string& needle, std::string::size_type pos = 0)
+{
+    return find_icase(haystack, needle.data(), pos, needle.size());
+}
+
+/**
+ * Search the given string for a whitespace-delimited word. It works as if the
+ * str was split_ws() and the resulting vector checked for a given
+ * word. However this function does not create a vector, it scans the string
+ * directly. Whitespace is space, tab, newline or carriage-return.
+ *
+ * @param str	whitespace-delimited string to check
+ * @param word	word to find
+ * @return	true if the word was found
+ */
+static inline bool contains_word(const std::string& str, const std::string& word)
+{
+    std::string::const_iterator it = str.begin(), last = it;
+
+    while (it != str.end())
+    {
+	// skip over whitespace
+	while (*it == ' ' || *it == '\n' || *it == '\t' || *it == '\r') {
+	    if (++it == str.end()) return false;
+	}
+
+	// check if this non-whitespace matches the string
+	std::string::const_iterator wi = word.begin();
+	while (*it == *wi) {
+	    ++it; ++wi;
+	    if (wi == word.end()) {
+		if (it == str.end() || *it == ' ' || *it == '\n' || *it == '\t' || *it == '\r')
+		    return true;
+		else break;
+	    }
+	    if (it == str.end()) return false;
+	}
+
+	// skip over not matching whitespace
+	while (*it != ' ' && *it != '\n' && *it != '\t' && *it != '\r') {
+	    if (++it == str.end()) return false;
+	}
+    }
+
+    return false;
+}
+
+/**
+ * Search the string for given start and end separators and extract all
+ * characters between the both, if they are found. Otherwise return an empty
+ * string.
+ *
+ * @param str   string to search in
+ * @param sep1  start boundary
+ * @param sep2  end boundary
+ */
+static inline std::string extract_between(const std::string& str,
+                                          const std::string& sep1,
+                                          const std::string& sep2)
+{
+    std::string::size_type start = str.find(sep1);
+    if (start == std::string::npos)
+        return std::string();
+
+    start += sep1.length();
+
+    std::string::size_type limit = str.find(sep2, start);
+
+    if (limit == std::string::npos)
+        return std::string();
+
+    return str.substr(start, limit - start);
+}
+
+/**
+ * Search the string for given start and end separators and extract all
+ * characters between the both, if they are found. Otherwise return an empty
+ * string. Ignore case while searching.
+ *
+ * @param str   string to search in
+ * @param sep1  start boundary
+ * @param sep2  end boundary
+ */
+static inline std::string extract_between_icase(const std::string& str,
+                                                const std::string& sep1,
+                                                const std::string& sep2)
+{
+    std::string::size_type start = find_icase(str, sep1);
+    if (start == std::string::npos)
+        return std::string();
+
+    start += sep1.length();
+
+    std::string::size_type limit = find_icase(str, sep2, start);
+
+    if (start == std::string::npos)
+        return std::string();
+
+    return str.substr(start, limit - start);
+}
+
+
+// ***                          ***
+// *** Split and Join Functions ***
+// ***                          ***
 
 /**
  * Split the given string by whitespaces into distinct words. Multiple
@@ -553,48 +692,6 @@ static inline std::vector<std::string> split(const std::string& str, const std::
 	out.push_back(std::string(last, str.end()));
 
     return out;
-}
-
-/**
- * Search the given string for a whitespace-delimited word. It works as if the
- * str was split_ws() and the resulting vector checked for a given
- * word. However this function does not create a vector, it scans the string
- * directly. Whitespace is space, tab, newline or carriage-return.
- *
- * @param str	whitespace-delimited string to check
- * @param word	word to find
- * @return	true if the word was found
- */
-static inline bool contains_word(const std::string& str, const std::string& word)
-{
-    std::string::const_iterator it = str.begin(), last = it;
-
-    while (it != str.end())
-    {
-	// skip over whitespace
-	while (*it == ' ' || *it == '\n' || *it == '\t' || *it == '\r') {
-	    if (++it == str.end()) return false;
-	}
-
-	// check if this non-whitespace matches the string
-	std::string::const_iterator wi = word.begin();
-	while (*it == *wi) {
-	    ++it; ++wi;
-	    if (wi == word.end()) {
-		if (it == str.end() || *it == ' ' || *it == '\n' || *it == '\t' || *it == '\r')
-		    return true;
-		else break;
-	    }
-	    if (it == str.end()) return false;
-	}
-
-	// skip over not matching whitespace
-	while (*it != ' ' && *it != '\n' && *it != '\t' && *it != '\r') {
-	    if (++it == str.end()) return false;
-	}
-    }
-
-    return false;
 }
 
 /**
@@ -1567,13 +1664,14 @@ static inline std::string gzcompress(const std::string& str, int compressionleve
 }
 
 /**
- * Decompress a string using zlib and return the original data. Throws
+ * Decompress a buffer using zlib and return the original data. Throws
  * std::runtime_error if an error occurred during decompression.
  *
- * @param str  (binary) compressed image to decompress
- * @return     uncompressed string
+ * @param data  (binary) compressed image to decompress
+ * @param size  length of compressed image
+ * @return      uncompressed string
  */
-static inline std::string decompress(const std::string& str)
+static inline std::string decompress(const char* data, unsigned int size)
 {
     z_stream zs;	// z_stream is zlib's control structure
     memset(&zs, 0, sizeof(zs));
@@ -1581,8 +1679,8 @@ static inline std::string decompress(const std::string& str)
     if (inflateInit(&zs) != Z_OK)
 	throw(std::runtime_error("inflateInit failed while decompressing."));
 
-    zs.next_in = const_cast<Bytef*>(reinterpret_cast<const Bytef*>(str.data()));
-    zs.avail_in = str.size();
+    zs.next_in = const_cast<Bytef*>(reinterpret_cast<const Bytef*>(data));
+    zs.avail_in = size;
 
     int ret;
     char outbuffer[32768];
@@ -1612,6 +1710,18 @@ static inline std::string decompress(const std::string& str)
     }
 
     return outstring;
+}
+
+/**
+ * Decompress a string using zlib and return the original data. Throws
+ * std::runtime_error if an error occurred during decompression.
+ *
+ * @param str  (binary) compressed image to decompress
+ * @return     uncompressed string
+ */
+static inline std::string decompress(const std::string& str)
+{
+    return decompress(str.data(), str.size());
 }
 
 } // namespace string
