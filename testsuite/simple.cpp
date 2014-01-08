@@ -334,6 +334,7 @@ void test_hexdump()
     std::string hexstring = stx::string::hexdump(hexdata);
 
     CHECK( hexstring == "8DE285D4BF98E603" );
+    CHECK( stx::string::hexdump(hexdump, sizeof(hexdump)) == "8DE285D4BF98E603" );
 
     std::string hexparsed = stx::string::parse_hexdump(hexstring);
     CHECK( hexparsed == hexdata );

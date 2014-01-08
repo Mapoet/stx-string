@@ -869,6 +869,18 @@ static inline std::string hexdump(const std::string& str)
 }
 
 /**
+ * Dump a (binary) memory buffer as a sequence of hexadecimal pairs.
+ *
+ * @param data	pointer to input
+ * @param len   length of input
+ * @return	string of hexadecimal pairs
+ */
+static inline std::string hexdump(const void* data, size_t len)
+{
+    return hexdump(std::string(static_cast<const char*>(data),len));
+}
+
+/**
  * Read a string as a sequence of hexadecimal pairs. Converts each pair of
  * hexadecimal digits into a byte of the output string. Throws
  * std::runtime_error() if an unknown letter is encountered.
