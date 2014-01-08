@@ -1,22 +1,15 @@
 # $Id$
 
-noinst_PROGRAMS = testsuite
+noinst_PROGRAMS = CompressTest Bz2CompressTest SimpleTest NatcmpTest
 
-TESTS = testsuite
+TESTS = CompressTest Bz2CompressTest SimpleTest NatcmpTest
 
-if HAVE_CPPUNIT
+CompressTest_SOURCES = CompressTest.cc
 
-testsuite_SOURCES = TestRunner.cc
+Bz2CompressTest_SOURCES = Bz2CompressTest.cc
 
-testsuite_SOURCES += SimpleTest.cc CompressTest.cc Bz2CompressTest.cc
+SimpleTest_SOURCES = SimpleTest.cc
 
-testsuite_SOURCES += NatcmpTest.cc strnatcmp.h strnatcmp.c
+NatcmpTest_SOURCES = NatcmpTest.cc strnatcmp.c
 
-else
-
-testsuite_SOURCES = TestTrue.cc
-
-endif
-
-AM_CXXFLAGS = -W -Wall -Wold-style-cast -I$(top_srcdir)/include @CPPUNIT_CFLAGS@
-LDADD = @CPPUNIT_LIBS@
+AM_CXXFLAGS = -W -Wall -Wold-style-cast -I$(top_srcdir)/include

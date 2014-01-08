@@ -75,11 +75,6 @@ AC_CHECK_HEADER([bzlib.h],
 		[AC_MSG_ERROR([*** bzlib.h include file not found!
 Install bzip2 development package using your distribution's package manager.])])
 
-# check if cppunit is available
-AM_PATH_CPPUNIT(1.10.0)
-
-AM_CONDITIONAL(HAVE_CPPUNIT, test x$CPPUNIT_CONFIG != xno)
-
 # Checks for library functions.
 
 AC_CONFIG_FILES([Makefile

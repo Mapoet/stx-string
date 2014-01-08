@@ -14,7 +14,7 @@ run-gcov: clean-gcov
 	lcov --directory . --zerocounters
 	-$(MAKE) check
 	lcov --directory . --capture --output-file coverage/all.info
-	lcov -e coverage/all.info "/tdata/*" -o coverage/testsuite.info
+	lcov -e coverage/all.info "/home/*" -o coverage/testsuite.info
 	genhtml -o coverage --num-spaces 8 coverage/testsuite.info --title "STX String Testsuite" --prefix `pwd`
 
 clean-gcov:
