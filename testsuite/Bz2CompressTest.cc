@@ -27,11 +27,12 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#define STX_STRING_NO_ZLIB
 #include <stx-string.h>
 #include <stdlib.h>
 
 #include "check.h"
+
+#if HAVE_BZIP2
 
 void test_bz2compress()
 {
@@ -151,3 +152,12 @@ int main()
 
     return 0;
 }
+
+#else
+
+int main()
+{
+    return 0;
+}
+
+#endif // HAVE_BZIP2

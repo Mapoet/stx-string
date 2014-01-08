@@ -39,7 +39,6 @@
 #include <string.h>
 
 namespace stx {
-
 namespace string {
 
 // ***                           ***
@@ -1548,10 +1547,9 @@ struct order_natless_icase_desc {
 };
 
 } // namespace string
-
 } // namespace stx
 
-#ifndef STX_STRING_NO_ZLIB
+#if HAVE_ZLIB
 
 // ***                                              ***
 // *** Compress and Uncompress Functions using zlib ***
@@ -1560,7 +1558,6 @@ struct order_natless_icase_desc {
 #include <zlib.h>
 
 namespace stx {
-
 namespace string {
 
 /**
@@ -1752,12 +1749,11 @@ static inline std::string decompress(const std::string& str)
 }
 
 } // namespace string
-
 } // namespace stx
 
-#endif // STX_STRING_NO_ZLIB
+#endif // HAVE_ZLIB
 
-#ifndef STX_STRING_NO_BZ2LIB
+#if HAVE_BZIP2
 
 // ***                                               ***
 // *** Compress and Uncompress Functions using bzip2 ***
@@ -1766,7 +1762,6 @@ static inline std::string decompress(const std::string& str)
 #include <bzlib.h>
 
 namespace stx {
-
 namespace string {
 
 /**
@@ -1885,9 +1880,8 @@ static inline std::string bz2decompress(const std::string& str)
 }
 
 } // namespace string
-
 } // namespace stx
 
-#endif // STX_STRING_NO_BZ2LIB
+#endif // HAVE_BZIP2
 
 #endif // _STX_STRING_H_

@@ -32,6 +32,8 @@
 
 #include "check.h"
 
+#if HAVE_ZLIB
+
 void test_compress()
 {
     const unsigned char input_[642] = {
@@ -141,3 +143,12 @@ int main()
 
     return 0;
 }
+
+#else
+
+int main()
+{
+    return 0;
+}
+
+#endif // HAVE_ZLIB
