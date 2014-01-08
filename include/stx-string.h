@@ -154,13 +154,13 @@ static inline std::string& trim_right_inplace(std::string &str, const std::strin
 /** toupper() functional for std::transform with correct signature. */
 static inline char char_toupper_functional(char c)
 {
-    return std::toupper(c);
+    return static_cast<char>(std::toupper(c));
 }
 
 /** tolower() functional for std::transform with correct signature. */
 static inline char char_tolower_functional(char c)
 {
-    return std::tolower(c);
+    return static_cast<char>(std::tolower(c));
 }
 
 /**
@@ -270,8 +270,8 @@ static inline int compare_icase(const std::string& a, const std::string& b)
 
     while( ai != a.end() && bi != b.end() )
     {
-        char ca = std::tolower(*ai++);
-        char cb = std::tolower(*bi++);
+        int ca = std::tolower(*ai++);
+        int cb = std::tolower(*bi++);
 
         if (ca == cb) continue;
         if (ca < cb) return -1;
@@ -699,7 +699,7 @@ static inline std::vector<std::string> split(const std::string& str, const std::
 
     std::string::const_iterator it = str.begin(), last = it;
 
-    for (; it + sepstr.size() <= str.end(); ++it)
+    for (; it + sepstr.size() < str.end(); ++it)
     {
         if (std::equal(sepstr.begin(), sepstr.end(), it))
         {
@@ -778,7 +778,7 @@ static inline std::string random_binary(std::string::size_type size)
     std::string out;
     out.resize(size);
 
-    for (unsigned int i = 0; i < size; ++i)
+    for (size_t i = 0; i < size; ++i)
         out[i] = static_cast<unsigned char>(rand() % 256);
 
     return out;
@@ -799,7 +799,7 @@ static inline std::string random(std::string::size_type size, const std::string&
     std::string out;
     out.resize(size);
 
-    for (unsigned int i = 0; i < size; ++i)
+    for (size_t i = 0; i < size; ++i)
         out[i] = cset[ rand() % cset.size() ];
 
     return out;
@@ -985,7 +985,7 @@ static inline std::string hexdump_sourcecode(const std::string& str, const std::
  * @param linebreak     break the output string every n characters
  * @return              base64 encoded string
  */
-static inline std::string base64_encode(const std::string& instr, unsigned int linebreak = 0)
+static inline std::string base64_encode(const std::string& instr, size_t linebreak = 0)
 {
     std::string::const_iterator inchar = instr.begin();
     std::string outstr;
@@ -993,14 +993,14 @@ static inline std::string base64_encode(const std::string& instr, unsigned int l
     if (instr.size() == 0) return outstr;
 
     // calculate output string's size in advance
-    unsigned int outsize = (((instr.size() - 1) / 3) + 1) * 4;
+    size_t outsize = (((instr.size() - 1) / 3) + 1) * 4;
     if (linebreak > 0) outsize += outsize / linebreak;
     outstr.reserve( outsize );
 
     static const char encoding64[65]
         = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     char result = 0;
-    unsigned int linebegin = 0;
+    size_t linebegin = 0;
 
     while (1)
     {
@@ -1206,7 +1206,7 @@ struct LevenshteinStandardICase
  * @return      Levenshtein distance
  */
 template <typename levenshtein_param>
-static inline unsigned int levenshtein_algorithm(const std::string& a, const std::string& b)
+static inline size_t levenshtein_algorithm(const std::string& a, const std::string& b)
 {
     // if one of the strings is zero, then all characters of the other must
     // be inserted.
@@ -1218,23 +1218,24 @@ static inline unsigned int levenshtein_algorithm(const std::string& a, const std
     const std::string &bs = (a.size() > b.size()) ? b : a;
 
     // only allocate two rows of the needed matrix.
-    unsigned int matrix[2][as.size() + 1];
+    std::vector<size_t> lastrow(as.size() + 1);
+    std::vector<size_t> thisrow(as.size() + 1);
 
-    // fill first row with ascending ordinals.
-    for(unsigned int i = 0; i < as.size() + 1; i++) {
-        matrix[0][i] = i;
+    // fill this row with ascending ordinals.
+    for(size_t i = 0; i < as.size() + 1; i++) {
+        thisrow[i] = i;
     }
 
     // compute distance
-    for(unsigned int j = 1; j < bs.size() + 1; j++)
+    for (size_t j = 1; j < bs.size() + 1; j++)
     {
-        // switch rows each time
-        unsigned int *lastrow = matrix[(j - 1) % 2];
-        unsigned int *thisrow = matrix[j % 2];
+        // switch rows
+        std::swap(lastrow, thisrow);
 
+        // compute new row
         thisrow[0] = j;
 
-        for(unsigned int i = 1; i < as.size() + 1; i++)
+        for(size_t i = 1; i < as.size() + 1; i++)
         {
             // three-way mimimum of
             thisrow[i] = std::min(
@@ -1250,7 +1251,7 @@ static inline unsigned int levenshtein_algorithm(const std::string& a, const std
     }
 
     // result is in the last cell of the last computed row
-    return matrix[ bs.size() % 2 ][ as.size() ];
+    return thisrow[ as.size() ];
 }
 
 // *** static inline Wrapper Functions ***
@@ -1264,7 +1265,7 @@ static inline unsigned int levenshtein_algorithm(const std::string& a, const std
  * @param b     second string
  * @return      Levenshtein distance
  */
-static inline unsigned int levenshtein(const std::string& a, const std::string& b)
+static inline size_t levenshtein(const std::string& a, const std::string& b)
 {
     return levenshtein_algorithm<LevenshteinStandard>(a, b);
 }
@@ -1278,7 +1279,7 @@ static inline unsigned int levenshtein(const std::string& a, const std::string& 
  * @param b     second string
  * @return      Levenshtein distance
  */
-static inline unsigned int levenshtein_icase(const std::string& a, const std::string& b)
+static inline size_t levenshtein_icase(const std::string& a, const std::string& b)
 {
     return levenshtein_algorithm<LevenshteinStandardICase>(a, b);
 }
@@ -1403,8 +1404,8 @@ static inline int natcmp_algorithm(const std::string& a, const std::string& b, b
             }
         }
 
-        char ca = fold_case ? std::toupper(*ai) : *ai;
-        char cb = fold_case ? std::toupper(*bi) : *bi;
+        int ca = fold_case ? std::toupper(*ai) : *ai;
+        int cb = fold_case ? std::toupper(*bi) : *bi;
 
         if (ca < cb)
             return -1;
@@ -1695,7 +1696,7 @@ static inline std::string gzcompress(const std::string& str, int compressionleve
  * @param size  length of compressed image
  * @return      uncompressed string
  */
-static inline std::string decompress(const char* data, unsigned int size)
+static inline std::string decompress(const char* data, size_t size)
 {
     z_stream zs;        // z_stream is zlib's control structure
     memset(&zs, 0, sizeof(zs));

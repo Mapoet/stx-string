@@ -29,6 +29,7 @@
 
 #include <stx-string.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "check.h"
 
@@ -305,7 +306,7 @@ void test_extract_between()
 
 void test_random()
 {
-    srand( time(NULL) );
+    srand( static_cast<unsigned int>(time(NULL)) );
 
     std::string rand1 = stx::string::random_binary(42);
     std::string rand2 = stx::string::random_alpha(42);

@@ -35,6 +35,11 @@ if(MSVC)
   else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
   endif()
+  ### disable verbose warnings:
+  # warning C4127: conditional expression is constant
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4127")
+  # disable warnings about "unsecure" STL functions
+  add_definitions(-D_SCL_SECURE_NO_WARNINGS)
 elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   # Update if necessary
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wextra -Wold-style-cast")

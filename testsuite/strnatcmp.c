@@ -39,22 +39,22 @@
 
 /* These are defined as macros to make it easier to adapt this code to
  * different characters types or comparison functions. */
-static inline int
+static int
 nat_isdigit(nat_char a)
 {
      return isdigit((unsigned char) a);
 }
 
-static inline int
+static int
 nat_isspace(nat_char a)
 {
      return isspace((unsigned char) a);
 }
 
-static inline nat_char
+static nat_char
 nat_toupper(nat_char a)
 {
-     return toupper((unsigned char) a);
+     return (nat_char)toupper((unsigned char) a);
 }
 
 static int
@@ -82,8 +82,6 @@ compare_right(nat_char const *a, nat_char const *b)
           } else if (!*a  &&  !*b)
                return bias;
      }
-
-     return 0;
 }
 
 static int
@@ -103,8 +101,6 @@ compare_left(nat_char const *a, nat_char const *b)
           else if (*a > *b)
                return +1;
      }
-
-     return 0;
 }
 
 static int strnatcmp0(nat_char const *a, nat_char const *b, int fold_case)
