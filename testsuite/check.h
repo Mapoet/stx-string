@@ -1,6 +1,6 @@
 /*
  * STX String Functions
- * Copyright (C) 2013 Timo Bingmann <tb@panthema.net>
+ * Copyright (C) 2014 Timo Bingmann <tb@panthema.net>
  *
  * Boost Software License - Version 1.0 - August 17th, 2003
  *
