@@ -49,9 +49,9 @@ namespace string {
  * Trims the given string on the left and right. Removes all characters in the
  * given drop array, which defaults to " ". Returns a copy of the string.
  *
- * @param str	string to process
- * @param drop	remove these characters
- * @return	new trimmed string
+ * @param str   string to process
+ * @param drop  remove these characters
+ * @return      new trimmed string
  */
 static inline std::string trim(const std::string& str, const std::string& drop = " ")
 {
@@ -62,16 +62,16 @@ static inline std::string trim(const std::string& str, const std::string& drop =
     if (pos2 == std::string::npos) return std::string();
 
     return str.substr(pos1 == std::string::npos ? 0 : pos1,
-		      pos2 == std::string::npos ? (str.size() - 1) : (pos2 - pos1 + 1));
+                      pos2 == std::string::npos ? (str.size() - 1) : (pos2 - pos1 + 1));
 }
 
 /**
  * Trims the given string only on the left. Removes all characters in the given
  * drop array, which defaults to " ". Returns a copy of the string.
  *
- * @param str	string to process
- * @param drop	remove these characters
- * @return	new trimmed string
+ * @param str   string to process
+ * @param drop  remove these characters
+ * @return      new trimmed string
  */
 static inline std::string trim_left(const std::string& str, const std::string& drop = " ")
 {
@@ -85,9 +85,9 @@ static inline std::string trim_left(const std::string& str, const std::string& d
  * Trims the given string only on the right. Removes all characters in the
  * given drop array, which defaults to " ". Returns a copy of the string.
  *
- * @param str	string to process
- * @param drop	remove these characters
- * @return	new trimmed string
+ * @param str   string to process
+ * @param drop  remove these characters
+ * @return      new trimmed string
  */
 static inline std::string trim_right(const std::string& str, const std::string& drop = " ")
 {
@@ -101,20 +101,20 @@ static inline std::string trim_right(const std::string& str, const std::string& 
  * Trims the given string in-place on the left and right. Removes all
  * characters in the given drop array, which defaults to " ".
  *
- * @param str	string to process
- * @param drop	remove these characters
- * @return	reference to the modified string
+ * @param str   string to process
+ * @param drop  remove these characters
+ * @return      reference to the modified string
  */
 static inline std::string& trim_inplace(std::string& str, const std::string& drop = " ")
 {
     std::string::size_type pos = str.find_last_not_of(drop);
     if (pos != std::string::npos) {
-	str.erase(pos + 1);
-	pos = str.find_first_not_of(drop);
-	if (pos != std::string::npos) str.erase(0, pos);
+        str.erase(pos + 1);
+        pos = str.find_first_not_of(drop);
+        if (pos != std::string::npos) str.erase(0, pos);
     }
     else
-	str.erase(str.begin(), str.end());
+        str.erase(str.begin(), str.end());
 
     return str;
 }
@@ -123,9 +123,9 @@ static inline std::string& trim_inplace(std::string& str, const std::string& dro
  * Trims the given string in-place only on the left. Removes all characters in
  * the given drop array, which defaults to " ".
  *
- * @param str	string to process
- * @param drop	remove these characters
- * @return	reference to the modified string
+ * @param str   string to process
+ * @param drop  remove these characters
+ * @return      reference to the modified string
  */
 static inline std::string& trim_left_inplace(std::string& str, const std::string &drop = " ")
 {
@@ -137,9 +137,9 @@ static inline std::string& trim_left_inplace(std::string& str, const std::string
  * Trims the given string in-place only on the right. Removes all characters in
  * the given drop array, which defaults to " ".
  *
- * @param str	string to process
- * @param drop	remove these characters
- * @return	reference to the modified string
+ * @param str   string to process
+ * @param drop  remove these characters
+ * @return      reference to the modified string
  */
 static inline std::string& trim_right_inplace(std::string &str, const std::string &drop = " ")
 {
@@ -166,8 +166,8 @@ static inline char char_tolower_functional(char c)
 /**
  * Returns a copy of the given string converted to uppercase.
  *
- * @param str	string to process
- * @return	new string uppercased
+ * @param str   string to process
+ * @return      new string uppercased
  */
 static inline std::string toupper(const std::string& str)
 {
@@ -179,8 +179,8 @@ static inline std::string toupper(const std::string& str)
 /**
  * Returns a copy of the given string converted to lowercase.
  *
- * @param str	string to process
- * @return	new string lowercased
+ * @param str   string to process
+ * @return      new string lowercased
  */
 static inline std::string tolower(const std::string& str)
 {
@@ -192,8 +192,8 @@ static inline std::string tolower(const std::string& str)
 /**
  * Transforms the given string to uppercase and returns a reference to it.
  *
- * @param str	string to process
- * @return	reference to the modified string
+ * @param str   string to process
+ * @return      reference to the modified string
  */
 static inline std::string& toupper_inplace(std::string& str)
 {
@@ -204,8 +204,8 @@ static inline std::string& toupper_inplace(std::string& str)
 /**
  * Transforms the given string to lowercase and returns a reference to it.
  *
- * @param str	string to process
- * @return	reference to the modified string
+ * @param str   string to process
+ * @return      reference to the modified string
  */
 static inline std::string& tolower_inplace(std::string& str)
 {
@@ -245,7 +245,7 @@ static inline bool equal_icase(const std::string& a, const std::string& b)
     if (a.size() != b.size()) return false;
 
     return std::equal( a.begin(), a.end(), b.begin(),
-		       char_icase_equal() );
+                       char_icase_equal() );
 }
 
 /**
@@ -255,8 +255,8 @@ static inline bool equal_icase(const std::string& a, const std::string& b)
 static inline bool less_icase(const std::string& a, const std::string& b)
 {
     return std::lexicographical_compare( a.begin(), a.end(),
-					 b.begin(), b.end(),
-					 char_icase_less() );
+                                         b.begin(), b.end(),
+                                         char_icase_less() );
 }
 
 /**
@@ -270,12 +270,12 @@ static inline int compare_icase(const std::string& a, const std::string& b)
 
     while( ai != a.end() && bi != b.end() )
     {
-	char ca = std::tolower(*ai++);
-	char cb = std::tolower(*bi++);
+        char ca = std::tolower(*ai++);
+        char cb = std::tolower(*bi++);
 
-	if (ca == cb) continue;
-	if (ca < cb) return -1;
-	else return +1;
+        if (ca == cb) continue;
+        if (ca < cb) return -1;
+        else return +1;
     }
 
     if (ai == a.end() && bi != b.end()) return +1;
@@ -289,7 +289,7 @@ static inline int compare_icase(const std::string& a, const std::string& b)
 struct order_less
 {
     inline bool operator()(const std::string &a, const std::string &b) const {
-	return (a < b);
+        return (a < b);
     }
 };
 
@@ -299,7 +299,7 @@ struct order_less
 struct order_less_icase
 {
     inline bool operator()(const std::string &a, const std::string &b) const {
-	return less_icase(a, b);
+        return less_icase(a, b);
     }
 };
 
@@ -310,7 +310,7 @@ struct order_less_icase
 struct order_less_desc
 {
     inline bool operator()(const std::string &a, const std::string &b) const {
-	return !(a < b);
+        return !(a < b);
     }
 };
 
@@ -321,7 +321,7 @@ struct order_less_desc
 struct order_less_icase_desc
 {
     inline bool operator()(const std::string &a, const std::string &b) const {
-	return !less_icase(a, b);
+        return !less_icase(a, b);
     }
 };
 
@@ -345,7 +345,7 @@ static inline bool is_suffix(const std::string& str, const std::string& match)
 {
     if (match.size() > str.size()) return false;
     return std::equal( match.begin(), match.end(),
-		       str.end() - match.size() );
+                       str.end() - match.size() );
 }
 
 /**
@@ -356,7 +356,7 @@ static inline bool is_prefix_icase(const std::string& str, const std::string& ma
 {
     if (match.size() > str.size()) return false;
     return std::equal( match.begin(), match.end(), str.begin(),
-		       char_icase_equal() );
+                       char_icase_equal() );
 }
 
 /**
@@ -367,8 +367,8 @@ static inline bool is_suffix_icase(const std::string& str, const std::string& ma
 {
     if (match.size() > str.size()) return false;
     return std::equal( match.begin(), match.end(),
-		       str.end() - match.size(),
-		       char_icase_equal() );
+                       str.end() - match.size(),
+                       char_icase_equal() );
 }
 
 // ***                              ***
@@ -380,10 +380,10 @@ static inline bool is_suffix_icase(const std::string& str, const std::string& ma
  * replaced with instead, if found. Returns a copy of the string with the
  * possible replacement.
  *
- * @param str		the string to process
- * @param needle	string to search for in str
- * @param instead	replace needle with instead
- * @return		copy of string possibly with replacement
+ * @param str           the string to process
+ * @param needle        string to search for in str
+ * @param instead       replace needle with instead
+ * @return              copy of string possibly with replacement
  */
 static inline std::string replace_first(const std::string& str, const std::string& needle, const std::string& instead)
 {
@@ -391,7 +391,7 @@ static inline std::string replace_first(const std::string& str, const std::strin
     std::string::size_type firstpos = newstr.find(needle);
 
     if ( firstpos != std::string::npos)
-	newstr.replace(firstpos, needle.size(), instead);
+        newstr.replace(firstpos, needle.size(), instead);
 
     return newstr;
 }
@@ -400,10 +400,10 @@ static inline std::string replace_first(const std::string& str, const std::strin
  * Replace all occurrences of needle in str. Each needle will be replaced with
  * instead, if found. Returns a copy of the string with possible replacements.
  *
- * @param str		the string to process
- * @param needle	string to search for in str
- * @param instead	replace needle with instead
- * @return		copy of string possibly with replacements
+ * @param str           the string to process
+ * @param needle        string to search for in str
+ * @param instead       replace needle with instead
+ * @return              copy of string possibly with replacements
  */
 static inline std::string replace_all(const std::string& str, const std::string& needle, const std::string& instead)
 {
@@ -412,8 +412,8 @@ static inline std::string replace_all(const std::string& str, const std::string&
 
     while ( (thispos = newstr.find(needle, lastpos)) != std::string::npos)
     {
-	newstr.replace(thispos, needle.size(), instead);
-	lastpos = thispos + instead.size();
+        newstr.replace(thispos, needle.size(), instead);
+        lastpos = thispos + instead.size();
     }
     return newstr;
 }
@@ -423,17 +423,17 @@ static inline std::string replace_all(const std::string& str, const std::string&
  * replaced with instead, if found. The replacement is done in the given string
  * and a reference to the same is returned.
  *
- * @param str		the string to process
- * @param needle	string to search for in str
- * @param instead	replace needle with instead
- * @return		reference to str
+ * @param str           the string to process
+ * @param needle        string to search for in str
+ * @param instead       replace needle with instead
+ * @return              reference to str
  */
 static inline std::string& replace_first_inplace(std::string& str, const std::string& needle, const std::string& instead)
 {
     std::string::size_type firstpos = str.find(needle);
 
     if ( firstpos != std::string::npos)
-	str.replace(firstpos, needle.size(), instead);
+        str.replace(firstpos, needle.size(), instead);
 
     return str;
 }
@@ -443,10 +443,10 @@ static inline std::string& replace_first_inplace(std::string& str, const std::st
  * instead, if found. The replacement is done in the given string and a
  * reference to the same is returned.
  *
- * @param str		the string to process
- * @param needle	string to search for in str
- * @param instead	replace needle with instead
- * @return		reference to str
+ * @param str           the string to process
+ * @param needle        string to search for in str
+ * @param instead       replace needle with instead
+ * @return              reference to str
  */
 static inline std::string& replace_all_inplace(std::string& str, const std::string& needle, const std::string& instead)
 {
@@ -454,8 +454,8 @@ static inline std::string& replace_all_inplace(std::string& str, const std::stri
 
     while ( (thispos = str.find(needle, lastpos)) != std::string::npos)
     {
-	str.replace(thispos, needle.size(), instead);
-	lastpos = thispos + instead.size();
+        str.replace(thispos, needle.size(), instead);
+        lastpos = thispos + instead.size();
     }
     return str;
 }
@@ -475,11 +475,11 @@ static inline std::string& replace_all_inplace(std::string& str, const std::stri
 static inline std::string::size_type find_icase(const std::string& haystack, const char* needle, std::string::size_type pos, std::string::size_type needlelen)
 {
     if (needlelen == 0)
-	return (pos <= haystack.size()) ? pos : std::string::npos;
+        return (pos <= haystack.size()) ? pos : std::string::npos;
 
     for (; pos <= haystack.size() - needlelen; ++pos)
     {
-        if (std::equal( needle, needle + needlelen, haystack.data() + pos, 
+        if (std::equal( needle, needle + needlelen, haystack.data() + pos,
                         char_icase_equal() ))
         {
             return pos;
@@ -506,9 +506,9 @@ static inline std::string::size_type find_icase(const std::string& haystack, con
  * word. However this function does not create a vector, it scans the string
  * directly. Whitespace is space, tab, newline or carriage-return.
  *
- * @param str	whitespace-delimited string to check
- * @param word	word to find
- * @return	true if the word was found
+ * @param str   whitespace-delimited string to check
+ * @param word  word to find
+ * @return      true if the word was found
  */
 static inline bool contains_word(const std::string& str, const std::string& word)
 {
@@ -516,27 +516,27 @@ static inline bool contains_word(const std::string& str, const std::string& word
 
     while (it != str.end())
     {
-	// skip over whitespace
-	while (*it == ' ' || *it == '\n' || *it == '\t' || *it == '\r') {
-	    if (++it == str.end()) return false;
-	}
+        // skip over whitespace
+        while (*it == ' ' || *it == '\n' || *it == '\t' || *it == '\r') {
+            if (++it == str.end()) return false;
+        }
 
-	// check if this non-whitespace matches the string
-	std::string::const_iterator wi = word.begin();
-	while (*it == *wi) {
-	    ++it; ++wi;
-	    if (wi == word.end()) {
-		if (it == str.end() || *it == ' ' || *it == '\n' || *it == '\t' || *it == '\r')
-		    return true;
-		else break;
-	    }
-	    if (it == str.end()) return false;
-	}
+        // check if this non-whitespace matches the string
+        std::string::const_iterator wi = word.begin();
+        while (*it == *wi) {
+            ++it; ++wi;
+            if (wi == word.end()) {
+                if (it == str.end() || *it == ' ' || *it == '\n' || *it == '\t' || *it == '\r')
+                    return true;
+                else break;
+            }
+            if (it == str.end()) return false;
+        }
 
-	// skip over not matching whitespace
-	while (*it != ' ' && *it != '\n' && *it != '\t' && *it != '\r') {
-	    if (++it == str.end()) return false;
-	}
+        // skip over not matching whitespace
+        while (*it != ' ' && *it != '\n' && *it != '\t' && *it != '\r') {
+            if (++it == str.end()) return false;
+        }
     }
 
     return false;
@@ -606,9 +606,9 @@ static inline std::string extract_between_icase(const std::string& str,
  * consecutive whitespaces are considered as one split point. Whitespaces are
  * space, tab, newline and carriage-return.
  *
- * @param str	string to split
- * @param limit	maximum number of parts returned
- * @return	vector containing each split substring
+ * @param str   string to split
+ * @param limit maximum number of parts returned
+ * @return      vector containing each split substring
  */
 static inline std::vector<std::string> split_ws(const std::string& str, std::string::size_type limit = std::string::npos)
 {
@@ -619,26 +619,26 @@ static inline std::vector<std::string> split_ws(const std::string& str, std::str
 
     for (; it != str.end(); ++it)
     {
-	if (*it == ' ' || *it == '\n' || *it == '\t' || *it == '\r')
-	{
-	    if (it == last) { // skip over empty split substrings
-		last = it+1;
-		continue;
-	    }
+        if (*it == ' ' || *it == '\n' || *it == '\t' || *it == '\r')
+        {
+            if (it == last) { // skip over empty split substrings
+                last = it+1;
+                continue;
+            }
 
-	    if (out.size() + 1 >= limit)
-	    {
-		out.push_back(std::string(last, str.end()));
-		return out;
-	    }
+            if (out.size() + 1 >= limit)
+            {
+                out.push_back(std::string(last, str.end()));
+                return out;
+            }
 
-	    out.push_back(std::string(last, it));
-	    last = it + 1;
-	}
+            out.push_back(std::string(last, it));
+            last = it + 1;
+        }
     }
 
     if (last != it)
-	out.push_back(std::string(last, it));
+        out.push_back(std::string(last, it));
 
     return out;
 }
@@ -648,10 +648,10 @@ static inline std::vector<std::string> split_ws(const std::string& str, std::str
  * substrings. Multiple consecutive separators are considered individually and
  * will result in empty split substrings.
  *
- * @param str	string to split
- * @param sep	separator character
- * @param limit	maximum number of parts returned
- * @return	vector containing each split substring
+ * @param str   string to split
+ * @param sep   separator character
+ * @param limit maximum number of parts returned
+ * @return      vector containing each split substring
  */
 static inline std::vector<std::string> split(const std::string& str, char sep, std::string::size_type limit = std::string::npos)
 {
@@ -662,21 +662,21 @@ static inline std::vector<std::string> split(const std::string& str, char sep, s
 
     for (; it != str.end(); ++it)
     {
-	if (*it == sep)
-	{
-	    if (out.size() + 1 >= limit)
-	    {
-		out.push_back(std::string(last, str.end()));
-		return out;
-	    }
+        if (*it == sep)
+        {
+            if (out.size() + 1 >= limit)
+            {
+                out.push_back(std::string(last, str.end()));
+                return out;
+            }
 
-	    out.push_back(std::string(last, it));
-	    last = it + 1;
-	}
+            out.push_back(std::string(last, it));
+            last = it + 1;
+        }
     }
 
     if (last != it)
-	out.push_back(std::string(last, it));
+        out.push_back(std::string(last, it));
 
     return out;
 }
@@ -686,10 +686,10 @@ static inline std::vector<std::string> split(const std::string& str, char sep, s
  * substrings. Multiple consecutive separators are considered individually and
  * will result in empty split substrings.
  *
- * @param str		string to split
- * @param sepstr	separator string
- * @param limit		maximum number of parts returned
- * @return		vector containing each split substring
+ * @param str           string to split
+ * @param sepstr        separator string
+ * @param limit         maximum number of parts returned
+ * @return              vector containing each split substring
  */
 static inline std::vector<std::string> split(const std::string& str, const std::string& sepstr, std::string::size_type limit = std::string::npos)
 {
@@ -701,21 +701,21 @@ static inline std::vector<std::string> split(const std::string& str, const std::
 
     for (; it + sepstr.size() <= str.end(); ++it)
     {
-	if (std::equal(sepstr.begin(), sepstr.end(), it))
-	{
-	    if (out.size() + 1 >= limit)
-	    {
-		out.push_back(std::string(last, str.end()));
-		return out;
-	    }
+        if (std::equal(sepstr.begin(), sepstr.end(), it))
+        {
+            if (out.size() + 1 >= limit)
+            {
+                out.push_back(std::string(last, str.end()));
+                return out;
+            }
 
-	    out.push_back(std::string(last, it));
-	    last = it + sepstr.size();
-	}
+            out.push_back(std::string(last, it));
+            last = it + sepstr.size();
+        }
     }
 
     if (last != str.end())
-	out.push_back(std::string(last, str.end()));
+        out.push_back(std::string(last, str.end()));
 
     return out;
 }
@@ -724,10 +724,10 @@ static inline std::vector<std::string> split(const std::string& str, const std::
  * Join a sequence of strings by some glue string between each pair from the
  * sequence. The sequence in given as a range between two iterators.
  *
- * @param glue	string to glue
- * @param first	the beginning iterator of the range to join
- * @param last	the ending iterator of the range to join
- * @return	string constructed from the range with the glue between two strings.
+ * @param glue  string to glue
+ * @param first the beginning iterator of the range to join
+ * @param last  the ending iterator of the range to join
+ * @return      string constructed from the range with the glue between two strings.
  */
 template <typename input_iterator>
 static inline std::string join(const std::string& glue, input_iterator first, input_iterator last)
@@ -740,9 +740,9 @@ static inline std::string join(const std::string& glue, input_iterator first, in
 
     while( first != last )
     {
-	out.append(glue);
-	out.append(*first);
-	++first;
+        out.append(glue);
+        out.append(*first);
+        ++first;
     }
 
     return out;
@@ -752,9 +752,9 @@ static inline std::string join(const std::string& glue, input_iterator first, in
  * Join a vector of strings by some glue string between each pair from the
  * sequence.
  *
- * @param glue	string to glue
- * @param parts	the vector of strings to join
- * @return	string constructed from the vector with the glue between two strings.
+ * @param glue  string to glue
+ * @param parts the vector of strings to join
+ * @return      string constructed from the vector with the glue between two strings.
  */
 static inline std::string join(const std::string& glue, const std::vector<std::string>& parts)
 {
@@ -770,8 +770,8 @@ static inline std::string join(const std::string& glue, const std::vector<std::s
  * equally probable. Uses the pseudo-random number generator from stdlib; take
  * care to seed it using srand() before calling this function.
  *
- * @param size	length of result
- * @return	random binary string of given length
+ * @param size  length of result
+ * @return      random binary string of given length
  */
 static inline std::string random_binary(std::string::size_type size)
 {
@@ -779,7 +779,7 @@ static inline std::string random_binary(std::string::size_type size)
     out.resize(size);
 
     for (unsigned int i = 0; i < size; ++i)
-	out[i] = static_cast<unsigned char>(rand() % 256);
+        out[i] = static_cast<unsigned char>(rand() % 256);
 
     return out;
 }
@@ -790,9 +790,9 @@ static inline std::string random_binary(std::string::size_type size)
  * probable. Uses the pseudo-random number generator from stdlib; take care to
  * seed it using srand() before calling this function.
  *
- * @param size	length of result
- * @param cset	character set to choose from
- * @return	random string of given length
+ * @param size  length of result
+ * @param cset  character set to choose from
+ * @return      random string of given length
  */
 static inline std::string random(std::string::size_type size, const std::string& cset)
 {
@@ -800,7 +800,7 @@ static inline std::string random(std::string::size_type size, const std::string&
     out.resize(size);
 
     for (unsigned int i = 0; i < size; ++i)
-	out[i] = cset[ rand() % cset.size() ];
+        out[i] = cset[ rand() % cset.size() ];
 
     return out;
 }
@@ -810,13 +810,13 @@ static inline std::string random(std::string::size_type size, const std::string&
  * probable to occur. Uses the pseudo-random number generator from stdlib; take
  * care to seed it using srand() before calling this function.
  *
- * @param size	length of result
- * @return	random string of given length
+ * @param size  length of result
+ * @return      random string of given length
  */
 static inline std::string random_alpha(std::string::size_type size)
 {
     static const std::string letters =
-	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     return random(size, letters);
 }
@@ -827,13 +827,13 @@ static inline std::string random_alpha(std::string::size_type size)
  * from stdlib; take care to seed it using srand() before calling this
  * function.
  *
- * @param size	length of result
- * @return	random string of given length
+ * @param size  length of result
+ * @return      random string of given length
  */
 static inline std::string random_alphanumeric(std::string::size_type size)
 {
     static const std::string letters =
-	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     return random(size, letters);
 }
@@ -845,8 +845,8 @@ static inline std::string random_alphanumeric(std::string::size_type size)
 /**
  * Dump a (binary) string as a sequence of hexadecimal pairs.
  *
- * @param str	string to output in hex
- * @return	string of hexadecimal pairs
+ * @param str   string to output in hex
+ * @return      string of hexadecimal pairs
  */
 static inline std::string hexdump(const std::string& str)
 {
@@ -854,15 +854,15 @@ static inline std::string hexdump(const std::string& str)
     out.resize( str.size() * 2 );
 
     static const char xdigits[16] = {
-	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
     };
 
     std::string::iterator oi = out.begin();
     for (std::string::const_iterator si = str.begin();
-	 si != str.end(); ++si)
+         si != str.end(); ++si)
     {
-	*oi++ = xdigits[ (*si & 0xF0) >> 4 ];
-	*oi++ = xdigits[ (*si & 0x0F) ];
+        *oi++ = xdigits[ (*si & 0xF0) >> 4 ];
+        *oi++ = xdigits[ (*si & 0x0F) ];
     }
 
     return out;
@@ -873,8 +873,8 @@ static inline std::string hexdump(const std::string& str)
  * hexadecimal digits into a byte of the output string. Throws
  * std::runtime_error() if an unknown letter is encountered.
  *
- * @param str	string to parse as hex digits
- * @return	string of read bytes
+ * @param str   string to parse as hex digits
+ * @return      string of read bytes
  */
 static inline std::string parse_hexdump(const std::string& str)
 {
@@ -883,38 +883,38 @@ static inline std::string parse_hexdump(const std::string& str)
     unsigned char c = 0;
 
     for (std::string::const_iterator si = str.begin();
-	 si != str.end(); ++si)
+         si != str.end(); ++si)
     {
-	switch(*si)
-	{
-	case '0': c |= 0; break;
-	case '1': c |= 1; break;
-	case '2': c |= 2; break;
-	case '3': c |= 3; break;
-	case '4': c |= 4; break;
-	case '5': c |= 5; break;
-	case '6': c |= 6; break;
-	case '7': c |= 7; break;
-	case '8': c |= 8; break;
-	case '9': c |= 9; break;
-	case 'A': case 'a': c |= 10; break;
-	case 'B': case 'b': c |= 11; break;
-	case 'C': case 'c': c |= 12; break;
-	case 'D': case 'd': c |= 13; break;
-	case 'E': case 'e': c |= 14; break;
-	case 'F': case 'f': c |= 15; break;
-	default:
-	    throw(std::runtime_error("Invalid string for hex conversion"));
-	}
+        switch(*si)
+        {
+        case '0': c |= 0; break;
+        case '1': c |= 1; break;
+        case '2': c |= 2; break;
+        case '3': c |= 3; break;
+        case '4': c |= 4; break;
+        case '5': c |= 5; break;
+        case '6': c |= 6; break;
+        case '7': c |= 7; break;
+        case '8': c |= 8; break;
+        case '9': c |= 9; break;
+        case 'A': case 'a': c |= 10; break;
+        case 'B': case 'b': c |= 11; break;
+        case 'C': case 'c': c |= 12; break;
+        case 'D': case 'd': c |= 13; break;
+        case 'E': case 'e': c |= 14; break;
+        case 'F': case 'f': c |= 15; break;
+        default:
+            throw(std::runtime_error("Invalid string for hex conversion"));
+        }
 
-	if (n == 0) {
-	    c *= 0x10;
-	}
-	else if (n == 1) {
-	    out.append(1, c);
-	    c = 0;
-	}
-	n = (n+1) % 2;
+        if (n == 0) {
+            c *= 0x10;
+        }
+        else if (n == 1) {
+            out.append(1, c);
+            c = 0;
+        }
+        n = (n+1) % 2;
     }
 
     if (n != 0) throw(std::runtime_error("Invalid string for hex conversion"));
@@ -928,9 +928,9 @@ static inline std::string parse_hexdump(const std::string& str)
  * argument for varname, because it leads to ambiguous calls with the object
  * method below.
  *
- * @param str		string to output as C source array
- * @param varname	name of the array variable in the outputted code snippet
- * @return		string holding C source snippet
+ * @param str           string to output as C source array
+ * @param varname       name of the array variable in the outputted code snippet
+ * @return              string holding C source snippet
  */
 static inline std::string hexdump_sourcecode(const std::string& str, const std::string& varname)
 {
@@ -943,25 +943,25 @@ static inline std::string hexdump_sourcecode(const std::string& str, const std::
     out.reserve( out.size() + (str.size() * 5) - 1 + (str.size() / 16) + 4 );
 
     static const char xdigits[16] = {
-	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
     };
 
     std::string::size_type ci = 0;
 
     for (std::string::const_iterator si = str.begin();
-	 si != str.end(); ++si, ++ci)
+         si != str.end(); ++si, ++ci)
     {
-	out.append("0x");
-	out.append(1, xdigits[ (*si & 0xF0) >> 4 ]);
-	out.append(1, xdigits[ (*si & 0x0F) ]);
+        out.append("0x");
+        out.append(1, xdigits[ (*si & 0xF0) >> 4 ]);
+        out.append(1, xdigits[ (*si & 0x0F) ]);
 
-	if (ci+1 < str.size()) {
-	    out.append(1, ',');
+        if (ci+1 < str.size()) {
+            out.append(1, ',');
 
-	    if (ci % perline == perline-1) {
-		out.append(1, '\n');
-	    }
-	}
+            if (ci % perline == perline-1) {
+                out.append(1, '\n');
+            }
+        }
     }
 
     out.append("\n};\n");
@@ -981,9 +981,9 @@ static inline std::string hexdump_sourcecode(const std::string& str, const std::
  * 4. The function's code is based on code from the libb64 project (see
  * http://sourceforge.net/projects/libb64).
  *
- * @param instr		input string to encode
- * @param linebreak	break the output string every n characters
- * @return		base64 encoded string
+ * @param instr         input string to encode
+ * @param linebreak     break the output string every n characters
+ * @return              base64 encoded string
  */
 static inline std::string base64_encode(const std::string& instr, unsigned int linebreak = 0)
 {
@@ -998,61 +998,61 @@ static inline std::string base64_encode(const std::string& instr, unsigned int l
     outstr.reserve( outsize );
 
     static const char encoding64[65]
-	= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     char result = 0;
     unsigned int linebegin = 0;
 
     while (1)
     {
-	// step 0: if the string is finished here, no padding is needed
-	if (inchar == instr.end()) {
-	    return outstr;
-	}
+        // step 0: if the string is finished here, no padding is needed
+        if (inchar == instr.end()) {
+            return outstr;
+        }
 
-	// step 0: process first byte, write first letter
-	char fragment = *inchar++;
-	result = (fragment & 0xFC) >> 2;
-	outstr += encoding64[static_cast<int>(result)];
-	result = (fragment & 0x03) << 4;
+        // step 0: process first byte, write first letter
+        char fragment = *inchar++;
+        result = (fragment & 0xFC) >> 2;
+        outstr += encoding64[static_cast<int>(result)];
+        result = (fragment & 0x03) << 4;
 
-	// step 1: if string finished here, add two padding '='s
-	if (inchar == instr.end()) {
-	    outstr += encoding64[static_cast<int>(result)];
-	    outstr += '=';
-	    outstr += '=';
-	    return outstr;
-	}
+        // step 1: if string finished here, add two padding '='s
+        if (inchar == instr.end()) {
+            outstr += encoding64[static_cast<int>(result)];
+            outstr += '=';
+            outstr += '=';
+            return outstr;
+        }
 
-	// step 1: process second byte together with first, write second
-	// letter
-	fragment = *inchar++;
-	result |= (fragment & 0xF0) >> 4;
-	outstr += encoding64[static_cast<int>(result)];
-	result = (fragment & 0x0F) << 2;
+        // step 1: process second byte together with first, write second
+        // letter
+        fragment = *inchar++;
+        result |= (fragment & 0xF0) >> 4;
+        outstr += encoding64[static_cast<int>(result)];
+        result = (fragment & 0x0F) << 2;
 
-	// step 2: if string finished here, add one padding '='
-	if (inchar == instr.end()) {
-	    outstr += encoding64[static_cast<int>(result)];
-	    outstr += '=';
-	    return outstr;
-	}
+        // step 2: if string finished here, add one padding '='
+        if (inchar == instr.end()) {
+            outstr += encoding64[static_cast<int>(result)];
+            outstr += '=';
+            return outstr;
+        }
 
-	// step 2: process third byte and write third and fourth letters.
-	fragment = *inchar++;
+        // step 2: process third byte and write third and fourth letters.
+        fragment = *inchar++;
 
-	result |= (fragment & 0xC0) >> 6;
-	outstr += encoding64[static_cast<int>(result)];
+        result |= (fragment & 0xC0) >> 6;
+        outstr += encoding64[static_cast<int>(result)];
 
-	result  = (fragment & 0x3F) >> 0;
-	outstr += encoding64[static_cast<int>(result)];
+        result  = (fragment & 0x3F) >> 0;
+        outstr += encoding64[static_cast<int>(result)];
 
-	// wrap base64 encoding into lines if desired, but only after whole
-	// blocks of 4 letters.
-	if (linebreak > 0 && outstr.size() - linebegin >= linebreak)
-	{
-	    outstr += '\n';
-	    linebegin = outstr.size();
-	}
+        // wrap base64 encoding into lines if desired, but only after whole
+        // blocks of 4 letters.
+        if (linebreak > 0 && outstr.size() - linebegin >= linebreak)
+        {
+            outstr += '\n';
+            linebegin = outstr.size();
+        }
     }
 }
 
@@ -1064,9 +1064,9 @@ static inline std::string base64_encode(const std::string& instr, unsigned int l
  * ignored. The function's code is based on code from the libb64 project (see
  * http://sourceforge.net/projects/libb64).
  *
- * @param instr		input string to encode
- * @param strict	throw exception on invalid character
- * @return		decoded binary data
+ * @param instr         input string to encode
+ * @param strict        throw exception on invalid character
+ * @return              decoded binary data
  */
 static inline std::string base64_decode(const std::string& instr, bool strict = false)
 {
@@ -1079,22 +1079,22 @@ static inline std::string base64_decode(const std::string& instr, bool strict = 
 
     // value lookup table: -1 -> exception, -2 -> skip whitespace
     const char decoding64[256] = {
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -2, -1, -1, -2, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63,
-	52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -2, -1, -1,
-	-1,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14,
-	15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1,
-	-1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-	41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -2, -1, -1, -2, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63,
+        52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -2, -1, -1,
+        -1,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14,
+        15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1,
+        -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+        41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
     };
 
     char outchar;
@@ -1102,64 +1102,64 @@ static inline std::string base64_decode(const std::string& instr, bool strict = 
 
     while (1)
     {
-	// step 0: save first valid letter. do not output a byte, yet.
-	do {
-	    if (inchar == instr.end()) return outstr;
+        // step 0: save first valid letter. do not output a byte, yet.
+        do {
+            if (inchar == instr.end()) return outstr;
 
-	    fragment = decoding64[ static_cast<int>(*inchar++) ];
+            fragment = decoding64[ static_cast<int>(*inchar++) ];
 
-	    if (fragment == -1 && strict)
-		throw(std::runtime_error("Invalid character encountered during Base64 decoding."));
+            if (fragment == -1 && strict)
+                throw(std::runtime_error("Invalid character encountered during Base64 decoding."));
 
-	} while (fragment < 0);
+        } while (fragment < 0);
 
-	outchar = (fragment & 0x3F) << 2;
+        outchar = (fragment & 0x3F) << 2;
 
-	// step 1: get second valid letter. output the first byte.
-	do {
-	    if (inchar == instr.end()) return outstr;
+        // step 1: get second valid letter. output the first byte.
+        do {
+            if (inchar == instr.end()) return outstr;
 
-	    fragment = decoding64[ static_cast<int>(*inchar++) ];
+            fragment = decoding64[ static_cast<int>(*inchar++) ];
 
-	    if (fragment == -1 && strict)
-		throw(std::runtime_error("Invalid character encountered during Base64 decoding."));
+            if (fragment == -1 && strict)
+                throw(std::runtime_error("Invalid character encountered during Base64 decoding."));
 
-	} while (fragment < 0);
+        } while (fragment < 0);
 
-	outchar |= (fragment & 0x30) >> 4;
-	outstr += outchar;
+        outchar |= (fragment & 0x30) >> 4;
+        outstr += outchar;
 
-	outchar = (fragment & 0x0F) << 4;
+        outchar = (fragment & 0x0F) << 4;
 
-	// step 2: get third valid letter. output the second byte.
-	do {
-	    if (inchar == instr.end())  return outstr;
+        // step 2: get third valid letter. output the second byte.
+        do {
+            if (inchar == instr.end())  return outstr;
 
-	    fragment = decoding64[ static_cast<int>(*inchar++) ];
+            fragment = decoding64[ static_cast<int>(*inchar++) ];
 
-	    if (fragment == -1 && strict)
-		throw(std::runtime_error("Invalid character encountered during Base64 decoding."));
+            if (fragment == -1 && strict)
+                throw(std::runtime_error("Invalid character encountered during Base64 decoding."));
 
-	} while (fragment < 0);
+        } while (fragment < 0);
 
-	outchar |= (fragment & 0x3C) >> 2;
-	outstr += outchar;
+        outchar |= (fragment & 0x3C) >> 2;
+        outstr += outchar;
 
-	outchar = (fragment & 0x03) << 6;
+        outchar = (fragment & 0x03) << 6;
 
-	// step 3: get fourth valid letter. output the third byte.
-	do {
-	    if (inchar == instr.end()) return outstr;
+        // step 3: get fourth valid letter. output the third byte.
+        do {
+            if (inchar == instr.end()) return outstr;
 
-	    fragment = decoding64[ static_cast<int>(*inchar++) ];
+            fragment = decoding64[ static_cast<int>(*inchar++) ];
 
-	    if (fragment == -1 && strict)
-		throw(std::runtime_error("Invalid character encountered during Base64 decoding."));
+            if (fragment == -1 && strict)
+                throw(std::runtime_error("Invalid character encountered during Base64 decoding."));
 
-	} while (fragment < 0);
+        } while (fragment < 0);
 
-	outchar |= (fragment & 0x3F);
-	outstr += outchar;
+        outchar |= (fragment & 0x3F);
+        outstr += outchar;
     }
 }
 
@@ -1175,8 +1175,8 @@ static inline std::string base64_decode(const std::string& instr, bool strict = 
  */
 struct LevenshteinStandard
 {
-    static const unsigned int cost_insert_delete	= 1;
-    static const unsigned int cost_replace		= 1;
+    static const unsigned int cost_insert_delete        = 1;
+    static const unsigned int cost_replace              = 1;
 
     static inline bool char_equal(const char& a, const char& b)
     { return (a == b); }
@@ -1188,8 +1188,8 @@ struct LevenshteinStandard
  */
 struct LevenshteinStandardICase
 {
-    static const unsigned int cost_insert_delete	= 1;
-    static const unsigned int cost_replace		= 1;
+    static const unsigned int cost_insert_delete        = 1;
+    static const unsigned int cost_replace              = 1;
 
     static inline bool char_equal(const char& a, const char& b)
     { return std::tolower(a) == std::tolower(b); }
@@ -1201,9 +1201,9 @@ struct LevenshteinStandardICase
  * string into the other. Implemented with time complexity O(|n|+|m|) and
  * memory complexity O(2*max(|n|,|m|))
  *
- * @param a	first string
- * @param b	second string
- * @return	Levenshtein distance
+ * @param a     first string
+ * @param b     second string
+ * @return      Levenshtein distance
  */
 template <typename levenshtein_param>
 static inline unsigned int levenshtein_algorithm(const std::string& a, const std::string& b)
@@ -1222,31 +1222,31 @@ static inline unsigned int levenshtein_algorithm(const std::string& a, const std
 
     // fill first row with ascending ordinals.
     for(unsigned int i = 0; i < as.size() + 1; i++) {
-	matrix[0][i] = i;
+        matrix[0][i] = i;
     }
 
     // compute distance
     for(unsigned int j = 1; j < bs.size() + 1; j++)
     {
-	// switch rows each time
-	unsigned int *lastrow = matrix[(j - 1) % 2];
-	unsigned int *thisrow = matrix[j % 2];
+        // switch rows each time
+        unsigned int *lastrow = matrix[(j - 1) % 2];
+        unsigned int *thisrow = matrix[j % 2];
 
-	thisrow[0] = j;
+        thisrow[0] = j;
 
-	for(unsigned int i = 1; i < as.size() + 1; i++)
-	{
-	    // three-way mimimum of
-	    thisrow[i] = std::min(
-		std::min(
-		    // left plus insert cost
-		    thisrow[i-1] + levenshtein_param::cost_insert_delete,
-		    // top plus delete cost
-		    lastrow[i] + levenshtein_param::cost_insert_delete),
-		// top left plus replacement cost
-		lastrow[i-1] + (levenshtein_param::char_equal(as[i-1], bs[j-1]) ? 0 : levenshtein_param::cost_replace)
-		);
-	}
+        for(unsigned int i = 1; i < as.size() + 1; i++)
+        {
+            // three-way mimimum of
+            thisrow[i] = std::min(
+                std::min(
+                    // left plus insert cost
+                    thisrow[i-1] + levenshtein_param::cost_insert_delete,
+                    // top plus delete cost
+                    lastrow[i] + levenshtein_param::cost_insert_delete),
+                // top left plus replacement cost
+                lastrow[i-1] + (levenshtein_param::char_equal(as[i-1], bs[j-1]) ? 0 : levenshtein_param::cost_replace)
+                );
+        }
     }
 
     // result is in the last cell of the last computed row
@@ -1260,9 +1260,9 @@ static inline unsigned int levenshtein_algorithm(const std::string& a, const std
  * is the minimum number of replacements/inserts/deletes needed to change one
  * string into the other.
  *
- * @param a	first string
- * @param b	second string
- * @return	Levenshtein distance
+ * @param a     first string
+ * @param b     second string
+ * @return      Levenshtein distance
  */
 static inline unsigned int levenshtein(const std::string& a, const std::string& b)
 {
@@ -1274,9 +1274,9 @@ static inline unsigned int levenshtein(const std::string& a, const std::string& 
  * is the minimum number of replacements/inserts/deletes needed to change one
  * string into the other. Character comparison is done case-insensitively.
  *
- * @param a	first string
- * @param b	second string
- * @return	Levenshtein distance
+ * @param a     first string
+ * @param b     second string
+ * @return      Levenshtein distance
  */
 static inline unsigned int levenshtein_icase(const std::string& a, const std::string& b)
 {
@@ -1316,10 +1316,10 @@ static inline unsigned int levenshtein_icase(const std::string& a, const std::st
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  *
- * @param a		first string to compare
- * @param b		second string to compare
- * @param fold_case	ignore alphabetic case in comparison
- * @return		0 if (a == b), -1 if (a < b) and +1 if (a > b).
+ * @param a             first string to compare
+ * @param b             second string to compare
+ * @param fold_case     ignore alphabetic case in comparison
+ * @return              0 if (a == b), -1 if (a < b) and +1 if (a > b).
  */
 static inline int natcmp_algorithm(const std::string& a, const std::string& b, bool fold_case)
 {
@@ -1328,101 +1328,101 @@ static inline int natcmp_algorithm(const std::string& a, const std::string& b, b
 
     while (ai != a.end() || bi != b.end())
     {
-	// skip over leading spaces or zeros
-	while (ai != a.end() && std::isspace(*ai))
-	    ++ai;
+        // skip over leading spaces or zeros
+        while (ai != a.end() && std::isspace(*ai))
+            ++ai;
 
-	while (bi != b.end() && std::isspace(*bi))
-	    ++bi;
+        while (bi != b.end() && std::isspace(*bi))
+            ++bi;
 
-	if (ai == a.end() || bi == b.end())
-	    break;
+        if (ai == a.end() || bi == b.end())
+            break;
 
-	// process run of digits
-	if (std::isdigit(*ai) && std::isdigit(*bi))
-	{
-	    if (*ai == '0' || *bi == '0') // fractional
-	    {
-		// Compare two left-aligned numbers: the first to have a
-		// different value wins.
+        // process run of digits
+        if (std::isdigit(*ai) && std::isdigit(*bi))
+        {
+            if (*ai == '0' || *bi == '0') // fractional
+            {
+                // Compare two left-aligned numbers: the first to have a
+                // different value wins.
 
-		while (ai != a.end() && bi != b.end())
-		{
-		    if (!std::isdigit(*ai) && !std::isdigit(*bi))
-			break;
-		    else if (!std::isdigit(*ai))
-			return -1;
-		    else if (!std::isdigit(*bi))
-			return +1;
-		    else if (*ai < *bi)
-			return -1;
-		    else if (*ai > *bi)
-			return +1;
+                while (ai != a.end() && bi != b.end())
+                {
+                    if (!std::isdigit(*ai) && !std::isdigit(*bi))
+                        break;
+                    else if (!std::isdigit(*ai))
+                        return -1;
+                    else if (!std::isdigit(*bi))
+                        return +1;
+                    else if (*ai < *bi)
+                        return -1;
+                    else if (*ai > *bi)
+                        return +1;
 
-		    ++ai; ++bi;
-		}
+                    ++ai; ++bi;
+                }
 
-		continue;
-	    }
-	    else
-	    {
-		// The longest run of digits wins.  That aside, the
-		// greatest value wins, but we can't know that it will
-		// until we've scanned both numbers to know that they have
-		// the same magnitude, so we remember it in BIAS.
+                continue;
+            }
+            else
+            {
+                // The longest run of digits wins.  That aside, the
+                // greatest value wins, but we can't know that it will
+                // until we've scanned both numbers to know that they have
+                // the same magnitude, so we remember it in BIAS.
 
-		int bias = 0;
+                int bias = 0;
 
-		while(ai != a.end() && bi != b.end())
-		{
-		    if (!std::isdigit(*ai) && !std::isdigit(*bi)) {
-			if (bias) return bias;
-			else break;
-		    }
-		    else if (!std::isdigit(*ai))
-			return -1;
-		    else if (!std::isdigit(*bi))
-			return +1;
-		    else if (*ai < *bi) {
-			if (!bias) bias = -1;
-		    }
-		    else if (*ai > *bi) {
-			if (!bias) bias = +1;
-		    }
+                while(ai != a.end() && bi != b.end())
+                {
+                    if (!std::isdigit(*ai) && !std::isdigit(*bi)) {
+                        if (bias) return bias;
+                        else break;
+                    }
+                    else if (!std::isdigit(*ai))
+                        return -1;
+                    else if (!std::isdigit(*bi))
+                        return +1;
+                    else if (*ai < *bi) {
+                        if (!bias) bias = -1;
+                    }
+                    else if (*ai > *bi) {
+                        if (!bias) bias = +1;
+                    }
 
-		    ++ai; ++bi;
-		}
+                    ++ai; ++bi;
+                }
 
-		// check for the longer sequence of digits
-		if (ai == a.end() && bi != b.end() && std::isdigit(*bi)) return -1;
-		if (bi == b.end() && ai != a.end() && std::isdigit(*ai)) return +1;
+                // check for the longer sequence of digits
+                if (ai == a.end() && bi != b.end() && std::isdigit(*bi)) return -1;
+                if (bi == b.end() && ai != a.end() && std::isdigit(*ai)) return +1;
 
-		if (bias) return bias;
+                if (bias) return bias;
 
-		continue;
-	    }
-	}
+                continue;
+            }
+        }
 
-	char ca = fold_case ? std::toupper(*ai) : *ai;
-	char cb = fold_case ? std::toupper(*bi) : *bi;
+        char ca = fold_case ? std::toupper(*ai) : *ai;
+        char cb = fold_case ? std::toupper(*bi) : *bi;
 
-	if (ca < cb)
-	    return -1;
-	else if (ca > cb)
-	    return +1;
+        if (ca < cb)
+            return -1;
+        else if (ca > cb)
+            return +1;
 
-	++ai; ++bi;
+        ++ai; ++bi;
     }
 
     if (ai == a.end() && bi == b.end()) {
-	// The strings compare the same.  Perhaps the caller will want to
-	// call strcmp to break the tie.
-	return 0;
+        // The strings compare the same.  Perhaps the caller will want to
+        // call strcmp to break the tie.
+        return 0;
     }
     else if (ai == a.end() && bi != b.end())
-	return -1;
+        return -1;
     else if (ai != a.end() && bi == b.end())
-	return +1;
+        return +1;
 
     return 0; // never reached
 }
@@ -1434,9 +1434,9 @@ static inline int natcmp_algorithm(const std::string& a, const std::string& b, b
  * comparison algorithm. It orders strings so that "rfc1.txt" < "rfc822.txt" <
  * "rfc2086.txt". The comparison is done case-sensitive.
  *
- * @param a	first string to compare
- * @param b	second string to compare
- * @return	0 if (a == b), -1 if (a < b) and +1 if (a > b).
+ * @param a     first string to compare
+ * @param b     second string to compare
+ * @return      0 if (a == b), -1 if (a < b) and +1 if (a > b).
  */
 static inline int natcmp(const std::string& a, const std::string& b)
 {
@@ -1448,9 +1448,9 @@ static inline int natcmp(const std::string& a, const std::string& b)
  * comparison algorithm. It orders strings so that "rfc1.txt" < "rfc822.txt" <
  * "rfc2086.txt". The comparison is done case-insensitive.
  *
- * @param a	first string to compare
- * @param b	second string to compare
- * @return	0 if (a == b), -1 if (a < b) and +1 if (a > b).
+ * @param a     first string to compare
+ * @param b     second string to compare
+ * @return      0 if (a == b), -1 if (a < b) and +1 if (a > b).
  */
 static inline int natcmp_icase(const std::string& a, const std::string& b)
 {
@@ -1512,7 +1512,7 @@ static inline bool natless_icase(const std::string& a, const std::string& b)
  */
 struct order_natless {
     inline bool operator()(const std::string &a, const std::string &b) const {
-	return natless(a, b);
+        return natless(a, b);
     }
 };
 
@@ -1522,7 +1522,7 @@ struct order_natless {
  */
 struct order_natless_icase {
     inline bool operator()(const std::string &a, const std::string &b) const {
-	return natless_icase(a, b);
+        return natless_icase(a, b);
     }
 };
 
@@ -1532,7 +1532,7 @@ struct order_natless_icase {
  */
 struct order_natless_desc {
     inline bool operator()(const std::string &a, const std::string &b) const {
-	return !natless(a, b);
+        return !natless(a, b);
     }
 };
 
@@ -1542,7 +1542,7 @@ struct order_natless_desc {
  */
 struct order_natless_icase_desc {
     inline bool operator()(const std::string &a, const std::string &b) const {
-	return !natless_icase(a, b);
+        return !natless_icase(a, b);
     }
 };
 
@@ -1574,7 +1574,7 @@ static inline std::string compress(const std::string& str, int compressionlevel 
     memset(&zs, 0, sizeof(zs));
 
     if (deflateInit(&zs, compressionlevel) != Z_OK)
-	throw(std::runtime_error("deflateInit failed while compressing."));
+        throw(std::runtime_error("deflateInit failed while compressing."));
 
     zs.next_in = const_cast<Bytef*>(reinterpret_cast<const Bytef*>(str.data()));
     zs.avail_in = str.size();           // set the z_stream's input
@@ -1585,24 +1585,24 @@ static inline std::string compress(const std::string& str, int compressionlevel 
 
     // retrieve the compressed bytes blockwise
     do {
-	zs.next_out = reinterpret_cast<Bytef*>(outbuffer);
-	zs.avail_out = sizeof(outbuffer);
+        zs.next_out = reinterpret_cast<Bytef*>(outbuffer);
+        zs.avail_out = sizeof(outbuffer);
 
-	ret = deflate(&zs, Z_FINISH);
+        ret = deflate(&zs, Z_FINISH);
 
-	if (outstring.size() < zs.total_out) {
-	    // append the block to the output string
-	    outstring.append(outbuffer,
-			     zs.total_out - outstring.size());
-	}
+        if (outstring.size() < zs.total_out) {
+            // append the block to the output string
+            outstring.append(outbuffer,
+                             zs.total_out - outstring.size());
+        }
     } while (ret == Z_OK);
 
     deflateEnd(&zs);
 
     if (ret != Z_STREAM_END) {          // an error occurred that was not EOF
-	std::ostringstream oss;
-	oss << "Exception during zlib compression: (" << ret << ") " << zs.msg;
-	throw(std::runtime_error(oss.str()));
+        std::ostringstream oss;
+        oss << "Exception during zlib compression: (" << ret << ") " << zs.msg;
+        throw(std::runtime_error(oss.str()));
     }
 
     return outstring;
@@ -1623,13 +1623,13 @@ static inline std::string gzcompress(const std::string& str, int compressionleve
 
     // add simple gzip header of 10 bytes length
     static const unsigned int header_size = 10;
-    outstring += '\x1F';	// ID1 (IDentification 1)
-    outstring += '\x8B';	// ID2 (IDentification 2)
-    outstring += '\x08';	// CM (Compression Method). 8 = deflate.
-    outstring += '\x00';	// FLG (FLaGs). None set.
-    outstring.append(4, '\0');	// MTIME (Modification TIME). Zeroed.
-    outstring += '\x02';	// XFL (eXtra FLags). Set maximum compression.
-    outstring += '\x03';	// OS (Operating System). 3 = Unix.
+    outstring += '\x1F';        // ID1 (IDentification 1)
+    outstring += '\x8B';        // ID2 (IDentification 2)
+    outstring += '\x08';        // CM (Compression Method). 8 = deflate.
+    outstring += '\x00';        // FLG (FLaGs). None set.
+    outstring.append(4, '\0');  // MTIME (Modification TIME). Zeroed.
+    outstring += '\x02';        // XFL (eXtra FLags). Set maximum compression.
+    outstring += '\x03';        // OS (Operating System). 3 = Unix.
 
     // perform deflation
     z_stream zs;         // z_stream is zlib's control structure
@@ -1638,7 +1638,7 @@ static inline std::string gzcompress(const std::string& str, int compressionleve
     // use advance initialization routine with windowBits < 0 to suppress zlib
     // deflate header and footer.
     if (deflateInit2(&zs, compressionlevel, Z_DEFLATED, -MAX_WBITS, MAX_MEM_LEVEL, Z_DEFAULT_STRATEGY) != Z_OK)
-	throw(std::runtime_error("deflateInit failed while compressing."));
+        throw(std::runtime_error("deflateInit failed while compressing."));
 
     zs.next_in = const_cast<Bytef*>(reinterpret_cast<const Bytef*>(str.data()));
     zs.avail_in = str.size();           // set the z_stream's input
@@ -1648,24 +1648,24 @@ static inline std::string gzcompress(const std::string& str, int compressionleve
 
     // retrieve the compressed bytes blockwise
     do {
-	zs.next_out = reinterpret_cast<Bytef*>(outbuffer);
-	zs.avail_out = sizeof(outbuffer);
+        zs.next_out = reinterpret_cast<Bytef*>(outbuffer);
+        zs.avail_out = sizeof(outbuffer);
 
-	ret = deflate(&zs, Z_FINISH);
+        ret = deflate(&zs, Z_FINISH);
 
-	if (outstring.size() < header_size + zs.total_out) {
-	    // append the block to the output string
-	    outstring.append(outbuffer,
-			     zs.total_out - outstring.size() + header_size);
-	}
+        if (outstring.size() < header_size + zs.total_out) {
+            // append the block to the output string
+            outstring.append(outbuffer,
+                             zs.total_out - outstring.size() + header_size);
+        }
     } while (ret == Z_OK);
 
     deflateEnd(&zs);
 
     if (ret != Z_STREAM_END) {          // an error occurred that was not EOF
-	std::ostringstream oss;
-	oss << "Exception during zlib compression: (" << ret << ") " << zs.msg;
-	throw(std::runtime_error(oss.str()));
+        std::ostringstream oss;
+        oss << "Exception during zlib compression: (" << ret << ") " << zs.msg;
+        throw(std::runtime_error(oss.str()));
     }
 
     // add gzip footer: calculate crc32 of original data
@@ -1697,11 +1697,11 @@ static inline std::string gzcompress(const std::string& str, int compressionleve
  */
 static inline std::string decompress(const char* data, unsigned int size)
 {
-    z_stream zs;	// z_stream is zlib's control structure
+    z_stream zs;        // z_stream is zlib's control structure
     memset(&zs, 0, sizeof(zs));
 
     if (inflateInit(&zs) != Z_OK)
-	throw(std::runtime_error("inflateInit failed while decompressing."));
+        throw(std::runtime_error("inflateInit failed while decompressing."));
 
     zs.next_in = const_cast<Bytef*>(reinterpret_cast<const Bytef*>(data));
     zs.avail_in = size;
@@ -1712,25 +1712,25 @@ static inline std::string decompress(const char* data, unsigned int size)
 
     // get the uncompressed bytes blockwise using repeated calls to inflate
     do {
-	zs.next_out = reinterpret_cast<Bytef*>(outbuffer);
-	zs.avail_out = sizeof(outbuffer);
+        zs.next_out = reinterpret_cast<Bytef*>(outbuffer);
+        zs.avail_out = sizeof(outbuffer);
 
-	ret = inflate(&zs, 0);
+        ret = inflate(&zs, 0);
 
-	if (outstring.size() < zs.total_out) {
-	    outstring.append(outbuffer,
-			     zs.total_out - outstring.size());
-	}
+        if (outstring.size() < zs.total_out) {
+            outstring.append(outbuffer,
+                             zs.total_out - outstring.size());
+        }
 
     } while (ret == Z_OK);
 
     inflateEnd(&zs);
 
     if (ret != Z_STREAM_END) {          // an error occurred that was not EOF
-	std::ostringstream oss;
-	oss << "Exception during zlib uncompression: (" << ret << ") "
-	    << zs.msg;
-	throw(std::runtime_error(oss.str()));
+        std::ostringstream oss;
+        oss << "Exception during zlib uncompression: (" << ret << ") "
+            << zs.msg;
+        throw(std::runtime_error(oss.str()));
     }
 
     return outstring;
@@ -1798,10 +1798,10 @@ static inline std::string bz2compress(const std::string& str, int blockSize100k 
     memset(&bz, 0, sizeof(bz));
 
     if (BZ2_bzCompressInit(&bz, blockSize100k, 0, workFactor) != BZ_OK)
-	throw(std::runtime_error("BZ2_bzCompressInit failed while initializing compression."));
+        throw(std::runtime_error("BZ2_bzCompressInit failed while initializing compression."));
 
     bz.next_in = const_cast<char*>(str.data());
-    bz.avail_in = str.size();	// set the bz_stream's input
+    bz.avail_in = str.size();   // set the bz_stream's input
 
     int ret;
     char outbuffer[32768];
@@ -1809,24 +1809,24 @@ static inline std::string bz2compress(const std::string& str, int blockSize100k 
 
     // retrieve the compressed bytes blockwise
     do {
-	bz.next_out = outbuffer;
-	bz.avail_out = sizeof(outbuffer);
+        bz.next_out = outbuffer;
+        bz.avail_out = sizeof(outbuffer);
 
-	ret = BZ2_bzCompress(&bz, BZ_FINISH);
+        ret = BZ2_bzCompress(&bz, BZ_FINISH);
 
-	if (outstring.size() < bz.total_out_lo32) {
-	    // append the block to the output string
-	    outstring.append(outbuffer,
-			     bz.total_out_lo32 - outstring.size());
-	}
+        if (outstring.size() < bz.total_out_lo32) {
+            // append the block to the output string
+            outstring.append(outbuffer,
+                             bz.total_out_lo32 - outstring.size());
+        }
     } while (ret == BZ_OK);
 
     BZ2_bzCompressEnd(&bz);
 
     if (ret != BZ_STREAM_END) {          // an error occurred that was not EOF
-	std::ostringstream oss;
-	oss << "Exception during bzip2 compression: (" << ret << ")";
-	throw(std::runtime_error(oss.str()));
+        std::ostringstream oss;
+        oss << "Exception during bzip2 compression: (" << ret << ")";
+        throw(std::runtime_error(oss.str()));
     }
 
     return outstring;
@@ -1841,11 +1841,11 @@ static inline std::string bz2compress(const std::string& str, int blockSize100k 
  */
 static inline std::string bz2decompress(const std::string& str)
 {
-    bz_stream bz;	// bz_stream is bzip2's control structure
+    bz_stream bz;       // bz_stream is bzip2's control structure
     memset(&bz, 0, sizeof(bz));
 
     if (BZ2_bzDecompressInit(&bz, 0, 0) != BZ_OK)
-	throw(std::runtime_error("BZ2_bzDecompressInit failed while initializing decompression."));
+        throw(std::runtime_error("BZ2_bzDecompressInit failed while initializing decompression."));
 
     bz.next_in = const_cast<char*>(str.data());
     bz.avail_in = str.size();
@@ -1856,24 +1856,24 @@ static inline std::string bz2decompress(const std::string& str)
 
     // get the uncompressed bytes blockwise
     do {
-	bz.next_out = outbuffer;
-	bz.avail_out = sizeof(outbuffer);
+        bz.next_out = outbuffer;
+        bz.avail_out = sizeof(outbuffer);
 
-	ret = BZ2_bzDecompress(&bz);
+        ret = BZ2_bzDecompress(&bz);
 
-	if (outstring.size() < bz.total_out_lo32) {
-	    outstring.append(outbuffer,
-			     bz.total_out_lo32 - outstring.size());
-	}
+        if (outstring.size() < bz.total_out_lo32) {
+            outstring.append(outbuffer,
+                             bz.total_out_lo32 - outstring.size());
+        }
 
     } while (ret == BZ_OK);
 
     BZ2_bzDecompressEnd(&bz);
 
     if (ret != BZ_STREAM_END) {          // an error occurred that was not EOF
-	std::ostringstream oss;
-	oss << "Exception during bzip2 uncompression: (" << ret << ")";
-	throw(std::runtime_error(oss.str()));
+        std::ostringstream oss;
+        oss << "Exception during bzip2 uncompression: (" << ret << ")";
+        throw(std::runtime_error(oss.str()));
     }
 
     return outstring;
