@@ -109,6 +109,15 @@ void test_compare_icase()
     CHECK( stx::string::compare_icase("ABC", "abb") > 0  );
 }
 
+void test_sstream()
+{
+    CHECK( stx::string::to_str(42) == "42" );
+
+    unsigned int output;
+    CHECK( stx::string::from_str("42", output) );
+    CHECK( !stx::string::from_str("42b", output) );
+}
+
 void test_prefix_suffix()
 {
     CHECK( stx::string::is_prefix("abcdef", "abc") );
@@ -426,6 +435,7 @@ int main()
     test_trim();
     test_toupper_tolower();
     test_compare_icase();
+    test_sstream();
     test_prefix_suffix();
     test_replace();
     test_split_ws();

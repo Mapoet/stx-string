@@ -325,6 +325,34 @@ struct order_less_icase_desc
     }
 };
 
+// ***                                        ***
+// *** String Stream Transformation Functions ***
+// ***                                        ***
+
+/**
+ * Template transformation function which uses std::ostringstream to serialize
+ * any ostreamable type into a std::string.
+ */
+template <typename Type>
+static inline std::string to_str(const Type& val)
+{
+    std::ostringstream os;
+    os << val;
+    return os.str();
+}
+
+/**
+ * Template transformation function which uses std::istringstream to parse any
+ * istreamable type from a std::string.
+ */
+template <typename Type>
+static inline bool from_str(const std::string& str, Type& outval)
+{
+    std::istringstream is(str);
+    is >> outval;
+    return is.eof();
+}
+
 // ***                             ***
 // *** Prefix and Suffix Functions ***
 // ***                             ***
