@@ -12,18 +12,18 @@
 
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
-add_executable(SimpleTest SimpleTest.cc)
-target_link_libraries(SimpleTest ${BUILD_LIBRARIES})
-add_test(SimpleTest SimpleTest)
+add_executable(simple simple.cpp)
+target_link_libraries(simple ${BUILD_LIBRARIES})
+add_test(simple simple)
 
-add_executable(NatcmpTest NatcmpTest.cc strnatcmp.c)
-target_link_libraries(NatcmpTest ${BUILD_LIBRARIES})
-add_test(NatcmpTest NatcmpTest)
+add_executable(natcmp natcmp.cpp strnatcmp.c)
+target_link_libraries(natcmp ${BUILD_LIBRARIES})
+add_test(natcmp natcmp)
 
-add_executable(CompressTest CompressTest.cc)
-target_link_libraries(CompressTest ${BUILD_LIBRARIES})
-add_test(CompressTest CompressTest)
+add_executable(compress compress.cpp)
+target_link_libraries(compress ${BUILD_LIBRARIES})
+add_test(compress compress)
 
-add_executable(Bz2CompressTest Bz2CompressTest.cc)
-target_link_libraries(Bz2CompressTest ${BUILD_LIBRARIES})
-add_test(Bz2CompressTest Bz2CompressTest)
+add_executable(bz2compress bz2compress.cpp)
+target_link_libraries(bz2compress ${BUILD_LIBRARIES})
+add_test(bz2compress bz2compress)
