@@ -32,6 +32,7 @@
 
 #include <iostream>
 
+//! Check that [condition] is true, abort otherwise.
 #define CHECK(condition)                                                \
     do {                                                                \
         if (condition) break;                                           \
@@ -41,6 +42,7 @@
         abort();                                                        \
     } while (0)
 
+//! Define to check that [code] throws and exception of given type
 #define CHECK_THROW(code, exception_type)                               \
     do {                                                                \
         bool test__ = false;                                            \
@@ -53,5 +55,9 @@
             << std::endl;                                               \
         abort();                                                        \
     } while (0)
+
+//! Returns an initialized unsigned char[] array inside an std::string
+#define ARRAY_AS_STRING(array) \
+    std::string(reinterpret_cast<const char*>(array), sizeof(array))
 
 #endif // CHECK_HEADER
