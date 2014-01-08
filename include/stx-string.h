@@ -899,9 +899,9 @@ static inline std::string hexdump(const std::string& str)
 /**
  * Dump a (binary) memory buffer as a sequence of hexadecimal pairs.
  *
- * @param data	pointer to input
+ * @param data  pointer to input
  * @param len   length of input
- * @return	string of hexadecimal pairs
+ * @return      string of hexadecimal pairs
  */
 static inline std::string hexdump(const void* data, size_t len)
 {
@@ -1924,5 +1924,92 @@ static inline std::string bz2decompress(const std::string& str)
 } // namespace stx
 
 #endif // HAVE_BZIP2
+
+#if HAVE_OPENSSL
+
+// ***                                            ***
+// *** MD5 and SHA Digest Functions using OpenSSL ***
+// ***                                            ***
+
+#include <openssl/md5.h>
+#include <openssl/sha.h>
+
+namespace stx {
+namespace string {
+
+/**
+ * Calculate MD5 digest of a a string using openssl and return the binary data.
+ *
+ * @param str          (binary) string to digest
+ * @return             binary digest
+ */
+static inline std::string md5_binary(const std::string& str)
+{
+    unsigned char digest[MD5_DIGEST_LENGTH];
+    MD5(reinterpret_cast<const unsigned char*>(str.data()), str.size(), digest);
+    return std::string(reinterpret_cast<char*>(digest), MD5_DIGEST_LENGTH);
+}
+
+/**
+ * Calculate MD5 digest of a a string using openssl and return the hex-encoded data.
+ *
+ * @param str          (binary) string to digest
+ * @return             hex-encoded digest
+ */
+static inline std::string md5_hex(const std::string& str)
+{
+    return hexdump( md5_binary(str) );
+}
+
+/**
+ * Calculate MD5 digest of a a string using openssl and return the base64-encoded data.
+ *
+ * @param str          (binary) string to digest
+ * @return             base64-encoded digest
+ */
+static inline std::string md5_base64(const std::string& str)
+{
+    return base64_encode( md5_binary(str) );
+}
+
+/**
+ * Calculate SHA1 digest of a a string using openssl and return the binary data.
+ *
+ * @param str          (binary) string to digest
+ * @return             binary digest
+ */
+static inline std::string sha1_binary(const std::string& str)
+{
+    unsigned char digest[SHA_DIGEST_LENGTH];
+    SHA1(reinterpret_cast<const unsigned char*>(str.data()), str.size(), digest);
+    return std::string(reinterpret_cast<char*>(digest), SHA_DIGEST_LENGTH);
+}
+
+/**
+ * Calculate SHA1 digest of a a string using openssl and return the hex-encoded data.
+ *
+ * @param str          (binary) string to digest
+ * @return             hex-encoded digest
+ */
+static inline std::string sha1_hex(const std::string& str)
+{
+    return hexdump( sha1_binary(str) );
+}
+
+/**
+ * Calculate SHA1 digest of a a string using openssl and return the base64-encoded data.
+ *
+ * @param str          (binary) string to digest
+ * @return             base64-encoded digest
+ */
+static inline std::string sha1_base64(const std::string& str)
+{
+    return base64_encode( sha1_binary(str) );
+}
+
+} // namespace string
+} // namespace stx
+
+#endif // HAVE_OPENSSL
 
 #endif // _STX_STRING_H_

@@ -64,5 +64,13 @@ if(BZIP2_FOUND)
   set(BUILD_LIBRARIES ${BUILD_LIBRARIES} ${BZIP2_LIBRARIES})
 endif()
 
+# check if OpenSSL is available
+find_package(OpenSSL)
+if(OPENSSL_FOUND)
+  add_definitions(-DHAVE_OPENSSL)
+  include_directories(${OPENSSL_INCLUDE_DIRS})
+  set(BUILD_LIBRARIES ${BUILD_LIBRARIES} ${OPENSSL_LIBRARIES})
+endif()
+
 # build test suite
 add_subdirectory(testsuite)

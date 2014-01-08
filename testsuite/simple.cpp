@@ -391,7 +391,8 @@ void test_base64()
     // check line-splitting
     std::string rand1base64lines = stx::string::base64_encode(rand1, 16);
 
-    CHECK( rand1base64lines == "FjXKA5BrRxGFAudA\n" "njrOQwxXPjXnprI3\n" "7G32aPYOdAxEPw/U\n" "qlblL1jM" );
+    CHECK( rand1base64lines == "FjXKA5BrRxGFAudA\n" "njrOQwxXPjXnprI3\n"
+                               "7G32aPYOdAxEPw/U\n" "qlblL1jM" );
 
     // take three random binary data string with different sizes and run
     // the base64 encoding->decoding->checking drill.
@@ -430,6 +431,17 @@ void test_levenshtein()
     CHECK( stx::string::levenshtein_icase("Test this distance", "to this one") == 9 );
 }
 
+#if HAVE_OPENSSL
+void test_crypto_digest()
+{
+    CHECK( stx::string::md5_hex("test data") == "EB733A00C0C9D336E65691A37AB54293" );
+    CHECK( stx::string::md5_base64("test data") == "63M6AMDJ0zbmVpGjerVCkw==" );
+
+    CHECK( stx::string::sha1_hex("test data") == "F48DD853820860816C75D54D0F584DC863327A7C" );
+    CHECK( stx::string::sha1_base64("test data") == "9I3YU4IIYIFsddVND1hNyGMyenw=" );
+}
+#endif
+
 int main()
 {
     test_trim();
@@ -447,6 +459,10 @@ int main()
     test_hexdump();
     test_base64();
     test_levenshtein();
+
+#if HAVE_OPENSSL
+    test_crypto_digest();
+#endif
 
     return 0;
 }
