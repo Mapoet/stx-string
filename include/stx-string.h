@@ -1,5 +1,9 @@
-/*
- * STX String Functions
+/*******************************************************************************
+ * stx-string.h
+ *
+ * STX Collection of std::string C++ Functions
+ *
+ *******************************************************************************
  * Copyright (C) 2007-2014 Timo Bingmann <tb@panthema.net>
  *
  * Boost Software License - Version 1.0 - August 17th, 2003
@@ -25,10 +29,10 @@
  * FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
- */
+ ******************************************************************************/
 
-#ifndef _STX_STRING_H_
-#define _STX_STRING_H_
+#ifndef STX_STRING_HEADER
+#define STX_STRING_HEADER
 
 #include <string>
 #include <cctype>
@@ -2012,4 +2016,4 @@ static inline std::string sha1_base64(const std::string& str)
 
 #endif // HAVE_OPENSSL
 
-#endif // _STX_STRING_H_
+#endif // STX_STRING_HEADER
