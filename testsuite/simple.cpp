@@ -418,6 +418,14 @@ void test_base64()
     CHECK_THROW( stx::string::base64_decode("FjXKA5!!RxGFAudA", 1), std::runtime_error );
 }
 
+void test_uri_decode()
+{
+    std::string uri = "http://localhost/Test%20File?do=%09%0D";
+
+    stx::string::uri_decode_inplace(uri);
+    CHECK( uri == "http://localhost/Test File?do=\11\15" );
+}
+
 void test_levenshtein()
 {
     CHECK( stx::string::levenshtein("Demonstration", "Comparison") == 9 );
@@ -458,6 +466,7 @@ int main()
     test_random();
     test_hexdump();
     test_base64();
+    test_uri_decode();
     test_levenshtein();
 
 #if HAVE_OPENSSL
